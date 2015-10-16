@@ -409,6 +409,7 @@ public class RegisterActivity extends Activity {
 			for (int i = 1; i < 255; i++) {
 
 				if (findDev) {
+
 					return;
 				}
 				new UDPThread(ip, i).start();

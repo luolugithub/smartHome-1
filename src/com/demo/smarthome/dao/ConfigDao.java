@@ -4,6 +4,7 @@ import com.demo.smarthome.db.DatabaseHelper;
 import com.demo.smarthome.service.ConfigService;
 
 import android.content.Context;
+import android.util.Log;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 

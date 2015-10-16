@@ -234,8 +234,7 @@ public class SocketService extends Service {
 								Log.i(TAG,
 										DateTools.getNowTimeString()
 												+ "==>·¢ËÍ µÇÂ¼Ö¸Áî£¡"
-												+ StrTools
-														.bytesToHexString(sendStr));
+												+ StrTools.bytesToHexString(sendStr));
 								socketOut.write(sendStr);
 							} catch (IOException e) {
 								// TODO Auto-generated catch block

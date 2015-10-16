@@ -1338,7 +1338,7 @@ public class PlProtocol implements IProtocol {
 			listResultMsg = DeCodeMessageEF01(msg);
 		} else if (MSGCMD.CMD06 == msg.getCmd()) {
 			listResultMsg = DeCodeMessageEF06(msg);
-		} else if (MSGCMD.CMD07 == msg.getCmd()) {
+		} else if (MSGCMD.CMD07 == msg.getCmd()) {	//Éè±¸±»É¾³ý
 			listResultMsg = DeCodeMessageEF07(msg);
 		}
 		// switch (msg.cmd)

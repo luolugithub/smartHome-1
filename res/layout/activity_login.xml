@@ -121,6 +121,18 @@
         </FrameLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="20dp">
+        <CheckBox
+            android:id="@+id/rememberUser"
+            android:layout_height="wrap_content"
+            android:text="是否自动登录"
+            android:checked="false"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
     <!-- 按键 -->
 
     <LinearLayout
@@ -143,7 +155,6 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/loging_11" />
     </LinearLayout>
-    <!-- 按键 -->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -152,11 +163,11 @@
         android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
-        <Button
+        <!--<Button
             android:id="@+id/loginBtnSetup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/loging_031" />
+            android:background="@drawable/loging_031" />-->
 
         <Button
             android:id="@+id/loginBtnSmartLink"

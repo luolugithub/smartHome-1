@@ -34,6 +34,7 @@ package com.demo.smarthome.activity;
 		import android.view.Window;
 		import android.view.View.OnClickListener;
 		import android.widget.Button;
+		import android.widget.EditText;
 		import android.widget.ImageView;
 		import android.widget.ProgressBar;
 		import android.widget.SeekBar;
@@ -58,9 +59,11 @@ package com.demo.smarthome.activity;
  */
 public class HCHOActivity extends Activity {
 
-	String httpArg = "cityname=南昌";
 	infoReslut Info = new infoReslut();
 
+	static final int GET_WEATHER_SUCCEED = 0;
+	static final int GET_WEATHER_FAIL 	 = 1;
+	static final int CITY_NAME_FAIL 	 = 2;
 	protected class infoReslut{
 		public  String errNum = "0";
 		public  String errMsg = "fail";
@@ -68,6 +71,7 @@ public class HCHOActivity extends Activity {
 		public  String date = "";//当前日期
 		public  String time = "";//温度发布时的时间
 		public  String weather = "";//天气情况
+		public  String temp = "";  //当前温度
 		public  String l_tmp = "";//今日最低气温
 		public  String h_tmp = "";//今日最高气温
 		public  String WD = "";//风向
@@ -75,6 +79,33 @@ public class HCHOActivity extends Activity {
 		//protected static String sunrise = "";//日出时间
 		//protected static String sunset = "";//日落时间
 	}
+
+	Handler handler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			TextView infoRsult = (TextView) findViewById(R.id.enviInfoTextView);
+			switch (msg.what) {
+				case GET_WEATHER_SUCCEED:
+					infoRsult.setText("今天"+Info.city+"天气" + Info.weather+"\n截止到"
+							+ Info.time + " 温度"+Info.temp + "度，最高气温："
+							+ Info.h_tmp + "，最低气温：" + Info.l_tmp);
+					infoRsult.setTextSize(30);
+					break;
+				case GET_WEATHER_FAIL:
+					infoRsult.setText("未获取到天气信息,请检查网络");
+					infoRsult.setTextSize(30);
+					break;
+				case CITY_NAME_FAIL:
+					infoRsult.setText("请输入正确的城市名称");
+					infoRsult.setTextSize(30);
+					break;
+				default:
+					break;
+			}
+		}
+	};
 
 	/**
 	 * 函数将申请到的字符串数据转换到infoReslut类中
@@ -86,6 +117,7 @@ public class HCHOActivity extends Activity {
 		Info.errNum = temp[1].substring(0, 1);
 		temp = tempResult.split("errMsg:");
 		Info.errMsg = temp[1].substring(0, temp[1].indexOf(","));
+		Info.errMsg  = decodeUnicode(Info.errMsg);
 		if(Info.errMsg.equals("success")) {
 			temp = tempResult.split("city:");
 			Info.city = temp[1].substring(0, temp[1].indexOf(","));
@@ -97,6 +129,8 @@ public class HCHOActivity extends Activity {
 			temp = tempResult.split("weather:");
 			Info.weather = temp[1].substring(0, temp[1].indexOf(","));
 			Info.weather  = decodeUnicode(Info.weather);
+			temp = tempResult.split("temp:");
+			Info.temp = temp[1].substring(0, temp[1].indexOf(","));
 			temp = tempResult.split("l_tmp:");
 			Info.l_tmp = temp[1].substring(0, temp[1].indexOf(","));
 			temp = tempResult.split("h_tmp:");
@@ -115,15 +149,25 @@ public class HCHOActivity extends Activity {
 	class getEnvironmentFromInternetThread extends Thread {
 		@Override
 		public void run() {
-			final String jsonResult = requestAPI(Cfg.WEATHER_INFORMATION, httpArg);
-			if (toInfo(jsonResult)) {
-				TextView infoRsult = (TextView) findViewById(R.id.enviInfoTextView);
-				Log.i("hcho", "今天天气" + Info.weather + "，最高气温："
-						+ Info.h_tmp + "，最低气温：" + Info.l_tmp);
-				infoRsult.setText("今天天气" + Info.weather + "，最高气温："
-						+ Info.h_tmp + "，最低气温：" + Info.l_tmp);
-				//infoRsult.setTextSize(10);
+			Message message = new Message();
+			EditText cityInfo = (EditText) findViewById(R.id.cityName);
+
+			String httpArg = new String("cityname="+cityInfo.getText());
+
+			if(toInfo(requestAPI(Cfg.WEATHER_INFORMATION, httpArg))) {
+
+				message.what = GET_WEATHER_SUCCEED;
+
 			}
+			else {
+				if(Info.errMsg.equals("请输入正确的城市id/城市名称/城市拼音")){
+					message.what = CITY_NAME_FAIL;
+				}
+				else {
+					message.what = GET_WEATHER_FAIL;
+				}
+			}
+			handler.sendMessage(message);
 		}
 	}
 	/**
@@ -135,7 +179,7 @@ public class HCHOActivity extends Activity {
 	 *            :参数
 	 * @return 返回结果
 	 */
-	public static String requestAPI(String httpUrl, String httpArg) {
+	private  String requestAPI(String httpUrl, String httpArg) {
 		String result = null;
 		StringBuffer sbf = new StringBuffer();
 		httpUrl = httpUrl + "?" + httpArg;
@@ -161,7 +205,7 @@ public class HCHOActivity extends Activity {
 			result = sbf.toString();
 		}
 		catch (SocketTimeoutException e) {
-			e.printStackTrace();
+			Info.errMsg = "fail";
 		}
 		catch (Exception e) {
 			e.printStackTrace();

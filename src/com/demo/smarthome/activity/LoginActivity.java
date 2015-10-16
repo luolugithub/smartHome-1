@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,6 +81,8 @@ public class LoginActivity extends Activity {
 	EditText txtName = null;
 	EditText txtPassword = null;
 
+	CheckBox isAtuoLogin = null;
+
 	String name = "";
 	String password = "";
 	boolean isLogin = false;
@@ -104,6 +107,9 @@ public class LoginActivity extends Activity {
 						.toString());
 				dbService.SaveSysCfgByKey(Cfg.KEY_PASS_WORD, txtPassword
 						.getText().toString());
+				dbService.SaveSysCfgByKey(Cfg.KEY_AUTO_LOGIN
+						, String.valueOf(isAtuoLogin.isChecked()));
+
 				Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT)
 						.show();
 				// 跳转到设置界面
@@ -169,6 +175,7 @@ public class LoginActivity extends Activity {
 
 		txtName = (EditText) findViewById(R.id.loginTxtName);
 		txtPassword = (EditText) findViewById(R.id.loginTxtPassword);
+		isAtuoLogin = (CheckBox) findViewById(R.id.rememberUser);
 
 		// Intent intent = this.getIntent();
 		// String strDevId = intent.getStringExtra("devId");
@@ -185,10 +192,11 @@ public class LoginActivity extends Activity {
 		btnOk.setOnClickListener(new BtnOkOnClickListener());
 		Button btnReg = (Button) findViewById(R.id.loginBtnReg);
 		btnReg.setOnClickListener(new BtnRegOnClickListener());
-		Button btnSetup = (Button) findViewById(R.id.loginBtnSetup);
-		btnSetup.setOnClickListener(new BtnSetupOnClickListener());
+		//Button btnSetup = (Button) findViewById(R.id.loginBtnSetup);
+		//btnSetup.setOnClickListener(new BtnSetupOnClickListener());
 		Button btnSmartLink = (Button) findViewById(R.id.loginBtnSmartLink);
 		btnSmartLink.setOnClickListener(new BtnSmartLinkOnClickListener());
+
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
 		// Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
@@ -242,6 +250,7 @@ public class LoginActivity extends Activity {
 		// }
 		Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
 
+
 		Intent intent = this.getIntent();
 		String strDevId = intent.getStringExtra("devId");
 		String strDevPass = intent.getStringExtra("devPass");
@@ -255,6 +264,14 @@ public class LoginActivity extends Activity {
 		} else {
 			txtName.setText(dbService.getCfgByKey(Cfg.KEY_USER_NAME));
 			txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
+
+			if(dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
+				isAtuoLogin.setChecked(true);
+			}
+			else {
+				isAtuoLogin.setChecked(false);
+			}
+
 			// Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
 		}
 		name = txtName.getText().toString();
@@ -412,9 +429,9 @@ public class LoginActivity extends Activity {
 
 			if (info.length() > 10) {
 				String[] text = info.split(":");
-				int index = 0;
+
 				if (text.length == 4) {
-					index = 1;
+					int index = 1;
 					Cfg.torken = text[index++];
 					Cfg.userId = StrTools.hexStringToBytes(StrTools
 							.strNumToBig(text[index++]));// id 要倒序
@@ -551,84 +568,6 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	// public class UdpHelper implements Runnable {
-	// public Boolean IsThreadDisable = false;//指示监听线程是否终止
-	// private WifiManager.MulticastLock lock;
-	// InetAddress mInetAddress;
-	// public UdpHelper() {
-	//
-	// }
-	// public UdpHelper(WifiManager manager) {
-	// this.lock= manager.createMulticastLock("UDPwifi");
-	// }
-	// public void StartListen() {
-	// // UDP服务器监听的端口
-	// Integer port = 2468;
-	// // 接收的字节大小，客户端发送的数据不能超过这个大小
-	// byte[] message = new byte[100];
-	// try {
-	// // 建立Socket连接
-	// DatagramSocket datagramSocket = new DatagramSocket(port);
-	// datagramSocket.setBroadcast(true);
-	// DatagramPacket datagramPacket = new DatagramPacket(message,
-	// message.length);
-	// try {
-	// while (!IsThreadDisable) {
-	// // 准备接收数据
-	// Log.d("UDP Demo", "准备接受");
-	// this.lock.acquire();
-	//
-	// datagramSocket.receive(datagramPacket);
-	// String strMsg=new String(datagramPacket.getData()).trim();
-	// Log.d("UDP Demo", datagramPacket.getAddress()
-	// .getHostAddress().toString()
-	// + ":" +strMsg );this.lock.release();
-	// }
-	// } catch (IOException e) {//IOException
-	// e.printStackTrace();
-	// }
-	// } catch (SocketException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
-	// public void send(String message) {
-	// message = (message == null ? "Hello IdeasAndroid!" : message);
-	// int server_port = 8904;
-	// Log.d("UDP Demo", "UDP发送数据:"+message);
-	// DatagramSocket s = null;
-	// try {
-	// s = new DatagramSocket();
-	// } catch (SocketException e) {
-	// e.printStackTrace();
-	// }
-	// InetAddress local = null;
-	// try {
-	// local = InetAddress.getByName("255.255.255.255");
-	// } catch (UnknownHostException e) {
-	// e.printStackTrace();
-	// }
-	// int msg_length = message.length();
-	// byte[] messageByte = message.getBytes();
-	// DatagramPacket p = new DatagramPacket(messageByte, msg_length, local,
-	// server_port);
-	// try {
-	//
-	// s.send(p);
-	// s.close();
-	//
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// @Override
-	// public void run() {
-	// StartListen();
-	// }
-	// }
-	//
-	// }
 	class UDPReceiveThread extends Thread {
 		public String echo(String msg) {
 			return "and echo:" + msg;

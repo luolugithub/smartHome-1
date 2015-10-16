@@ -9,7 +9,7 @@ import android.app.Application;
 
 
 /**
- * Ó¦ÓÃ³ÌĞòÈ«¾Ö±äÁ¿ Àà
+ * Ó¦ï¿½Ã³ï¿½ï¿½ï¿½È«ï¿½Ö±ï¿½ï¿½ï¿½ ï¿½ï¿½
  * @author Administrator
  *
  */
@@ -27,18 +27,21 @@ public class Cfg extends Application  {
 	
 	public final static String KEY_PASS_WORD ="password";
 	public final static String KEY_USER_NAME ="username";
+	public final static String KEY_AUTO_LOGIN ="autoLogin";
 	
-	//  ·¢²¼µØÖ·  cloud.ai-thinker.com
+	//  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·  cloud.ai-thinker.com
 	//	cloud.ai-thinker.com
 	//	admin
 	//	admin_!@#*()
-	//  µ÷ÊÔµØÖ· tangdengan.xicp.net
+	//  ï¿½ï¿½ï¿½Ôµï¿½Ö· tangdengan.xicp.net
 //	public final static String WEBSERVICE_SERVER_URL="http://182.139.160.79:8020/service/s.asmx";
 	public final static String WEBSERVICE_SERVER_URL="http://cloud.ai-thinker.com/service/s.asmx";
+	//ç”¨äºç™¾åº¦APIçš„KEYç ,ç°ç»‘å®šå¼€å‘è€…çŸ³ç£Šçš„è´¦å·
+	public final static String APIKEY="63cb0c1770c622f9287d62868c079989";
 	public final static String TCP_SERVER_URL="cloud.ai-thinker.com";
 //	public final static String WEBSERVICE_SERVER_URL="http://tangdengan.xicp.net:8020/service/s.asmx";
 //	public final static String TCP_SERVER_URL="tangdengan.xicp.net";
-	//²éÑ¯ÌìÆøµÄAPIµÄµØÖ·
+	//ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½APIï¿½Äµï¿½Ö·
 	public final static String WEATHER_INFORMATION="http://apis.baidu.com/apistore/weatherservice/cityname";
 //	public final static String TCP_SERVER_URL="182.139.160.79";
 	public final static int  TCP_SERVER_PORT=6009;
@@ -46,7 +49,7 @@ public class Cfg extends Application  {
 //	public final static String DEV_UDP_IPADDR="192.168.5.88"; //192.168.1.255
 	public final static int  DEV_UDP_SEND_PORT=2468;
 	public final static int  DEV_UDP_SEND_DELAY=100;
-	public final static int  DEV_UDP_READ_DELAY=15; //udp É¨ÃèµÈ´ı15Ãë
+	public final static int  DEV_UDP_READ_DELAY=15; //udp É¨ï¿½ï¿½È´ï¿½15ï¿½ï¿½
 
 	public final static String DEV_UDP_IPADDR="192.168.4.1";
 	public final static int  DEV_UDP_PORT=8001;
@@ -68,15 +71,15 @@ public class Cfg extends Application  {
 	public  static String regUserPass ="";
 	
 	public static List<Dev> listDev=new  ArrayList<Dev>();
-	private static List<Dev> listDevScan=new  ArrayList<Dev>();//É¨ÃèµÄÉè±¸
+	private static List<Dev> listDevScan=new  ArrayList<Dev>();//É¨ï¿½ï¿½ï¿½ï¿½è±¸
 
 	public  static String deviceId ="";
 	public  static String devicePwd ="";
 	
-//	public static final int timeDelayDef = 50; // ÃüÁîÑÓÊ±Ê±¼ä ms
-//	public static final int timeOutDef = 30 * (1000 / timeDelayDef); // ÃüÁî³¬Ê±Ê±¼ä
-//																		// 20Ãë
-//	public static final int timeReSendTimeDef = 5 * (1000 / timeDelayDef); // ÃüÁîÖØ·¢³¬Ê±Ê±¼ä
+//	public static final int timeDelayDef = 50; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê±ï¿½ï¿½ ms
+//	public static final int timeOutDef = 30 * (1000 / timeDelayDef); // ï¿½ï¿½ï¿½î³¬Ê±Ê±ï¿½ï¿½
+//																		// 20ï¿½ï¿½
+//	public static final int timeReSendTimeDef = 5 * (1000 / timeDelayDef); // ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½Ê±Ê±ï¿½ï¿½
 
 	public static Dev getDevById(String id) {
 		Dev dev = null;
