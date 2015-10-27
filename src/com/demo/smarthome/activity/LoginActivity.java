@@ -12,11 +12,11 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 import com.demo.smarthome.dao.ConfigDao;
+import com.demo.smarthome.server.LoginServer;
+import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.service.ConfigService;
 import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.Cfg;
-import com.demo.smarthome.tools.MD5Tools;
-import com.demo.smarthome.tools.StrTools;
 import com.demo.smarthome.R;
 
 import android.os.Bundle;
@@ -36,6 +36,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.smarthome.device.Dev;
+import com.demo.smarthome.server.setServerURL;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 
 /**
  * 登录类
@@ -93,6 +97,8 @@ public class LoginActivity extends Activity {
 	static final int GET_DEV_SUCCEED = 2;
 	static final int GET_DEV_ERROR = 3;
 
+	ServerReturnResult loginResult = new ServerReturnResult();
+
 	Handler handler = new Handler() {
 
 		@Override
@@ -102,6 +108,9 @@ public class LoginActivity extends Activity {
 			// dataToui();
 			switch (msg.what) {
 			case LOGIN_SUCCEED:
+				Toast.makeText(LoginActivity.this
+						, loginResult.getMsg() +loginResult.getCode(), Toast.LENGTH_SHORT)
+						.show();
 				isLogin = true;
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, txtName.getText()
 						.toString());
@@ -110,9 +119,6 @@ public class LoginActivity extends Activity {
 				dbService.SaveSysCfgByKey(Cfg.KEY_AUTO_LOGIN
 						, String.valueOf(isAtuoLogin.isChecked()));
 
-				Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT)
-						.show();
-				// 跳转到设置界面
 				Intent intent = new Intent();
 				intent.setClass(LoginActivity.this, MainActivity.class);
 				startActivity(intent);// 打开新界面
@@ -151,8 +157,6 @@ public class LoginActivity extends Activity {
 		}
 
 	};
-	private UDPThread udphelper = null;
-	private Thread tReceived = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -177,16 +181,6 @@ public class LoginActivity extends Activity {
 		txtPassword = (EditText) findViewById(R.id.loginTxtPassword);
 		isAtuoLogin = (CheckBox) findViewById(R.id.rememberUser);
 
-		// Intent intent = this.getIntent();
-		// String strDevId = intent.getStringExtra("devId");
-		// String strDevPass = intent.getStringExtra("devPass");
-		//
-		// if((strDevId!=null)&&(!strDevId.isEmpty())){
-		// if((strDevPass!=null)&&(!strDevPass.isEmpty())){
-		// txtName.setText(strDevId );
-		// txtPassword.setText(strDevPass );
-		// }
-		// }
 
 		Button btnOk = (Button) findViewById(R.id.loginBtnOk);
 		btnOk.setOnClickListener(new BtnOkOnClickListener());
@@ -199,81 +193,19 @@ public class LoginActivity extends Activity {
 
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
-		// Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
-		// Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
 
-		txtName.setText(Cfg.userName);
+		//从数据库中取出用户名密码
 
-		// txtName.setText("asdf");
-		// txtPassword.setText("asdf");
-		// WifiManager manager = (WifiManager) this
-		// .getSystemService(Context.WIFI_SERVICE);
-		// WifiManager.MulticastLock lock =
-		// manager.createMulticastLock("UDPwifi");
-		// lock.acquire();
-		// udphelper = new UDPThread(manager);
-		// // udphelper.start();
-		//
-		// //传递WifiManager对象，以便在UDPHelper类里面使用MulticastLock
-		// // udphelper.addObserver(LoginActivity.this);
-		// tReceived = new Thread(udphelper);
-		// tReceived.start();
+		txtName.setText(dbService.getCfgByKey(Cfg.KEY_USER_NAME));
+		txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
 
-		// new UDPThread().start();
-		// new UDPReceiveThread().start();
-		// Log.v("LoginThread", "UDPReceiveThread start..");
-		// new UDPThread().start();
-		// test
-		// int id = 10159981;
-		// long pass = 2973179566l;
-		// Dev dev = new Dev();
-		// dev.setId("1234567890");
-		// dev.setNickName("123456789");
-		// DevDao dao = new DevDao(LoginActivity.this.getBaseContext());
-		// dao.saveDev(dev);
-		// Log.v("LoginThread", "dev:"+dev.getId()+" "+dev.getNickName());
-		//
-		// dev.setId("12345678901");
-		// dev.setNickName("1234567891");
-		// dao.saveDev(dev);
-		// Log.v("LoginThread", "dev:"+dev.getId()+" "+dev.getNickName());
-		// dev = dao.getDevById("1234567890");
-		// Log.v("LoginThread",
-		// "select dev:"+dev.getId()+" "+dev.getNickName());
-		// dev = dao.getDevById("12345678901");
-		// Log.v("LoginThread",
-		// "select dev:"+dev.getId()+" "+dev.getNickName());
-		//
-		// List<Dev> listDev = dao.getDevList();
-		// for(Dev d : listDev){
-		// Log.v("LoginThread", "out dev:"+dev.getId()+" "+dev.getNickName());
-		// }
-		Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
-
-
-		Intent intent = this.getIntent();
-		String strDevId = intent.getStringExtra("devId");
-		String strDevPass = intent.getStringExtra("devPass");
-
-		if ((strDevId != null) && (!strDevId.isEmpty())) {
-			if ((strDevPass != null) && (!strDevPass.isEmpty())) {
-				txtName.setText(strDevId);
-				txtPassword.setText(strDevPass);
-				new LoginThread().start();
-			}
-		} else {
-			txtName.setText(dbService.getCfgByKey(Cfg.KEY_USER_NAME));
-			txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
-
-			if(dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
-				isAtuoLogin.setChecked(true);
-			}
-			else {
-				isAtuoLogin.setChecked(false);
-			}
-
-			// Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
+		if(dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
+			isAtuoLogin.setChecked(true);
 		}
+		else {
+			isAtuoLogin.setChecked(false);
+		}
+
 		name = txtName.getText().toString();
 		password = txtPassword.getText().toString();
 		if (name.trim().isEmpty()) {
@@ -329,16 +261,17 @@ public class LoginActivity extends Activity {
 			name = txtName.getText().toString();
 			password = txtPassword.getText().toString();
 			if (name.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入用户名", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入用户名", Toast.LENGTH_SHORT).show();
 				txtName.setFocusable(true);
 				return;
 			}
 			if (password.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入密码", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入密码", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
-
+			Cfg.userName = name;
+			Cfg.userPassword =password;
 			new LoginThread().start();
 
 		}
@@ -356,12 +289,12 @@ public class LoginActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 
-			Intent intent = new Intent();
-			intent.setClass(LoginActivity.this, RegisterActivity.class);// CaptureActivity
-			Bundle bundle = new Bundle();
-			bundle.putInt("type", 2);
-			intent.putExtras(bundle);
-			startActivity(intent);
+//			Intent intent = new Intent();
+//			intent.setClass(LoginActivity.this, RegisterActivity.class);// CaptureActivity
+//			Bundle bundle = new Bundle();
+//			bundle.putInt("type", 2);
+//			intent.putExtras(bundle);
+//			startActivity(intent);
 			//finish();
 		}
 
@@ -410,43 +343,30 @@ public class LoginActivity extends Activity {
 		@Override
 		public void run() {
 			Message message = new Message();
-			message.what = LOGIN_ERROR;
+			message.what = Cfg.REG_SUCCESS;
 
-			Log.v("LoginThread", "LoginThread start..");
-			String md5Pass;
-			if (password.length() >= 20) {
-				md5Pass = password;
-			} else {
-				md5Pass = MD5Tools.string2MD5(password).toUpperCase();
+			loginResult = LoginServer.LoginServerMethod();
+
+			switch (Integer.parseInt(loginResult.getCode()))
+			{
+				case Cfg.CODE_SUCCESS:
+					message.what = Cfg.REG_SUCCESS;
+					break;
+				case Cfg.CODE_PWD_ERROR:
+					message.what = Cfg.REG_PWD_ERROR;
+					break;
+				case Cfg.CODE_USER_EXISTED:
+					message.what = Cfg.REG_USER_EXISTED;
+					break;
+				//服务器程序异常
+				case Cfg.CODE_EXCEPTION:
+					message.what = Cfg.REG_EXCEPTION;
+					break;
+				default:
+					message.what = Cfg.REG_ERROR;
+					break;
 			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String info = HttpConnectService.userLogin(name, (md5Pass));
 
-			if (info.length() > 10) {
-				String[] text = info.split(":");
-
-				if (text.length == 4) {
-					int index = 1;
-					Cfg.torken = text[index++];
-					Cfg.userId = StrTools.hexStringToBytes(StrTools
-							.strNumToBig(text[index++]));// id 要倒序
-					Cfg.passWd = StrTools.hexStringToBytes(StrTools
-							.strNumToHex(text[index++]));
-
-					Cfg.userName = name;
-					message.what = LOGIN_SUCCEED;
-					// Log.v("LoginThread", "Cfg.torken:" + Cfg.torken);
-					// Log.v("LoginThread", "Cfg.userId:" + Cfg.userId);
-					// Log.v("LoginThread", "Cfg.userName:" + Cfg.userName);
-					// Log.v("LoginThread", "Cfg.userId:" + Cfg.userId);
-					// Log.v("LoginThread", "Cfg.passWd:" + Cfg.passWd);
-				}
-			}
 			handler.sendMessage(message);
 		}
 	}

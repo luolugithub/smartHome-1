@@ -14,13 +14,19 @@ import com.demo.smarthome.protocol.MSGCMD;
 import com.demo.smarthome.protocol.MSGCMDTYPE;
 import com.demo.smarthome.protocol.Msg;
 import com.demo.smarthome.protocol.PlProtocol;
+import com.demo.smarthome.server.LoginServer;
+import com.demo.smarthome.server.ServerReturnResult;
+import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
 import com.demo.smarthome.tools.StrTools;
 import com.demo.smarthome.zxing.demo.CaptureActivity;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -47,6 +53,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.content.DialogInterface;
 
 /**
  * 主界面类
@@ -60,8 +67,8 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-
-		new GetDevListThread().start();
+		new GetDevThread().start();
+//		new GetDevListThread().start();
 	}
 
 	Button btnRefresh = null;
@@ -76,6 +83,8 @@ public class MainActivity extends Activity {
 	static final int BUTTON_CONTROL = 3;
 	static final int DELETE_SUCCEED = 4;
 	static final int DELETE_ERROR = 5;
+	String jsonResult;
+	ServerReturnResult getResult = new ServerReturnResult();
 
 	Handler handler = new Handler() {
 
@@ -87,39 +96,21 @@ public class MainActivity extends Activity {
 			switch (msg.what) {
 
 			case GET_DEV_SUCCEED:
-				Toast.makeText(MainActivity.this, "获取设备列表成功！",
-						Toast.LENGTH_SHORT).show();
-				changeDevList();
-
+				getDevList();
 				break;
 			case GET_DEV_ERROR:
 				// Toast.makeText(MainActivity.this, "获取设备列表成功！",
 				// Toast.LENGTH_SHORT).show();
-				Cfg.listDev.clear();
-				changeDevList();
-
+//				Cfg.listDev.clear();
+//				changeDevList();
 				break;
 
 			case BUTTON_DELETE:
-				// Toast.makeText(MainActivity.this, "BUTTON_DELETE:" +
-				// msg.arg1,
-				// Toast.LENGTH_SHORT).show();
-				// Toast.makeText(MainActivity.this,
-				// "BUTTON_CONTROL:"+msg.arg1,Toast.LENGTH_SHORT).show();
-				HashMap<String, Object> data1 = (HashMap<String, Object>) listView
-						.getItemAtPosition(msg.arg1);
-				String devId1 = (String) data1.get("id");
-
-				Log.i(TAG, "ItemClickListener devId：" + devId1);
-				Toast.makeText(getApplicationContext(), "选择设备" + devId1, 0)
+				Toast.makeText(getApplicationContext(), "成功删除设备", Toast.LENGTH_SHORT)
 						.show();
-				Dev dev1 = getDevById(devId1);
-				if (dev1 == null) {
-					Toast.makeText(getApplicationContext(), "请重新选择设备", 0)
-							.show();
-					return;
-				}
-				new DeleteDevThread(dev1.getId()).start();
+				finish();
+				Intent intent = new Intent(MainActivity.this, MainActivity.class);
+				startActivity(intent);
 				break;
 			case BUTTON_CONTROL:
 				// Toast.makeText(MainActivity.this,
@@ -129,26 +120,24 @@ public class MainActivity extends Activity {
 				String devId = (String) data.get("id");
 
 				Log.i(TAG, "ItemClickListener devId：" + devId);
-				Toast.makeText(getApplicationContext(), "选择设备" + devId, 0)
+				Toast.makeText(getApplicationContext(), "选择设备" + devId, Toast.LENGTH_SHORT)
 						.show();
 				Dev dev = getDevById(devId);
 				if (dev == null) {
-					Toast.makeText(getApplicationContext(), "请重新选择设备", 0)
+					Toast.makeText(getApplicationContext(), "请重新选择设备", Toast.LENGTH_SHORT)
 							.show();
 					return;
 				}
 				// 跳转到设置界面
-				Intent intent = new Intent();
-				//intent.setClass(MainActivity.this, DevViewActivity.class);
-				intent.setClass(MainActivity.this, HCHOActivity.class);
 
-				Bundle bundle = new Bundle();
-				bundle.putString("devId", dev.getId());
-				intent.putExtras(bundle);
+				//intent.setClass(MainActivity.this, DevViewActivity.class);
+				Intent tempIntent = new Intent();
+				tempIntent.setClass(MainActivity.this, HCHOActivity.class);
+
 
 				Log.i(TAG, "ItemClickListener dev：" + dev.getId());
 				// MyLog.i(TAG, "跳转至设置界面");DeleteDevThread
-				startActivity(intent);// 打开新界面
+				startActivity(tempIntent);// 打开新界面
 				break;
 
 			case DELETE_SUCCEED:
@@ -161,6 +150,7 @@ public class MainActivity extends Activity {
 						.show();
 
 				break;
+
 			default:
 				break;
 
@@ -240,52 +230,50 @@ public class MainActivity extends Activity {
 		btnAddDev.setOnClickListener(new BtnAddDevOnClickListener());
 
 		listView = (ListView) this.findViewById(R.id.devListView);
-		// 条目点击事件
-	//	listView.setOnItemClickListener(new ItemClickListener());
 
-		// Cfg.listDev =new
-		// DevDao(MainActivity.this.getBaseContext()).getDevList();
-		new GetDevListThread().start();
+		new GetDevThread().start();
 
-		changeDevList();
-
-		// bind....
-		try {
-			if (!isBinderConnected) {
-				bindService();
-			}
-		} catch (Exception e) {
-
-		}
-		/*
-		 *  */
-		intentFilter = new IntentFilter();
-		intentFilter.addAction(Cfg.SendBoardCastName);
-		this.registerReceiver(socketConnectReceiver, intentFilter);
 	}
 
-	private void changeDevList() {
+//	private void changeDevList() {
+//		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
+//		for (Dev dev : Cfg.listDev) {
+//			HashMap<String, Object> item = new HashMap<String, Object>();
+//			item.put("id", dev.getId());
+//			item.put("name", dev.getNickName());
+//			item.put("state", dev.isOnLine() ? "在线" : "不在线");
+//			data.add(item);
+//		}
+//		// 创建SimpleAdapter适配器将数据绑定到item显示控件上
+//		SimpleAdapter adapter = new MySimpleAdapter(this, data,
+//				R.layout.devitem, new String[] { "id", "name", "state" },
+//				new int[] { R.id.devId, R.id.devName, R.id.devStat });
+//		// 实现列表的显示
+//		listView.setAdapter(adapter);
+//		// 删除分割线
+//		listView.setDivider(null);
+//	}
+
+	private void getDevList() {
 		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
-		for (Dev dev : Cfg.listDev) {
+
+		if(Cfg.devInfo == null) {
+			return;
+		}
+		for (String devID : Cfg.devInfo) {
 			HashMap<String, Object> item = new HashMap<String, Object>();
-			item.put("id", dev.getId());
-			item.put("name", dev.getNickName());
-			item.put("state", dev.isOnLine() ? "在线" : "不在线");
+			item.put("id", devID);
+			item.put("name", "未定义");
 			data.add(item);
 		}
 		// 创建SimpleAdapter适配器将数据绑定到item显示控件上
 		SimpleAdapter adapter = new MySimpleAdapter(this, data,
-				R.layout.devitem, new String[] { "id", "name", "state" },
-				new int[] { R.id.devId, R.id.devName, R.id.devStat });
+				R.layout.devitem, new String[] { "id", "name"},
+				new int[] { R.id.devId, R.id.devName});
 		// 实现列表的显示
 		listView.setAdapter(adapter);
 		// 删除分割线
 		listView.setDivider(null);
-	}
-
-	private void bindService() {
-		Intent intent = new Intent(MainActivity.this, SocketService.class);
-		bindService(intent, conn, Context.BIND_AUTO_CREATE);
 	}
 
 	@Override
@@ -308,7 +296,6 @@ public class MainActivity extends Activity {
 			// DevDao(MainActivity.this.getBaseContext()).getDevList();
 			// changeDevList();
 			Message message = new Message();
-			message.what = GET_DEV_ERROR;
 
 			Log.v("GetDevListThread", "GetDevListThread start..");
 
@@ -323,6 +310,24 @@ public class MainActivity extends Activity {
 				Cfg.listDev = listDev;
 				message.what = GET_DEV_SUCCEED;
 			}
+			message.what = GET_DEV_SUCCEED;
+			handler.sendMessage(message);
+		}
+	}
+
+	class GetDevThread extends Thread {
+
+		@Override
+		public void run() {
+			// Cfg.listDev =new
+			// DevDao(MainActivity.this.getBaseContext()).getDevList();
+			// changeDevList();
+			Message message = new Message();
+
+			LoginServer.LoginServerMethod();
+
+			message.what = GET_DEV_SUCCEED;
+
 			handler.sendMessage(message);
 		}
 	}
@@ -336,15 +341,18 @@ public class MainActivity extends Activity {
 	class BtnRefreshOnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			new GetDevListThread().start();
+			finish();
+			Intent intent = new Intent(MainActivity.this, MainActivity.class);
+			startActivity(intent);
 		}
 	}
+
 
 	class BtnAddDevOnClickListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, ScanActivity.class);
+			intent.setClass(MainActivity.this, AddDevice.class);
 			startActivity(intent);// 打开新界面
 		}
 	}
@@ -360,10 +368,10 @@ public class MainActivity extends Activity {
 			String devId = (String) data.get("id");
 
 			Log.i(TAG, "ItemClickListener devId：" + devId);
-			Toast.makeText(getApplicationContext(), "选择设备" + devId, 0).show();
+//			Toast.makeText(getApplicationContext(), "选择设备" + devId, 0).show();
 			Dev dev = getDevById(devId);
 			if (dev == null) {
-				Toast.makeText(getApplicationContext(), "请重新选择设备", 0).show();
+//				Toast.makeText(getApplicationContext(), "请重新选择设备", 0).show();
 				return;
 			}
 			// 跳转到设置界面
@@ -438,143 +446,95 @@ public class MainActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					// mHandler.obtainMessage(BUTTON_DELETE, mPosition, 0)
-					// .sendToTarget();
-
 					Message message = new Message();
 					message.what = BUTTON_DELETE;
 					message.arg1 = mPosition;
-					handler.sendMessage(message);
+
+					HashMap<String, Object> data1 = (HashMap<String, Object>) listView
+							.getItemAtPosition(message.arg1);
+					final String deleteDevId = (String) data1.get("id");
+
+					Log.i(TAG, "ItemClickListener devId：" + deleteDevId);
+
+					if (deleteDevId == null) {
+
+						message.what = DELETE_ERROR;
+						handler.sendMessage(message);
+
+						return;
+					}
+					//弹出"确定删除"警示框
+					AlertDialog.Builder deleteAlert = new AlertDialog.Builder(MainActivity.this);
+					deleteAlert.setTitle("确定删除该设备?");
+					deleteAlert.setIcon(R.drawable.delete_alert);
+
+					deleteAlert.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							new DelDevThread(deleteDevId).start();
+							return;
+						}
+					});
+
+					deleteAlert.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+
+							return;
+						}
+					});
+					deleteAlert.show();
 				}
 			});
 			return convertView;
 		}
-		// private Handler mHandler = new Handler() {
-		//
-		// @Override
-		// public void handleMessage(Message msg) {
-		// // TODO Auto-generated method stub
-		// super.handleMessage(msg);
-		// switch (msg.what) {
-		// case BUTTON_ADD:
-		// HashMap<String, Object> map = new HashMap<String, Object>();
-		// mList.add(map);
-		// notifyDataSetChanged();// 这个函数很重要，告诉Listview适配器数据发生了变化
-		// mShowInfo.setText("你点击了第" + (msg.arg1 + 1) + "按钮");
-		// break;
-		// case BUTTON_DELETE:
-		// mList.remove(msg.arg1);
-		// notifyDataSetChanged();
-		// mShowInfo.setText("你删除了第" + (msg.arg1 + 1) + "行");
-		// break;
-		// }
-		// }
-		//
-		// };
 
 	}
 
-	class DeleteDevThread extends Thread {
+	class DelDevThread extends Thread {
 		String id;
-		int delay = 50;
 
-		public DeleteDevThread(String strId) {
+		public DelDevThread(String strId) {
 			id = strId;
 
 		}
 
 		@Override
 		public void run() {
-			// try {
-			// Thread.sleep(1000);
-			// } catch (InterruptedException e1) {
-			// // TODO Auto-generated catch block
-			// e1.printStackTrace();
-			// }
+
 			if (id.isEmpty()) {
 				return;
 			}
 
 			Message message = new Message();
 			message.what = DELETE_ERROR;
+			Gson gson = new Gson();
 
-			Log.v("SendLigheStateThread", "开始提交数据 start..");
-			// int delay = 50;
-			int reSendTime = 1;
-			// Cfg.isSubmitDev = false;
+			String[] paramsName = {"userName","deviceId"};
+			String[] paramsValue = {Cfg.userName,id};
 
-			String tmp;
-			if (StrTools.stringToInt(id.substring(0, 1)) == 0) {
-				tmp = id.substring(1);
-			} else {
-				tmp = id;
+			setServerURL removeUser= new setServerURL();
+
+			jsonResult = removeUser.sendParamToServer("removeDeviceById", paramsName, paramsValue);
+			try {
+				getResult = gson.fromJson(jsonResult
+						, com.demo.smarthome.server.ServerReturnResult.class);
+			}
+			catch (JsonSyntaxException e){
+				e.printStackTrace();
 			}
 
-			byte[] data = new byte[8];
-			int index = 0;
-			long val = 0;
 
-			// id 低位在前
-			val = StrTools.stringToInt(tmp);
-			for (int i = 0; i < 8; i++) {
-				data[index++] = (byte) (val % 256);
-				val /= 256;
-			}
-			// // pass 高位在前
-			// byte[] b = new byte[8];
-			// val = StrTools.stringToInt(pass);
-			// for (int i = 0; i < 8; i++) {
-			// b[i] = (byte) (val % 256);
-			// val /= 256;
-			// }
-			// byte[] buff = StrTools.byteToSwapByte(b);
-			// for (int i = 0; i < 8; i++) {
-			// // if(buff[i] != 0){
-			// data[index++] = buff[i];
-			// // }
-			// }
-			msg.setId(Cfg.userId);
-			msg.setCmdType(MSGCMDTYPE.valueOf((byte) 0xEF));
-			msg.setCmd(MSGCMD.valueOf((byte) 0x07));
-			msg.setTorken(Cfg.tcpTorken);
-			msg.setData(data);
-			msg.setDataLen(data.length);
-			protocol.MessageEnCode(msg);
-
-			Log.i(TAG, "         data:" + StrTools.bytesToHexString(data));
-			Log.i(TAG,
-					"sendData:" + StrTools.bytesToHexString(msg.getSendData()));
-			Cfg.isDeleteDev = false;
-			while (true) {
-
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				reSendTime--;
-				if (reSendTime <= 0) {// send
-					reSendTime = 10;
-
-					socketService.socketSendMessage(msg);//
-
-				}
-				// 查询
-				if (Cfg.isDeleteDev) {
-					message.what = DELETE_SUCCEED;
-					handler.sendMessage(message);
+			switch (Integer.parseInt(getResult.getCode()))
+			{
+				case Cfg.CODE_SUCCESS:
+					message.what = BUTTON_DELETE;
 					break;
-				}
-
-				delay--;
-				if (delay <= 0) {
+				default:
 					message.what = DELETE_ERROR;
-					handler.sendMessage(message);
 					break;
-				}
 			}
+			handler.sendMessage(message);
 
 		}
 	}

@@ -7,48 +7,46 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="18" />
-        
 
-
-<!--  访问网络 
- -->
+<!--   访问网络  -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-	<uses-permission android:name="android.permission.WAKE_LOCK"/>  
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
- <!-- 震动权限 -->
+    <!-- 震动权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
- <!-- 使用照相机权限 -->
+    <!-- 使用照相机权限 -->
     <uses-feature android:name="android.hardware.camera.autofocus" />
- <!-- 自动聚焦权限 -->
+    <!-- 自动聚焦权限 -->
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
- <!-- 往sdcard中写入数据的权限 -->
+    <!-- 往sdcard中写入数据的权限 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
- <!-- 在sdcard中创建/删除文件的权限 -->
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 在sdcard中创建/删除文件的权限 -->
     <application
+        android:name=".service.Cfg"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:name = "com.demo.smarthome.service.Cfg"
         android:theme="@style/AppTheme" >
         <uses-library android:name="android.test.runner" />
 
-        <service android:name="com.demo.smarthome.service.SocketService" />
+        <service android:name=".service.SocketService" />
 
         <activity
-            android:name="com.demo.smarthome.activity.WelcomeActivity"
-            android:screenOrientation="portrait" 
+            android:name=".activity.WelcomeActivity"
+            android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:label="@string/app_name" >  
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,56 +54,58 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.demo.smarthome.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"  >
-          
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.demo.smarthome.activity.MainActivity"
-            android:screenOrientation="portrait"             
+            android:name=".activity.MainActivity"
+            android:label="@string/title_activity_register"
             android:launchMode="singleTask"
-            android:label="@string/title_activity_register" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.demo.smarthome.activity.HCHOActivity"
-            android:screenOrientation="portrait"
+            android:name=".activity.HCHOActivity"
+            android:label="@string/title_activity_hcho_view"
             android:launchMode="singleTask"
-            android:label="@string/title_activity_hcho_view" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.demo.smarthome.activity.RegisterActivity"
-            android:screenOrientation="portrait" 
-            android:label="@string/title_activity_register" >
+            android:name=".activity.RegisterActivity"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.demo.smarthome.activity.SetupDevActivity"
-            android:screenOrientation="portrait" 
-            android:label="@string/title_activity_setup_dev" >
+            android:name=".activity.SetupDevActivity"
+            android:label="@string/title_activity_setup_dev"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.demo.smarthome.activity.DevViewActivity"
-            android:screenOrientation="portrait" 
-            android:label="@string/title_activity_dev_view" >
+            android:name=".activity.DevViewActivity"
+            android:label="@string/title_activity_dev_view"
+            android:screenOrientation="portrait" >
         </activity>
-        
         <activity
-            android:name="com.demo.smarthome.activity.ScanActivity"
-            android:screenOrientation="portrait" 
-            android:label="@string/title_activity_dev_view" >
+            android:name=".activity.ScanActivity"
+            android:label="@string/title_activity_dev_view"
+            android:screenOrientation="portrait" >
         </activity>
-         <activity
-            android:name="com.demo.smarthome.zxing.demo.CaptureActivity"
+        <activity
+            android:name=".zxing.demo.CaptureActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/hello_world"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
-            <activity
+        <activity
             android:name="com.espressif.iot.esptouch.demo_activity.EsptouchDemoActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >           
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.AddDevice"
+            android:label="@string/title_activity_add_device" >
         </activity>
     </application>
 

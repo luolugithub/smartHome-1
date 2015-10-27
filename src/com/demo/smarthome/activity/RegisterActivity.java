@@ -248,12 +248,12 @@ public class RegisterActivity extends Activity {
 		registerProgBarScanInfo.setVisibility(View.INVISIBLE);
 
 		// bind....
-		bindService();
-		/*
-			 *  */
-		intentFilter = new IntentFilter();
-		intentFilter.addAction(Cfg.SendBoardCastName);
-		this.registerReceiver(socketConnectReceiver, intentFilter);
+//		bindService();
+//		/*
+//			 *  */
+//		intentFilter = new IntentFilter();
+//		intentFilter.addAction(Cfg.SendBoardCastName);
+//		this.registerReceiver(socketConnectReceiver, intentFilter);
 
 		// registerProgBarScanInfo.setVisibility(View.INVISIBLE);
 		// byte[] b = info.getBytes();
@@ -302,32 +302,32 @@ public class RegisterActivity extends Activity {
 			deviceId = txtDeviceId.getText().toString();
 			devicePwd = txtDevicePwd.getText().toString();
 			if (name.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入用户名", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入用户名", Toast.LENGTH_SHORT).show();
 				txtName.setFocusable(true);
 				return;
 			}
 			if (password.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入密码", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入密码", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
 			if (mobile.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入手机号码", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入手机号码", Toast.LENGTH_SHORT).show();
 				txtMobile.setFocusable(true);
 				return;
 			}
 			if (email.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入邮箱地址", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入邮箱地址", Toast.LENGTH_SHORT).show();
 				txtEmail.setFocusable(true);
 				return;
 			}
 			if (deviceId.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入设备ID", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入设备ID",Toast.LENGTH_SHORT).show();
 				txtDeviceId.setFocusable(true);
 				return;
 			}
 			if (devicePwd.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入设备密码", 0).show();
+				Toast.makeText(getApplicationContext(), "请输入设备密码", Toast.LENGTH_SHORT).show();
 				txtDevicePwd.setFocusable(true);
 				return;
 			}
@@ -359,7 +359,7 @@ public class RegisterActivity extends Activity {
 				ip = "192.168.1.255";
 			}
 			btnScan.setEnabled(false);
-			Toast.makeText(getApplicationContext(), "开始扫描...", 0).show();
+			Toast.makeText(getApplicationContext(), "开始扫描...", Toast.LENGTH_SHORT).show();
 			// new UDPThread(ip,88).start();
 			// new UDPThread(ip,102).start();
 			// isShow = !isShow;

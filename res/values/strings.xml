@@ -13,5 +13,6 @@
     <string name="tvPasswordTitle">Password: </string>
     <string name="switchIsSsidHiddenTitle">SSID is Hidden</string>
     <string name="btnConfirmTitle">Confirm</string>
+    <string name="title_activity_add_device">AddDevice</string>
 
 </resources>

@@ -19,7 +19,7 @@
             android:layout_height="60dp" >
 
             <TextView
-                android:id="@+id/titleHCHOView"
+                android:id="@+id/titleAddDevice"
                 android:layout_width="20dp"
                 android:layout_height="35dp"
                 android:layout_marginLeft="20dp"
@@ -30,67 +30,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:text="甲醛检测仪"
+                android:text="添加设备"
                 android:textColor="#FFFFFF"
                 android:textSize="25sp" />
         </FrameLayout>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="40dp"
-        android:orientation="horizontal" >
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="用户名:"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="90dp"
-                android:selectAllOnFocus="true"
-                android:ems="8" />
-        </FrameLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="40dp"
-        android:orientation="horizontal" >
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="密码:"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/userpassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="90dp"
-                android:ems="8"/>
-        </FrameLayout>
+        android:orientation="horizontal"
+        android:paddingTop="60dp" >
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -112,7 +61,7 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/deviceid"
+                android:id="@+id/addDeviceId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -140,7 +89,7 @@
                 android:textSize="20sp" />
 
             <EditText
-                android:id="@+id/devicepassword"
+                android:id="@+id/addDevicePwd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -149,15 +98,21 @@
         </FrameLayout>
     </LinearLayout>
     <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="60dp" >
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/registersubmit"
+            android:id="@+id/addDeviceSumbit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="注册"/>
+            android:text="添加"/>
     </LinearLayout>
 
 </LinearLayout>

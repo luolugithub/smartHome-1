@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/DevViewActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/HCHOActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/LoginActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/MainActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/RegisterActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/ScanActivity.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/SetupDevActivity.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/UDPReThread.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/WelcomeActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/service/Cfg.java" charset="GBK" />
-    <file url="PROJECT" charset="GBK" />
   </component>
 </project>

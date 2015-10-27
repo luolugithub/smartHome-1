@@ -240,8 +240,8 @@ public class HttpConnectService {
 			buffer.append("</soap:Body>");
 			buffer.append("</soap:Envelope>");
 			buffer.append("                                                                 ");
-			outMsg(TAG, "=============StringBuffer.len:" + buffer.length());
-			outMsg(TAG, "=============StringBuffer:" + buffer);
+			outMsg(TAG, "DD=============StringBuffer.len:" + buffer.length());
+			outMsg(TAG, "DD=============StringBuffer:" + buffer);
 
 			out.write(buffer.toString().getBytes());
 			InputStream in = connection.getInputStream();
@@ -660,8 +660,7 @@ public class HttpConnectService {
 	 *            设备编号
 	 * @param comment
 	 *            客户返回信息
-	 * @param base64Binary
-	 *            图片Base64加密过的string
+	 *
 	 * @return 返回""无效 返回 字符串有效
 	 */
 	public static String addLogs(String userName, String torken,

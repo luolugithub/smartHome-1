@@ -241,7 +241,6 @@ public class ScanActivity extends Activity {
 		// Intent intent = this.getIntent();
 		// info = intent.getStringExtra("info");
 		uiInit();
-		dataInit();
 
 		// bind....
 		bindService();
