@@ -289,6 +289,13 @@ public class LoginActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 
+			if(true)
+			{
+				Intent intent = new Intent();
+				intent.setClass(LoginActivity.this, HCHOActivity.class);
+				startActivity(intent);
+				finish();
+			}
 //			Intent intent = new Intent();
 //			intent.setClass(LoginActivity.this, RegisterActivity.class);// CaptureActivity
 //			Bundle bundle = new Bundle();
