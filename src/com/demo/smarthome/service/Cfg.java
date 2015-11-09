@@ -48,21 +48,31 @@ public class Cfg extends Application  {
 
 
 	//用于服务器返回代码
-	public final static int REG_SUCCESS 		= 0;
-	public final static int REG_ERROR   		= 1;
-	public final static int REG_PWD_ERROR   	= 7;
-	public final static int REG_USER_EXISTED    = 8;
-	public final static int REG_EXCEPTION   	= 9;
+	public final static int REG_SUCCESS 			= 0;
+	public final static int REG_ERROR   			= 1;
+	public final static int SERVER_CANT_CONNECT    	= 6;
+	public final static int REG_PWD_ERROR   		= 7;
+	public final static int REG_USER_EXISTED    	= 8;
+	public final static int REG_EXCEPTION   		= 9;
 
 	public final static int CODE_SUCCESS 		= 000;
 	public final static int CODE_PWD_ERROR   	= 777;
 	public final static int CODE_USER_EXISTED   = 888;
 	public final static int CODE_EXCEPTION   	= 999;
 
+	//用于配置设备联网返回码
+	public final static int SMART_SUCCESS 			= 0;
+	public final static int SMART_ERROR   			= 1;
+	public final static int SMART_PWD_ERROR   		= 2;
+	public final static int SMART_GET_SSID_ERROR    = 3;
+	public final static int SMART_EXCEPTION   		= 4;
 	//服务器返回的设备信息
 	public static String[] devInfo;
 	//账号绑定的设备数目
 	public static int devNumber;
+
+	//储存选定的设备的ID
+	public static String deviceID = null;
 	
 //	public final static String DEV_UDP_IPADDR="192.168.5.88"; //192.168.1.255
 	public final static int  DEV_UDP_SEND_PORT=2468;

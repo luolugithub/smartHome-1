@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 import com.demo.smarthome.dao.DevDao;
 import com.demo.smarthome.device.Dev;
 import com.demo.smarthome.service.Cfg;
+import com.demo.smarthome.service.ConnectDevice;
 import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
@@ -41,6 +42,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 /**
@@ -52,8 +54,9 @@ import android.widget.Toast;
 public class RegisterActivity extends Activity {
 	EditText txtName = null;
 	EditText txtPassword = null;
-	EditText txtMobile = null;
-	EditText txtEmail = null;
+	EditText txtrePassword = null;
+	EditText txtWifipassword = null;
+	Switch  switchIsHidden;
 	EditText txtDeviceId = null;
 	EditText txtDevicePwd = null;
 	Button btnScan;
@@ -63,6 +66,7 @@ public class RegisterActivity extends Activity {
 	String password = "";
 	String mobile = "";
 	String email = "";
+	String wifiPwd = "";
 	String deviceId = "";
 	String devicePwd = "";
 
@@ -233,11 +237,11 @@ public class RegisterActivity extends Activity {
 
 		txtName = (EditText) findViewById(R.id.registerTxtName);
 		txtPassword = (EditText) findViewById(R.id.registerTxtPassword);
-		txtMobile = (EditText) findViewById(R.id.registerTxtMobile);
-		txtEmail = (EditText) findViewById(R.id.registerTxtEemail);
+		txtrePassword = (EditText) findViewById(R.id.againPassword);
 		txtDeviceId = (EditText) findViewById(R.id.registerTxtDeviceId);
 		txtDevicePwd = (EditText) findViewById(R.id.registerTxtDevicePwd);
-
+		txtWifipassword = (EditText) findViewById(R.id.wifiPassword);
+		switchIsHidden = (Switch) findViewById(R.id.switchIsSsidHidden);
 		Button btnSetup = (Button) findViewById(R.id.registerBtnReg);
 		btnSetup.setOnClickListener(new BtnRegOnClickListener());
 
@@ -254,27 +258,6 @@ public class RegisterActivity extends Activity {
 //		intentFilter = new IntentFilter();
 //		intentFilter.addAction(Cfg.SendBoardCastName);
 //		this.registerReceiver(socketConnectReceiver, intentFilter);
-
-		// registerProgBarScanInfo.setVisibility(View.INVISIBLE);
-		// byte[] b = info.getBytes();
-		// StrTools.bytesToHexString(b);
-		// Log.v("RegisterActivity onCreate",
-		// "二维码信息:" + StrTools.bytesToHexString(b));
-		// if (info != null) {
-		//
-		// if (info.length() >= 5) {
-		// String[] text = info.split(",");
-		// int index = 0;
-		// Log.v("RegisterActivity onCreate", "二维码信息:" + info);
-		// if (text.length >= 2) {
-		// deviceId = text[index++].trim();
-		// devicePwd = text[index++].trim();
-		// txtDeviceId.setText(deviceId);
-		// txtDevicePwd.setText(devicePwd);
-		//
-		// }
-		// }
-		// }
 
 	}
 
@@ -297,12 +280,11 @@ public class RegisterActivity extends Activity {
 		public void onClick(View v) {
 			name = txtName.getText().toString();
 			password = txtPassword.getText().toString();
-			mobile = txtMobile.getText().toString();
-			email = txtEmail.getText().toString();
-			deviceId = txtDeviceId.getText().toString();
-			devicePwd = txtDevicePwd.getText().toString();
+			wifiPwd = txtWifipassword.getText().toString();
+//			deviceId = txtDeviceId.getText().toString();
+//			devicePwd = txtDevicePwd.getText().toString();
 			if (name.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入用户名", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "请输入邮箱地址作为用户名", Toast.LENGTH_SHORT).show();
 				txtName.setFocusable(true);
 				return;
 			}
@@ -311,28 +293,29 @@ public class RegisterActivity extends Activity {
 				txtPassword.setFocusable(true);
 				return;
 			}
-			if (mobile.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入手机号码", Toast.LENGTH_SHORT).show();
-				txtMobile.setFocusable(true);
+			if (wifiPwd.trim().isEmpty()) {
+				Toast.makeText(getApplicationContext(), "请输入路由器密码", Toast.LENGTH_SHORT).show();
+				txtWifipassword.setFocusable(true);
 				return;
 			}
-			if (email.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入邮箱地址", Toast.LENGTH_SHORT).show();
-				txtEmail.setFocusable(true);
-				return;
-			}
-			if (deviceId.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入设备ID",Toast.LENGTH_SHORT).show();
-				txtDeviceId.setFocusable(true);
-				return;
-			}
-			if (devicePwd.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入设备密码", Toast.LENGTH_SHORT).show();
-				txtDevicePwd.setFocusable(true);
-				return;
-			}
+//			if (email.trim().isEmpty()) {
+//				Toast.makeText(getApplicationContext(), "请输入邮箱地址作为用户名", Toast.LENGTH_SHORT).show();
+//				txtEmail.setFocusable(true);
+//				return;
+//			}
+//			if (deviceId.trim().isEmpty()) {
+//				Toast.makeText(getApplicationContext(), "请输入设备ID",Toast.LENGTH_SHORT).show();
+//				txtDeviceId.setFocusable(true);
+//				return;
+//			}
+//			if (devicePwd.trim().isEmpty()) {
+//				Toast.makeText(getApplicationContext(), "请输入设备密码", Toast.LENGTH_SHORT).show();
+//				txtDevicePwd.setFocusable(true);
+//				return;
+//			}
 			// new RegBySocketConnectThread().start();
-			new RegisterUserThread().start();
+			new ConnectDevThread().start();
+//			new RegisterUserThread().start();
 
 		}
 
@@ -437,7 +420,12 @@ public class RegisterActivity extends Activity {
 		}
 
 	}
-
+	class ConnectDevThread extends Thread {
+		@Override
+		public void run() {
+			ConnectDevice.SmartLink(wifiPwd, switchIsHidden.isChecked(), RegisterActivity.this);
+		}
+	}
 	/**
 	 * 注册用户 线程
 	 * 

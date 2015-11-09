@@ -6,7 +6,11 @@ import com.google.gson.JsonSyntaxException;
 
 /**
  * Created by leishi on 15/10/26.
+ *
+ * 通过用户名密码登录到服务器,将设备列表储存到Cfg.devInfo静态变量中
+ *
  */
+
 public class LoginServer {
 
 
@@ -29,8 +33,10 @@ public class LoginServer {
         String methodName = "login";
 
         setServerURL regiterUser = new setServerURL();
-        jsonResult = regiterUser.sendParamToServer(methodName, paramsName, paramsValue);
-//			Log.v("UDPReceiveThread", jsonresult);
+
+        if((jsonResult = regiterUser.sendParamToServer(methodName, paramsName, paramsValue)).isEmpty()){
+            return loginResult;
+        }
         try {
             loginResult = gson.fromJson(jsonResult
                     , com.demo.smarthome.server.ServerReturnResult.class);

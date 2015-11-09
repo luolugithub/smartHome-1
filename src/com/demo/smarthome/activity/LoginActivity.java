@@ -93,9 +93,10 @@ public class LoginActivity extends Activity {
 	private static final String TAG = "LoginActivity";
 	ConfigService dbService;
 	static final int LOGIN_SUCCEED = 0;
-	static final int LOGIN_ERROR = 1;
+	static final int PASSWORD_ERROR = 1;
 	static final int GET_DEV_SUCCEED = 2;
 	static final int GET_DEV_ERROR = 3;
+	static final int SERVER_ERROR = 7;
 
 	ServerReturnResult loginResult = new ServerReturnResult();
 
@@ -108,9 +109,9 @@ public class LoginActivity extends Activity {
 			// dataToui();
 			switch (msg.what) {
 			case LOGIN_SUCCEED:
-				Toast.makeText(LoginActivity.this
-						, loginResult.getMsg() +loginResult.getCode(), Toast.LENGTH_SHORT)
-						.show();
+//				Toast.makeText(LoginActivity.this
+//						, loginResult.getMsg() +loginResult.getCode(), Toast.LENGTH_SHORT)
+//						.show();
 				isLogin = true;
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, txtName.getText()
 						.toString());
@@ -126,13 +127,9 @@ public class LoginActivity extends Activity {
 				// 获取设备列表
 				// new GetDevListThread().start();
 				break;
-			case LOGIN_ERROR:
-				if (Cfg.register) {
-					Cfg.register = false;
-					new LoginThread().start();
-					return;
-				}
-				Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT)
+			case PASSWORD_ERROR:
+
+				Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT)
 						.show();
 				// finish();
 				break;
@@ -149,6 +146,8 @@ public class LoginActivity extends Activity {
 			case GET_DEV_ERROR:
 				Toast.makeText(LoginActivity.this, "获取设备列表失败！",
 						Toast.LENGTH_SHORT).show();
+				break;
+			case SERVER_ERROR:
 				break;
 			default:
 				break;
@@ -289,22 +288,14 @@ public class LoginActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 
-			if(true)
-			{
-				Intent intent = new Intent();
-				intent.setClass(LoginActivity.this, HCHOActivity.class);
-				startActivity(intent);
-				finish();
-			}
-//			Intent intent = new Intent();
-//			intent.setClass(LoginActivity.this, RegisterActivity.class);// CaptureActivity
-//			Bundle bundle = new Bundle();
-//			bundle.putInt("type", 2);
-//			intent.putExtras(bundle);
-//			startActivity(intent);
-			//finish();
+			Intent intent = new Intent();
+			intent.setClass(LoginActivity.this, RegisterActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putInt("type", 2);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			finish();
 		}
-
 	}
 
 	/**
@@ -352,22 +343,24 @@ public class LoginActivity extends Activity {
 			Message message = new Message();
 			message.what = Cfg.REG_SUCCESS;
 
-			loginResult = LoginServer.LoginServerMethod();
+			if((loginResult = LoginServer.LoginServerMethod())==null) {
+				message.what = SERVER_ERROR;
+				handler.sendMessage(message);
+				return;
+			}
 
 			switch (Integer.parseInt(loginResult.getCode()))
 			{
 				case Cfg.CODE_SUCCESS:
-					message.what = Cfg.REG_SUCCESS;
+					message.what = LOGIN_SUCCEED;
 					break;
 				case Cfg.CODE_PWD_ERROR:
-					message.what = Cfg.REG_PWD_ERROR;
+					message.what = PASSWORD_ERROR;
 					break;
 				case Cfg.CODE_USER_EXISTED:
-					message.what = Cfg.REG_USER_EXISTED;
 					break;
 				//服务器程序异常
 				case Cfg.CODE_EXCEPTION:
-					message.what = Cfg.REG_EXCEPTION;
 					break;
 				default:
 					message.what = Cfg.REG_ERROR;

@@ -56,6 +56,8 @@ public class HCHOActivity extends Activity {
 				case Cfg.REG_SUCCESS:
 					Toast.makeText(HCHOActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
 					break;
+				case Cfg.SERVER_CANT_CONNECT:
+					break;
 			}
 		}
 	};
@@ -110,7 +112,12 @@ public class HCHOActivity extends Activity {
 
 			setServerURL regiterUser= new setServerURL();
 
-			jsonResult = regiterUser.sendParamToServer("register", paramsName, paramsValue);
+			//需要判断服务器是否开启
+			if((jsonResult = regiterUser.sendParamToServer("register", paramsName, paramsValue)).isEmpty()){
+				message.what = Cfg.SERVER_CANT_CONNECT;
+				handler.sendMessage(message);
+				return;
+			}
 			try {
 				getResult = gson.fromJson(jsonResult
 						, com.demo.smarthome.server.ServerReturnResult.class);

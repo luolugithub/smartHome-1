@@ -8,7 +8,7 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="18" />
 
-<!--   访问网络  -->
+    <!-- 访问网络 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
@@ -31,7 +31,9 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 在sdcard中创建/删除文件的权限 -->
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- 在sdcard中创建/删除文件的权限 -->
     <application
         android:name=".service.Cfg"
         android:allowBackup="true"
@@ -104,8 +106,16 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.AddDevice"
+            android:name=".activity.AddDeviceActivity"
             android:label="@string/title_activity_add_device" >
+        </activity>
+        <activity
+            android:name=".activity.DeviceDataViewActivity"
+            android:label="@string/title_activity_device_view" >
+        </activity>
+        <activity
+            android:name=".activity.historyDataActivity"
+            android:label="@string/title_activity_history_data" >
         </activity>
     </application>
 

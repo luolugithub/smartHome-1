@@ -22,7 +22,7 @@ import com.demo.smarthome.service.Cfg;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-public class AddDevice extends Activity {
+public class AddDeviceActivity extends Activity {
 
     EditText textDevId;
     EditText textDevPwd;
@@ -37,8 +37,10 @@ public class AddDevice extends Activity {
             switch(msg.what)
             {
                 case Cfg.REG_SUCCESS:
-                    Toast.makeText(AddDevice.this, jsonResult, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddDeviceActivity.this, jsonResult, Toast.LENGTH_SHORT).show();
                     handler.postDelayed(r, 1000);
+                    break;
+                case Cfg.SERVER_CANT_CONNECT:
                     break;
             }
         }
@@ -93,7 +95,12 @@ public class AddDevice extends Activity {
 
             setServerURL addDevSet= new setServerURL();
 
-            jsonResult = addDevSet.sendParamToServer("addDeviceForUser", paramsName, paramsValue);
+            //–Ë“™≈–∂œ∑˛ŒÒ∆˜ «∑Òø™∆Ù
+            if((jsonResult = addDevSet.sendParamToServer("addDeviceForUser", paramsName, paramsValue)).isEmpty()){
+                message.what = Cfg.SERVER_CANT_CONNECT;
+                handler.sendMessage(message);
+                return;
+            }
             try {
                 getResult = gson.fromJson(jsonResult
                         , com.demo.smarthome.server.ServerReturnResult.class);
@@ -119,7 +126,7 @@ public class AddDevice extends Activity {
                 case Cfg.CODE_USER_EXISTED:
                     message.what = Cfg.REG_USER_EXISTED;
                     break;
-                //ÊúçÂä°Âô®Á®ãÂ∫èÂºÇÂ∏∏
+
                 case Cfg.CODE_EXCEPTION:
                     message.what = Cfg.REG_EXCEPTION;
                     break;

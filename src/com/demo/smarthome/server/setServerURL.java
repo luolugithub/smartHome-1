@@ -20,7 +20,7 @@ public class setServerURL {
 
     public setServerURL() {
 
-        String serverIp = "172.16.130.13";
+        String serverIp = "172.16.120.12";
         String serverPort = "8080";
 
         URL = "http://" + serverIp + ":" + serverPort

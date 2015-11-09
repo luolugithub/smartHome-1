@@ -12,9 +12,7 @@ public class ServerReturnResult {
     String Code;
     String Total;
 
-    public String getTotal() {
-        return Total;
-    }
+    public String getTotal() {return Total;}
 
     public void setTotal(String total) {
         Total = total;

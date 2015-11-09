@@ -14,5 +14,21 @@
     <string name="switchIsSsidHiddenTitle">SSID is Hidden</string>
     <string name="btnConfirmTitle">Confirm</string>
     <string name="title_activity_add_device">AddDevice</string>
+    <string name="title_activity_hcho">HchoHchoActivity</string>
+    <string name="title_activity_device_view">DeviceDataViewActivity</string>
+    <string name="device_hcho_name">甲醛</string>
+    <string name="device_pm2_5_name">PM 2.5</string>
+    <string name="device_pm10_name">PM 10</string>
+    <string name="device_tvoc_name">TVOC</string>
+    <string name="device_temperature_name">温度</string>
+    <string name="device_hcho_unit">mg/m³</string>
+    <string name="device_pm2_5_unit">μg/m³</string>
+    <string name="device_pm10_unit">μg/m³</string>
+    <string name="device_tvoc_unit">μg/m³</string>
+    <string name="device_temperature_unit">°C</string>
+    <string name="device_hygrometer_unit">%</string>
+    <string name="device_degrees_prompt">选择查看的日期</string>
+    <string name="title_activity_history_data">historyDataActivity</string>
+    <string name="title_activity_data_spinner_item">data_spinner_item</string>
 
 </resources>

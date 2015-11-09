@@ -19,15 +19,13 @@
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="60dp" >
-	           > 
-
-            <TextView
-                android:id="@+id/titleRegister"
-                android:layout_width="20dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/control2_03" />
+           <TextView
+            android:id="@+id/titleRegister"
+            android:layout_width="20dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/control2_03" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,7 +120,7 @@
                 android:singleLine="true" />
         </FrameLayout>
     </LinearLayout>
-    <!-- 手机号 -->
+    <!-- 确认密码 -->
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -141,18 +139,18 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
-                android:src="@drawable/regist_03" />
+                android:src="@drawable/pass" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="1dp"
-                android:text="手机号"
+                android:text="确认密码"
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/registerTxtMobile"
+                android:id="@+id/againPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -160,11 +158,11 @@
                 android:layout_marginTop="3dp"
                 android:background="@null"
                 android:ems="8"
+                android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
     </LinearLayout>
-    <!-- 邮箱 -->
-
+    <!-- WIFI密码 -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -182,30 +180,53 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
-                android:src="@drawable/regist_06" />
+                android:src="@drawable/pass" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="1dp"
-                android:text="邮箱"
+                android:text="无线网络密码"
                 android:textSize="18sp" />
 
             <EditText
-                android:id="@+id/registerTxtEemail"
+                android:id="@+id/wifiPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="110dp"
+                android:layout_marginLeft="150dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
                 android:ems="8"
+                android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
     </LinearLayout>
-    <!-- 设备ID -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/switchIsSsidHiddenTitle"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Switch
+            android:id="@+id/wifiIsHidden"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

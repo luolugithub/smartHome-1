@@ -1,28 +1,21 @@
 package com.demo.smarthome.activity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.demo.smarthome.R;
-import com.demo.smarthome.dao.DevDao;
 import com.demo.smarthome.device.Dev;
 import com.demo.smarthome.iprotocol.IProtocol;
-import com.demo.smarthome.protocol.MSGCMD;
-import com.demo.smarthome.protocol.MSGCMDTYPE;
 import com.demo.smarthome.protocol.Msg;
 import com.demo.smarthome.protocol.PlProtocol;
 import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
-import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
-import com.demo.smarthome.tools.StrTools;
-import com.demo.smarthome.zxing.demo.CaptureActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -46,7 +39,6 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -81,8 +73,9 @@ public class MainActivity extends Activity {
 	static final int GET_DEV_ERROR = 1;
 	static final int BUTTON_DELETE = 2;
 	static final int BUTTON_CONTROL = 3;
-	static final int DELETE_SUCCEED = 4;
 	static final int DELETE_ERROR = 5;
+	static final int SERVER_CONNECT_ERROR = 6;
+
 	String jsonResult;
 	ServerReturnResult getResult = new ServerReturnResult();
 
@@ -119,38 +112,28 @@ public class MainActivity extends Activity {
 						.getItemAtPosition(msg.arg1);
 				String devId = (String) data.get("id");
 
-				Log.i(TAG, "ItemClickListener devId：" + devId);
-				Toast.makeText(getApplicationContext(), "选择设备" + devId, Toast.LENGTH_SHORT)
-						.show();
-				Dev dev = getDevById(devId);
-				if (dev == null) {
+				if (devId == null) {
 					Toast.makeText(getApplicationContext(), "请重新选择设备", Toast.LENGTH_SHORT)
 							.show();
 					return;
 				}
 				// 跳转到设置界面
+				Cfg.deviceID = devId;
 
-				//intent.setClass(MainActivity.this, DevViewActivity.class);
 				Intent tempIntent = new Intent();
-				tempIntent.setClass(MainActivity.this, HCHOActivity.class);
+				tempIntent.setClass(MainActivity.this, DeviceDataViewActivity.class);
 
-
-				Log.i(TAG, "ItemClickListener dev：" + dev.getId());
-				// MyLog.i(TAG, "跳转至设置界面");DeleteDevThread
-				startActivity(tempIntent);// 打开新界面
+				startActivity(tempIntent);
 				break;
 
-			case DELETE_SUCCEED:
-				Toast.makeText(MainActivity.this, "删除设备成功。", Toast.LENGTH_SHORT)
-						.show();
-				new GetDevListThread().start();
-				break;
 			case DELETE_ERROR:
 				Toast.makeText(MainActivity.this, "删除设备失败！", Toast.LENGTH_SHORT)
 						.show();
 
 				break;
+			case SERVER_CONNECT_ERROR:
 
+					break;
 			default:
 				break;
 
@@ -274,6 +257,8 @@ public class MainActivity extends Activity {
 		listView.setAdapter(adapter);
 		// 删除分割线
 		listView.setDivider(null);
+
+		listView.setOnItemClickListener(new ItemClickListener());
 	}
 
 	@Override
@@ -282,41 +267,35 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	/**
-	 * 获得设备列表线程
-	 * 
-	 * @author Administrator
-	 * 
-	 */
-	class GetDevListThread extends Thread {
+//	class GetDevListThread extends Thread {
+//
+//		@Override
+//		public void run() {
+//			// Cfg.listDev =new
+//			// DevDao(MainActivity.this.getBaseContext()).getDevList();
+//			// changeDevList();
+//			Message message = new Message();
+//
+//			Log.v("GetDevListThread", "GetDevListThread start..");
+//
+//			List<Dev> listDev = HttpConnectService.getDeviceList(Cfg.userName,
+//					new String(Cfg.torken));
+//
+//			for (Dev dev : listDev) {
+//				Log.v("GetDevListThread", "dev:" + dev);
+//
+//			}
+//			if (listDev.size() > 0) {
+//				Cfg.listDev = listDev;
+//				message.what = GET_DEV_SUCCEED;
+//			}
+//			message.what = GET_DEV_SUCCEED;
+//			handler.sendMessage(message);
+//		}
+//	}
 
-		@Override
-		public void run() {
-			// Cfg.listDev =new
-			// DevDao(MainActivity.this.getBaseContext()).getDevList();
-			// changeDevList();
-			Message message = new Message();
-
-			Log.v("GetDevListThread", "GetDevListThread start..");
-
-			List<Dev> listDev = HttpConnectService.getDeviceList(Cfg.userName,
-					new String(Cfg.torken));
-
-			for (Dev dev : listDev) {
-				Log.v("GetDevListThread", "dev:" + dev);
-
-			}
-			if (listDev.size() > 0) {
-				Cfg.listDev = listDev;
-				message.what = GET_DEV_SUCCEED;
-			}
-			message.what = GET_DEV_SUCCEED;
-			handler.sendMessage(message);
-		}
-	}
-
+	//将设备列表储存到Cfg.devInfo静态变量中
 	class GetDevThread extends Thread {
-
 		@Override
 		public void run() {
 			// Cfg.listDev =new
@@ -324,8 +303,11 @@ public class MainActivity extends Activity {
 			// changeDevList();
 			Message message = new Message();
 
-			LoginServer.LoginServerMethod();
-
+			if((getResult = LoginServer.LoginServerMethod())==null) {
+				message.what = SERVER_CONNECT_ERROR;
+				handler.sendMessage(message);
+				return;
+			}
 			message.what = GET_DEV_SUCCEED;
 
 			handler.sendMessage(message);
@@ -352,7 +334,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, AddDevice.class);
+			intent.setClass(MainActivity.this, AddDeviceActivity.class);
 			startActivity(intent);// 打开新界面
 		}
 	}
@@ -365,26 +347,20 @@ public class MainActivity extends Activity {
 			ListView listView = (ListView) parent;
 			HashMap<String, Object> data = (HashMap<String, Object>) listView
 					.getItemAtPosition(position);
+
 			String devId = (String) data.get("id");
 
-			Log.i(TAG, "ItemClickListener devId：" + devId);
-//			Toast.makeText(getApplicationContext(), "选择设备" + devId, 0).show();
-			Dev dev = getDevById(devId);
-			if (dev == null) {
-//				Toast.makeText(getApplicationContext(), "请重新选择设备", 0).show();
+			if (devId == null) {
+				Toast.makeText(getApplicationContext(), "请重新选择设备", Toast.LENGTH_SHORT)
+						.show();
 				return;
 			}
 			// 跳转到设置界面
-			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, DevViewActivity.class);
+			Cfg.deviceID = devId;
 
-			Bundle bundle = new Bundle();
-			bundle.putString("devId", dev.getId());
-			intent.putExtras(bundle);
-
-			Log.i(TAG, "ItemClickListener dev：" + dev.getId());
-			// MyLog.i(TAG, "跳转至设置界面");
-			startActivity(intent);// 打开新界面
+			Intent tempIntent = new Intent();
+			tempIntent.setClass(MainActivity.this, DeviceDataViewActivity.class);
+			startActivity(tempIntent);
 
 		}
 	}
@@ -515,7 +491,12 @@ public class MainActivity extends Activity {
 
 			setServerURL removeUser= new setServerURL();
 
-			jsonResult = removeUser.sendParamToServer("removeDeviceById", paramsName, paramsValue);
+			//需要判断服务器是否开启
+			if((jsonResult = removeUser.sendParamToServer("removeDeviceById", paramsName, paramsValue)).isEmpty()){
+				message.what = SERVER_CONNECT_ERROR;
+				handler.sendMessage(message);
+				return;
+			}
 			try {
 				getResult = gson.fromJson(jsonResult
 						, com.demo.smarthome.server.ServerReturnResult.class);
