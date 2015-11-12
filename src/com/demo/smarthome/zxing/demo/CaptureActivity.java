@@ -68,16 +68,16 @@ public class CaptureActivity extends Activity implements Callback {
 			// dataToui();
 			switch (msg.what) {
 			case SCAN_SUCCEED:
-				// Toast.makeText(RegisterActivity.this, "×¢²áÓÃ»§³É¹¦£¡",
+				// Toast.makeText(RegisterActivity.this, "×¢ï¿½ï¿½ï¿½Ã»ï¿½ï¿½É¹ï¿½ï¿½ï¿½",
 				// Toast.LENGTH_LONG).show();
-				EditText txtDeviceId = (EditText) findViewById(R.id.registerTxtDeviceId);
-				EditText txtDevicePwd = (EditText) findViewById(R.id.registerTxtDevicePwd);
-				if (txtDeviceId != null) {
-					txtDeviceId.setText(deviceId);
-				}
-				if (txtDevicePwd != null) {
-					txtDevicePwd.setText(devicePwd);
-				}
+//				EditText txtDeviceId = (EditText) findViewById(R.id.registerTxtDeviceId);
+//				EditText txtDevicePwd = (EditText) findViewById(R.id.registerTxtDevicePwd);
+//				if (txtDeviceId != null) {
+//					txtDeviceId.setText(deviceId);
+//				}
+//				if (txtDevicePwd != null) {
+//					txtDevicePwd.setText(devicePwd);
+//				}
 				finish();
 				break;
 
@@ -94,7 +94,7 @@ public class CaptureActivity extends Activity implements Callback {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		// ³õÊ¼»¯ CameraManager
+		// ï¿½ï¿½Ê¼ï¿½ï¿½ CameraManager
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		hasSurface = false;
@@ -195,18 +195,18 @@ public class CaptureActivity extends Activity implements Callback {
 	public void handleDecode(final Result obj, Bitmap barcode) {
 
 		playBeepSoundAndVibrate();
-		// Ìø×ªµ½ÉèÖÃ½çÃæ
+		// ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½
 		// Intent intent = new Intent();
 		if (type == 1) {
 			info = obj.getText();
 			// intent.setClass(CaptureActivity.this, RegisterActivity.class);
-			EditText txtDeviceId = (EditText) findViewById(R.id.registerTxtDeviceId);
-			EditText txtDevicePwd = (EditText) findViewById(R.id.registerTxtDevicePwd);
+//			EditText txtDeviceId = (EditText) findViewById(R.id.registerTxtDeviceId);
+//			EditText txtDevicePwd = (EditText) findViewById(R.id.registerTxtDevicePwd);
 			if (info != null) {
 				if (info.length() >= 5) {
 					String[] text = info.split(",");
 					int index = 0;
-					Log.v("onCreate", "¶þÎ¬ÂëÐÅÏ¢:" + info);
+					Log.v("onCreate", "ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½Ï¢:" + info);
 					if (text.length >= 3) {
 						deviceId = text[index++].trim();
 						devicePwd = text[index++].trim();
@@ -228,7 +228,7 @@ public class CaptureActivity extends Activity implements Callback {
 			Bundle bundle = new Bundle();
 			bundle.putString("info", obj.getText());
 			intent.putExtras(bundle);
-			startActivity(intent);// ´ò¿ªÐÂ½çÃæ
+			startActivity(intent);// ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½
 			finish();
 		} else {
 			Intent intent = new Intent();
@@ -236,7 +236,7 @@ public class CaptureActivity extends Activity implements Callback {
 			Bundle bundle = new Bundle();
 			bundle.putString("info", obj.getText());
 			intent.putExtras(bundle);
-			startActivity(intent);// ´ò¿ªÐÂ½çÃæ
+			startActivity(intent);// ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½
 			finish();
 		}
 
@@ -253,31 +253,31 @@ public class CaptureActivity extends Activity implements Callback {
 		// Drawable drawable = new BitmapDrawable(barcode);
 		// dialog.setIcon(drawable);
 		// }
-		// dialog.setTitle("É¨Ãè½á¹û");
+		// dialog.setTitle("É¨ï¿½ï¿½ï¿½ï¿½");
 		// dialog.setMessage(obj.getText());
-		// dialog.setNegativeButton("È·¶¨", new DialogInterface.OnClickListener()
+		// dialog.setNegativeButton("È·ï¿½ï¿½", new DialogInterface.OnClickListener()
 		// {
 		// @Override
 		// public void onClick(DialogInterface dialog, int which)
 		// {
-		// //ÓÃÄ¬ÈÏä¯ÀÀÆ÷´ò¿ªÉ¨ÃèµÃµ½µÄµØÖ·
+		// //ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¨ï¿½ï¿½Ãµï¿½ï¿½Äµï¿½Ö·
 		// // Intent intent = new Intent();
 		// // intent.setAction("android.intent.action.VIEW");
 		// // Uri content_url = Uri.parse(obj.getText());
 		// // intent.setData(content_url);
 		// // startActivity(intent);
 		//
-		// // Ìø×ªµ½ÉèÖÃ½çÃæ
+		// // ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½
 		// Intent intent = new Intent();
 		// intent.setClass(CaptureActivity.this, ScanActivity.class);
 		// // Bundle bundle = new Bundle();
 		// // bundle.putInt("devId", dev.getId());
 		// // intent.putExtras(bundle);
-		// startActivity(intent);// ´ò¿ªÐÂ½çÃæ
+		// startActivity(intent);// ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½
 		// finish();
 		// }
 		// });
-		// dialog.setPositiveButton("È¡Ïû", new DialogInterface.OnClickListener()
+		// dialog.setPositiveButton("È¡ï¿½ï¿½", new DialogInterface.OnClickListener()
 		// {
 		// @Override
 		// public void onClick(DialogInterface dialog, int which)

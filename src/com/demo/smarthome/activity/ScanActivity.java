@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.demo.smarthome.R;
-import com.demo.smarthome.activity.RegisterActivity.StartUDPThread;
-import com.demo.smarthome.activity.RegisterActivity.UDPThread;
 import com.demo.smarthome.device.Dev;
 import com.demo.smarthome.iprotocol.IProtocol;
 import com.demo.smarthome.protocol.MSGCMD;
@@ -368,7 +366,7 @@ public class ScanActivity extends Activity {
 			}
 			// Cfg.listDevScan.clear();
 			Cfg.devScanClean();
-			Toast.makeText(getApplicationContext(), "开始扫描...", 0).show();
+			Toast.makeText(getApplicationContext(), "开始扫描...", Toast.LENGTH_SHORT).show();
 			// new UDPThread(ip,88).start();
 			// new UDPThread(ip,102).start();
 			findDev = false;

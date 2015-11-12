@@ -1,5 +1,6 @@
 package com.espressif.iot.esptouch.task;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -251,7 +252,7 @@ public class __EsptouchTask implements __IEsptouchTask {
 		__listenAsyn(mParameter.getEsptouchResultTotalLen());
 		EsptouchResult esptouchResultFail = new EsptouchResult(false, null,
 				null);
-		boolean isSuc = false;
+		boolean isSuc;
 		for (int i = 0; i < mParameter.getTotalRepeatTime(); i++) {
 			isSuc = __execute(generator);
 			if (isSuc) {

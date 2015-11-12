@@ -1,9 +1,9 @@
 package com.demo.smarthome.service;
 
 /**
- * Êý¾Ý¿â±£´æµÄÅäÖÃÐÅÏ¢ ·þÎñ½Ó¿Ú
+ * ï¿½ï¿½ï¿½Ý¿â±£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½
  * 
- * @author Administrator
+ * @author sl
  * 
  */
 public interface ConfigService {

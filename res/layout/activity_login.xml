@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -65,7 +65,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="3dp"
                 android:text="用户名"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/loginTxtName"
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -105,7 +105,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="3dp"
                 android:text="密  码"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/loginTxtPassword"
@@ -125,11 +125,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="25dp">
         <CheckBox
             android:id="@+id/rememberUser"
             android:layout_height="wrap_content"
             android:text="是否自动登录"
+            android:textSize="18sp"
             android:checked="false"
             android:layout_width="wrap_content" />
     </LinearLayout>
@@ -139,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="60dp"
         android:orientation="horizontal" >
 
         <Button
@@ -153,29 +154,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/loging_11" />
+            android:background="@drawable/regist_13" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal" >
+    <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_vertical|center_horizontal"-->
+        <!--android:layout_marginTop="15dp"-->
+        <!--android:orientation="horizontal" >-->
 
-        <!--<Button
-            android:id="@+id/loginBtnSetup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/loging_031" />-->
+        <!--&lt;!&ndash;<Button-->
+            <!--android:id="@+id/loginBtnSetup"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/loging_031" />&ndash;&gt;-->
 
-        <Button
-            android:id="@+id/loginBtnSmartLink"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/loging_111" />
-    </LinearLayout>
+        <!--<Button-->
+            <!--android:id="@+id/loginBtnSmartLink"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:background="@drawable/loging_111" />-->
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:layout_width="fill_parent"

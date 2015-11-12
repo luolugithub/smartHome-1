@@ -2,6 +2,7 @@ package com.demo.smarthome.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,10 +54,13 @@ public class DeviceDataViewActivity extends Activity {
     String pageSize;
 
     String jsonResult;
+
     DeviceDataResult deviceData = new DeviceDataResult();
+
+    ProgressDialog dialogView;
+
     Gson gson = new Gson();
-    //如果从服务器获取数据成功此标志位置true
-    boolean getDataSuccess = false;
+
     DeviceDataSet currentData = new DeviceDataSet();
     List<DeviceDataString> deviceListType;
     boolean haveTemperature = false;
@@ -76,19 +81,20 @@ public class DeviceDataViewActivity extends Activity {
             super.handleMessage(msg);
 
             switch (msg.what) {
-                case GET_COUNT_SUCCEED:
-                    getDataSuccess = true;
-                    showDataList();
-                    break;
+
                 case GET_COUNT_ERROR:
-                    getDataSuccess = false;
+
+
                     break;
                 case GET_CURRENT_SUCCED:
-                    getDataSuccess = true;
+
+                    dialogView.dismiss();
                     showDataList();
                     break;
                 case GET_CURRENT_FAIL:
-                    getDataSuccess = false;
+                    dialogView.dismiss();
+                    Toast.makeText(DeviceDataViewActivity.this, "获取数据失败", Toast.LENGTH_SHORT)
+                            .show();
                     break;
                 default:
                     break;
@@ -124,6 +130,38 @@ public class DeviceDataViewActivity extends Activity {
         buttonRefresh = (Button) findViewById(R.id.deviceDataRefresh);
         buttonRefresh.setOnClickListener(new refreshOnClickListener());
 
+        //等待框
+        dialogView = new ProgressDialog(DeviceDataViewActivity.this);
+        dialogView.setTitle("删除设备中");
+        dialogView.setMessage("正在从服务器中读取数据,请等待");
+        //点击等待框以外等待框不消失
+        dialogView.setCanceledOnTouchOutside(false);
+        dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+            }
+        });
+        dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
+                "请等待...", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        dialogView.show();
+        dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
+                .setEnabled(false);
+
+        dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            //屏蔽返回键
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    return true;
+                }
+                return false;
+            }
+        });
+
         new getCurrentData().start();
 
     }
@@ -136,10 +174,28 @@ public class DeviceDataViewActivity extends Activity {
         {
             //为能够显示特殊字符
             deviceListType = new DeviceType(this).getHchoMonitor();
-
+            String temperature,hygrometer;
             //显示带有温度和湿度的listView
-            itemTem.put("temperature", currentData.getTemperature());
-            itemTem.put("hygrometer", "000");
+            //温湿度值是一个字符串,需要拆分,各占三位,一共6位,如果一共不足6位,说明前面有零补位
+            if(currentData.getTemperature().length() > 3) {
+                temperature = currentData.getTemperature().substring(0
+                        ,currentData.getTemperature().length() - 3);
+                hygrometer = currentData.getTemperature().substring(2);
+                //为了美观,不足位用空格填满
+                for(int i = 0;i< 6 - currentData.getTemperature().length();i++){
+                    temperature = " " + temperature;
+                }
+                itemTem.put("temperature", temperature);
+                itemTem.put("hygrometer", hygrometer);
+            }else if(currentData.getTemperature().length() <= 3){
+                itemTem.put("temperature", "  0");
+                hygrometer = currentData.getTemperature();
+                for(int i = 0;i< 3 - currentData.getTemperature().length();i++){
+                    hygrometer = " " + hygrometer;
+                }
+                itemTem.put("hygrometer", currentData.getTemperature());
+            }
+
             dataTem.add(itemTem);
             haveTemperature = true;
         }
@@ -161,7 +217,6 @@ public class DeviceDataViewActivity extends Activity {
                 tempValue = currentData.getPm10();
             }
             else{
-                getDataSuccess = false;
                 return;
             }
 

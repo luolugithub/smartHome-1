@@ -1,10 +1,13 @@
 package com.demo.smarthome.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +52,7 @@ public class historyDataActivity extends Activity {
     DeviceDataResult historyData = new DeviceDataResult();
 
     HistoryDataLineView historyDataViewItem;
+    ProgressDialog dialogView;
 
     String userSetDate;
 
@@ -88,6 +92,7 @@ public class historyDataActivity extends Activity {
 
             switch (msg.what) {
                 case GET_DATE_SUCCEED:
+                    dialogView.dismiss();
                     mAdapter = new ArrayAdapter<String>(historyDataActivity.this,android.R.layout.simple_spinner_item, dateList);
 
                     mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -97,7 +102,7 @@ public class historyDataActivity extends Activity {
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             userSetDate = dateList.get(position);
                             if (userSetDate.isEmpty()) {
-                                Toast.makeText(getApplicationContext(), "锟斤拷锟斤拷选锟斤拷锟斤拷锟?", Toast.LENGTH_SHORT)
+                                Toast.makeText(getApplicationContext(), "日期数据错误", Toast.LENGTH_SHORT)
                                         .show();
                                 return;
                             }
@@ -109,6 +114,7 @@ public class historyDataActivity extends Activity {
                     });
                     break;
                 case GET_DATE_ERROR:
+                    dialogView.dismiss();
                         break;
                 case GET_DATA_SUCCED:
 
@@ -142,9 +148,6 @@ public class historyDataActivity extends Activity {
 
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent();
-                intent.setClass(historyDataActivity.this, DeviceDataViewActivity.class);
-                startActivity(intent);
                 finish();
             }
 
@@ -163,6 +166,38 @@ public class historyDataActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         dataType = bundle.getString("dataName");
+
+        //等待框
+        dialogView = new ProgressDialog(historyDataActivity.this);
+        dialogView.setTitle("读取数据中");
+        dialogView.setMessage("正在从服务器中读取历史数据,请等待");
+        //点击等待框以外等待框不消失
+        dialogView.setCanceledOnTouchOutside(false);
+        dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+            }
+        });
+        dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
+                "请等待...", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        dialogView.show();
+        dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
+                .setEnabled(false);
+
+        dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            //屏蔽返回键
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    return true;
+                }
+                return false;
+            }
+        });
 
         new getDateList().start();
 

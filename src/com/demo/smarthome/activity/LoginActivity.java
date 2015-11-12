@@ -123,7 +123,7 @@ public class LoginActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(LoginActivity.this, MainActivity.class);
 				startActivity(intent);// 打开新界面
-				//finish();
+
 				// 获取设备列表
 				// new GetDevListThread().start();
 				break;
@@ -187,9 +187,8 @@ public class LoginActivity extends Activity {
 		btnReg.setOnClickListener(new BtnRegOnClickListener());
 		//Button btnSetup = (Button) findViewById(R.id.loginBtnSetup);
 		//btnSetup.setOnClickListener(new BtnSetupOnClickListener());
-		Button btnSmartLink = (Button) findViewById(R.id.loginBtnSmartLink);
-		btnSmartLink.setOnClickListener(new BtnSmartLinkOnClickListener());
-
+//		Button btnSmartLink = (Button) findViewById(R.id.loginBtnSmartLink);
+//		btnSmartLink.setOnClickListener(new BtnSmartLinkOnClickListener());
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
 
@@ -290,11 +289,10 @@ public class LoginActivity extends Activity {
 
 			Intent intent = new Intent();
 			intent.setClass(LoginActivity.this, RegisterActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putInt("type", 2);
-			intent.putExtras(bundle);
+//			Bundle bundle = new Bundle();
+//			bundle.putInt("type", 2);
+//			intent.putExtras(bundle);
 			startActivity(intent);
-			finish();
 		}
 	}
 
@@ -316,19 +314,19 @@ public class LoginActivity extends Activity {
 
 	}
 
-	class BtnSmartLinkOnClickListener implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			Intent intent = new Intent();
-			intent.setClass(
-					LoginActivity.this,
-					com.espressif.iot.esptouch.demo_activity.EsptouchDemoActivity.class);
-			startActivity(intent);
-
-		}
-
-	}
+//	class BtnSmartLinkOnClickListener implements OnClickListener {
+//
+//		@Override
+//		public void onClick(View v) {
+//			Intent intent = new Intent();
+//			intent.setClass(
+//					LoginActivity.this,
+//					com.espressif.iot.esptouch.demo_activity.EsptouchDemoActivity.class);
+//			startActivity(intent);
+//
+//		}
+//
+//	}
 
 	/**
 	 * 登录
@@ -368,183 +366,6 @@ public class LoginActivity extends Activity {
 			}
 
 			handler.sendMessage(message);
-		}
-	}
-
-	/**
-	 * 获得设备列表线程
-	 * 
-	 * @author Administrator
-	 * 
-	 */
-	class GetDevListThread extends Thread {
-
-		@Override
-		public void run() {
-			Message message = new Message();
-			message.what = GET_DEV_ERROR;
-
-			Log.v("GetDevListThread", "GetDevListThread start..");
-
-			List<Dev> listDev = HttpConnectService.getDeviceList(Cfg.userName,
-					new String(Cfg.torken));
-
-			Cfg.listDev = listDev;
-			for (Dev dev : listDev) {
-				Log.v("GetDevListThread", "dev:" + dev);
-
-			}
-			if (listDev.size() > 0) {
-				message.what = GET_DEV_SUCCEED;
-			}
-			handler.sendMessage(message);
-		}
-	}
-
-	class UDPThread extends Thread {
-
-		public String echo(String msg) {
-			return " adn echo:" + msg;
-		}
-
-		public void run() {
-			int port = 2468;
-			// DatagramChannel channel = null;
-			final int MAX_SIZE = 1024;
-
-			byte[] buf = new byte[1024];
-			DatagramPacket dp = new DatagramPacket(buf, 1024);
-			// try {
-			// channel = DatagramChannel.open();
-			// } catch (IOException e1) {
-			// // TODO Auto-generated catch block
-			// e1.printStackTrace();
-			// }
-			InetAddress local = null;
-			DatagramSocket socket = null;
-			try {
-				local = InetAddress.getByName("192.168.1.88"); // 本机测试
-																// Cfg.DEV_UDP_IPADDR
-				// local = InetAddress.getLocalHost(); // 本机测试
-				System.out.println("local:" + local);
-				socket = new DatagramSocket(null);
-			} catch (SocketException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			SocketAddress localAddr = new InetSocketAddress(port);
-			try {
-				socket.setReuseAddress(true);
-				socket.bind(new InetSocketAddress(port));
-				// socket.bind(localAddr);
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			System.out.println("UDP服务器启动");
-
-			ByteBuffer receiveBuffer = ByteBuffer.allocate(MAX_SIZE);
-
-			String msg = "android. ";
-			DatagramPacket dPacket = new DatagramPacket(msg.getBytes(),
-					msg.length(), local, Cfg.DEV_UDP_PORT);
-			try {
-				socket.send(dPacket);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			while (true) {
-				try {
-					// 发送设置为广播
-					socket.setBroadcast(true);
-					// socket.send(dPacket);
-
-					socket.receive(dp);
-					String strInfo = new String(dp.getData(), 0, dp.getLength());
-					System.out.println(strInfo);
-
-					// receiveBuffer.clear();
-					// InetSocketAddress client = (InetSocketAddress) channel
-					// .receive(receiveBuffer);
-					// // 接收来自任意一个EchoClient的数据报
-					// receiveBuffer.flip();
-					// String msg =
-					// Charset.forName("utf8").decode(receiveBuffer)
-					// .toString();
-					// System.out.println(client.getAddress() + ":" +
-					// client.getPort()
-					// + ">" + msg);
-					// channel.send(ByteBuffer.wrap(echo(msg).getBytes()),
-					// client);
-					// // 给EchoClient回复一个数据报
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	class UDPReceiveThread extends Thread {
-		public String echo(String msg) {
-			return "and echo:" + msg;
-		}
-
-		public void run() {
-			Log.v("UDPReceiveThread", "run start..");
-			// 接收的字节大小，客户端发送的数据不能超过MAX_UDP_DATAGRAM_LEN
-			byte[] lMsg = new byte[1024];
-			// 实例化一个DatagramPacket类
-			DatagramPacket dp = new DatagramPacket(lMsg, lMsg.length);
-			// 新建一个DatagramSocket类
-			DatagramSocket ds = null;
-			try {
-				// UDP服务器监听的端口
-				// 发送设置为广播
-				// ds.setBroadcast(true);
-				InetAddress local = null;
-				try {
-					local = InetAddress.getByName(Cfg.DEV_UDP_IPADDR); // 本机测试
-					ds = new DatagramSocket(); // 注意此处要先在配置文件里设置权限,否则会抛权限不足的异常
-					// local = InetAddress.getLocalHost(); // 本机测试
-					System.out.println("local:" + local);
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
-				String msg = "android hello.";
-				int msg_len = msg == null ? 0 : msg.getBytes().length;
-				DatagramPacket dPacket = new DatagramPacket(msg.getBytes(),
-						msg_len, local, Cfg.DEV_UDP_PORT);
-				ds.setBroadcast(true);
-				ds.send(dPacket);
-
-				Log.v("UDPReceiveThread", "run 1..");
-				ds = new DatagramSocket(2468);
-				sleep(2000);
-				// 准备接收数据
-				Log.v("UDPReceiveThread", "run 2..");
-				ds.receive(dp);
-				Log.v("UDPReceiveThread", "run 3..");
-				String strInfo = new String(dp.getData(), 0, dp.getLength());
-				System.out.println(strInfo);
-			} catch (SocketException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-				// 如果ds对象不为空，则关闭ds对象
-				if (ds != null) {
-					ds.close();
-				}
-			}
-
-			Log.v("UDPReceiveThread", "run end..");
 		}
 	}
 

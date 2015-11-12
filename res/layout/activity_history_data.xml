@@ -45,7 +45,7 @@
             android:id="@+id/deviceDataRefresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="刷新"/>
+            android:background="@drawable/logined_03" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"

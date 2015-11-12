@@ -8,6 +8,7 @@ import com.espressif.iot.esptouch.task.__IEsptouchTask;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class EsptouchDemoActivity extends Activity implements OnClickListener {
 
@@ -108,7 +110,7 @@ public class EsptouchDemoActivity extends Activity implements OnClickListener {
 		protected void onPreExecute() {
 			mProgressDialog = new ProgressDialog(EsptouchDemoActivity.this);
 			mProgressDialog
-					.setMessage("Esptouch is configuring, please wait for a moment...");
+					.setMessage("配置智能设备连接服务器");
 			mProgressDialog.setCanceledOnTouchOutside(false);
 			mProgressDialog.setOnCancelListener(new OnCancelListener() {
 				@Override
@@ -122,7 +124,7 @@ public class EsptouchDemoActivity extends Activity implements OnClickListener {
 				}
 			});
 			mProgressDialog.setButton(DialogInterface.BUTTON_POSITIVE,
-					"Waiting...", new DialogInterface.OnClickListener() {
+					"请等待...", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 						}
@@ -150,18 +152,16 @@ public class EsptouchDemoActivity extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPostExecute(IEsptouchResult result) {
-			mProgressDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-					.setEnabled(true);
-			mProgressDialog.getButton(DialogInterface.BUTTON_POSITIVE).setText(
-					"Confirm");
+			mProgressDialog.dismiss();
 			// it is unnecessary at the moment, add here just to show how to use isCancelled()
 			if (!result.isCancelled()) {
 				if (result.isSuc()) {
-					mProgressDialog.setMessage("Esptouch success, bssid = "
-							+ result.getBssid() + ",InetAddress = "
-							+ result.getInetAddress().getHostAddress());
+					Toast.makeText(getApplicationContext(), "配置智能设备连接服务器功能成功", Toast.LENGTH_SHORT)
+							.show();
 				} else {
-					mProgressDialog.setMessage("Esptouch fail");
+					AlertDialog.Builder failAlert = new AlertDialog.Builder(EsptouchDemoActivity.this);
+					failAlert.setTitle(" 配置失败").setIcon(R.drawable.cloud_fail).setMessage("   智能设备连接服务器失败");
+					failAlert.create().show();
 				}
 			}
 		}

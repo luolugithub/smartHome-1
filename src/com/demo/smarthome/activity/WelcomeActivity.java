@@ -34,14 +34,20 @@ public class WelcomeActivity extends Activity {
 	static final int LOGIN_SUCCEED = 0;
 	static final int LOGIN_ERROR = 1;
 
+	static final int LONGIN_WAIT_TIME = 3000;
+
 	ConfigService dbService;
 
 	ServerReturnResult loginResult = new ServerReturnResult();
+	long startTimestamp;
 
 	Handler handler = new Handler(){
 		public void handleMessage(Message msg){
 			if(msg.what == Cfg.REG_SUCCESS){
 				Intent intent = new Intent();
+				Bundle bundle = new Bundle();
+				bundle.putString("activity", "welcome");
+				intent.putExtras(bundle);
 				intent.setClass(WelcomeActivity.this, MainActivity.class);
 				startActivity(intent);
 				finish();
@@ -58,15 +64,15 @@ public class WelcomeActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE); // ע��˳��
 		setContentView(R.layout.activity_welcome);
 
-		//�Ƿ���Ҫ�Զ���½,����Ҫ,�Զ���¼�ٻ�ӭ������е�¼��֤
+		//�Ƿ���Ҫ�Զ���½,����Ҫ,�Զ���¼�ٻ�ӭ������е�¼���?
 		dbService = new ConfigDao(WelcomeActivity.this.getBaseContext());
 		isAutoLogin = dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")? true : false;
 
 		if (isAutoLogin) {
-
+			startTimestamp = System.currentTimeMillis();
 			new AutoLoginThread().start();
 		} else {
-			handler.postDelayed(r, 3000);// 3���رգ�����ת����ҳ��
+			handler.postDelayed(r, LONGIN_WAIT_TIME);// 3���رգ�����ת����ҳ��
 		}
 	}
 
@@ -116,13 +122,17 @@ public class WelcomeActivity extends Activity {
 				case Cfg.CODE_USER_EXISTED:
 					message.what = Cfg.REG_USER_EXISTED;
 					break;
-				//服务器程序异常
+				//服务器程序异�?
 				case Cfg.CODE_EXCEPTION:
 					message.what = Cfg.REG_EXCEPTION;
 					break;
 				default:
 					message.what = Cfg.REG_ERROR;
 					break;
+			}
+			//��Ҫ�ȴ���ӭ���漸��
+			while(System.currentTimeMillis() - startTimestamp < LONGIN_WAIT_TIME){
+
 			}
 			handler.sendMessage(message);
 		}

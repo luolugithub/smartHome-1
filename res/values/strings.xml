@@ -11,7 +11,7 @@
     <string name="app_version">v0.0.1</string>
     <string name="tvApSsidTitle">SSID: </string>
     <string name="tvPasswordTitle">Password: </string>
-    <string name="switchIsSsidHiddenTitle">SSID is Hidden</string>
+    <string name="switchIsSsidHiddenTitle">无线网络是否隐藏SSID</string>
     <string name="btnConfirmTitle">Confirm</string>
     <string name="title_activity_add_device">AddDevice</string>
     <string name="title_activity_hcho">HchoHchoActivity</string>

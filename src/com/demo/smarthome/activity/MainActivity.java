@@ -14,12 +14,16 @@ import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
+import com.demo.smarthome.service.ConfigDevice;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
+import com.demo.smarthome.tools.IpTools;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -32,6 +36,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,14 +44,16 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.content.DialogInterface;
-
+import android.view.LayoutInflater;
 /**
  * 主界面类
  * 
@@ -60,14 +67,19 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		new GetDevThread().start();
-//		new GetDevListThread().start();
 	}
 
 	Button btnRefresh = null;
 	Button btnAddDev = null;
 	ListView listView;
 	private final String TAG = "MainActivity";
-	IProtocol protocol = new PlProtocol();
+
+	String wifiPassword;
+	boolean SSIDisHidden = false;
+
+	ConfigDevice deviceInfo;
+	AlertDialog.Builder failAlert;
+
 	Msg msg = new Msg();
 	static final int GET_DEV_SUCCEED = 0;
 	static final int GET_DEV_ERROR = 1;
@@ -75,9 +87,21 @@ public class MainActivity extends Activity {
 	static final int BUTTON_CONTROL = 3;
 	static final int DELETE_ERROR = 5;
 	static final int SERVER_CONNECT_ERROR = 6;
+	static final int ADD_DEV_SUCCED 		= 7;
+	static final int ADD_DEV_FAIL 		    = 8;
+
+	static final int WAIT_RESULT  = 0;
+	static final int FIND_DEVID = 2;
+	static final int CMD_TIMEOUT = 6;
+
+	static final int FIND_DEV_SUCCEED = 0X10;
+	static final int FIND_DEV_TIMEOUT = 0X11;
 
 	String jsonResult;
 	ServerReturnResult getResult = new ServerReturnResult();
+
+	ProgressDialog dialogView;
+	Intent tempIntent;
 
 	Handler handler = new Handler() {
 
@@ -85,29 +109,25 @@ public class MainActivity extends Activity {
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
-			// dataToui();
+			failAlert = new AlertDialog.Builder(MainActivity.this);
 			switch (msg.what) {
 
 			case GET_DEV_SUCCEED:
 				getDevList();
 				break;
 			case GET_DEV_ERROR:
-				// Toast.makeText(MainActivity.this, "获取设备列表成功！",
-				// Toast.LENGTH_SHORT).show();
-//				Cfg.listDev.clear();
-//				changeDevList();
+
 				break;
 
 			case BUTTON_DELETE:
+				dialogView.dismiss();
 				Toast.makeText(getApplicationContext(), "成功删除设备", Toast.LENGTH_SHORT)
 						.show();
 				finish();
-				Intent intent = new Intent(MainActivity.this, MainActivity.class);
-				startActivity(intent);
+				tempIntent = new Intent(MainActivity.this, MainActivity.class);
+				startActivity(tempIntent);
 				break;
 			case BUTTON_CONTROL:
-				// Toast.makeText(MainActivity.this,
-				// "BUTTON_CONTROL:"+msg.arg1,Toast.LENGTH_SHORT).show();
 				HashMap<String, Object> data = (HashMap<String, Object>) listView
 						.getItemAtPosition(msg.arg1);
 				String devId = (String) data.get("id");
@@ -120,20 +140,92 @@ public class MainActivity extends Activity {
 				// 跳转到设置界面
 				Cfg.deviceID = devId;
 
-				Intent tempIntent = new Intent();
-				tempIntent.setClass(MainActivity.this, DeviceDataViewActivity.class);
-
+				tempIntent = new Intent(MainActivity.this, DeviceDataViewActivity.class);
 				startActivity(tempIntent);
+
 				break;
 
 			case DELETE_ERROR:
+				dialogView.dismiss();
 				Toast.makeText(MainActivity.this, "删除设备失败！", Toast.LENGTH_SHORT)
 						.show();
 
 				break;
 			case SERVER_CONNECT_ERROR:
 
+				break;
+			case FIND_DEV_SUCCEED:
+				dialogView.dismiss();
+				//如果该设备已经存在
+				for (String devID : Cfg.devInfo) {
+					if(deviceInfo.getDeviceID().equals(devID)){
+						failAlert.setTitle(" 添加失败").setIcon(R.drawable.cloud_fail).setMessage("   没有新的本地设备");
+						failAlert.create().show();
+						return;
+					}
+				}
+				failAlert.setTitle(" 添加本地设备").setMessage("   是否添加本地设备\n  设备ID:"+ deviceInfo.getDeviceID())
+				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+
+						//等待框
+						dialogView = new ProgressDialog(MainActivity.this);
+						dialogView.setTitle("添加设备到云端");
+						dialogView.setMessage("正在添加本地设备到云端,请等待");
+						//点击等待框以外等待框不消失
+						dialogView.setCanceledOnTouchOutside(false);
+						dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
+							@Override
+							public void onCancel(DialogInterface dialog) {
+							}
+						});
+						dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
+								"请等待...", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+									}
+								});
+						dialogView.show();
+						dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
+								.setEnabled(false);
+
+						dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
+							//屏蔽返回键
+							@Override
+							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+								if (keyCode == KeyEvent.KEYCODE_BACK) {
+									return true;
+								}
+								return false;
+							}
+						});
+
+						new addDeviceThread().start();
+					}
+				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+				failAlert.create().show();
 					break;
+			case FIND_DEV_TIMEOUT:
+				dialogView.dismiss();
+
+				failAlert.setTitle(" 添加失败").setIcon(R.drawable.cloud_fail).setMessage("   无法找到本地设备");
+				failAlert.create().show();
+					break;
+			case ADD_DEV_SUCCED:
+				dialogView.dismiss();
+				Toast.makeText(MainActivity.this, "添加设备成功", Toast.LENGTH_SHORT)
+						.show();
+				finish();
+				tempIntent = new Intent(MainActivity.this, MainActivity.class);
+				startActivity(tempIntent);
+				break;
 			default:
 				break;
 
@@ -142,48 +234,6 @@ public class MainActivity extends Activity {
 
 	};
 
-	SocketBinder socketBinder;
-	SocketService socketService;
-	boolean isBinderConnected = false;
-
-	IntentFilter intentFilter = null;
-	SocketIsConnectReceiver socketConnectReceiver = new SocketIsConnectReceiver();
-
-	private class SocketIsConnectReceiver extends BroadcastReceiver {// 继承自BroadcastReceiver的子类
-		@Override
-		public void onReceive(Context context, Intent intent) {// 重写onReceive方法
-
-			if (intent.getBooleanExtra("conn", false)) {
-				Log.i(TAG, "socket连接成功。");
-			} else {
-				Log.i(TAG, "socket连接失败。");
-			}
-		}
-	}
-
-	private ServiceConnection conn = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
-			Log.i(TAG, "=============onServiceConnected");
-			socketBinder = (SocketBinder) service;
-			socketService = socketBinder.getService();
-			socketService.myMethod();
-
-			isBinderConnected = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-			Log.i(TAG, "xxxxxxxxxxxxxxxxxxxxxxxxxxxonServiceDisconnected");
-			isBinderConnected = false;
-			socketBinder = null;
-			socketService = null;
-		}
-
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -197,10 +247,12 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent();
-				intent.setClass( MainActivity.this , LoginActivity.class );
-				startActivity(intent);
+				Intent intent = getIntent();
+
+				if((intent.getStringExtra("activity")).equals("welcome")){
+					intent.setClass(MainActivity.this, LoginActivity.class);
+					startActivity(intent);
+				}
 				finish();
 			}
 
@@ -218,24 +270,20 @@ public class MainActivity extends Activity {
 
 	}
 
-//	private void changeDevList() {
-//		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
-//		for (Dev dev : Cfg.listDev) {
-//			HashMap<String, Object> item = new HashMap<String, Object>();
-//			item.put("id", dev.getId());
-//			item.put("name", dev.getNickName());
-//			item.put("state", dev.isOnLine() ? "在线" : "不在线");
-//			data.add(item);
-//		}
-//		// 创建SimpleAdapter适配器将数据绑定到item显示控件上
-//		SimpleAdapter adapter = new MySimpleAdapter(this, data,
-//				R.layout.devitem, new String[] { "id", "name", "state" },
-//				new int[] { R.id.devId, R.id.devName, R.id.devStat });
-//		// 实现列表的显示
-//		listView.setAdapter(adapter);
-//		// 删除分割线
-//		listView.setDivider(null);
-//	}
+	//捕捉back键
+	@Override
+	public void onBackPressed(){
+		Intent intent = getIntent();
+
+		if((intent.getStringExtra("activity")).equals("welcome")){
+			intent.setClass(MainActivity.this, LoginActivity.class);
+			startActivity(intent);
+			finish();
+		}else{
+			super.onBackPressed();
+		}
+
+	}
 
 	private void getDevList() {
 		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
@@ -267,40 +315,12 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-//	class GetDevListThread extends Thread {
-//
-//		@Override
-//		public void run() {
-//			// Cfg.listDev =new
-//			// DevDao(MainActivity.this.getBaseContext()).getDevList();
-//			// changeDevList();
-//			Message message = new Message();
-//
-//			Log.v("GetDevListThread", "GetDevListThread start..");
-//
-//			List<Dev> listDev = HttpConnectService.getDeviceList(Cfg.userName,
-//					new String(Cfg.torken));
-//
-//			for (Dev dev : listDev) {
-//				Log.v("GetDevListThread", "dev:" + dev);
-//
-//			}
-//			if (listDev.size() > 0) {
-//				Cfg.listDev = listDev;
-//				message.what = GET_DEV_SUCCEED;
-//			}
-//			message.what = GET_DEV_SUCCEED;
-//			handler.sendMessage(message);
-//		}
-//	}
 
 	//将设备列表储存到Cfg.devInfo静态变量中
 	class GetDevThread extends Thread {
 		@Override
 		public void run() {
-			// Cfg.listDev =new
-			// DevDao(MainActivity.this.getBaseContext()).getDevList();
-			// changeDevList();
+
 			Message message = new Message();
 
 			if((getResult = LoginServer.LoginServerMethod())==null) {
@@ -332,11 +352,133 @@ public class MainActivity extends Activity {
 
 	class BtnAddDevOnClickListener implements OnClickListener {
 		@Override
-		public void onClick(View v) {
-			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, AddDeviceActivity.class);
-			startActivity(intent);// 打开新界面
+		public void onClick(View view) {
+
+			LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
+			final View layout = inflater.inflate(R.layout.add_device_wifi_password, null);
+
+			AlertDialog.Builder myDialog = new AlertDialog.Builder(MainActivity.this)
+					.setTitle("请输入路由器密码");
+			myDialog.setView(layout);
+
+			myDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					EditText userSetPassword = (EditText) layout.findViewById(R.id.apPassword);
+					wifiPassword = userSetPassword.getText().toString();
+					SSIDisHidden = ((Switch)layout.findViewById(R.id.IsHiddenSSID)).isChecked();
+					dialog.dismiss();
+
+					//等待框
+					dialogView = new ProgressDialog(MainActivity.this);
+					dialogView.setTitle("正在添加设备");
+					dialogView.setMessage("正在扫描本地智能硬件,请等待");
+					//点击等待框以外等待框不消失
+					dialogView.setCanceledOnTouchOutside(false);
+					dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+						}
+					});
+					dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
+							"请等待...", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+								}
+							});
+					dialogView.show();
+					dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
+							.setEnabled(false);
+					//扫描设备时屏蔽返回键
+					dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
+						@Override
+						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+							if (keyCode == KeyEvent.KEYCODE_BACK) {
+								return true;
+							}
+							return false;
+						}
+					});
+
+					//扫描设备
+					new ConnectDevThread().start();
+				}
+
+			});
+			myDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+									int which) {
+					dialog.dismiss();
+				}
+			});
+			myDialog.create().show();
 		}
+	}
+	//先配置设备连接WI-FI,再扫描本地设备获取本地设备ID.
+	class ConnectDevThread extends Thread {
+		@Override
+		public void run() {
+			Message message = new Message();
+
+			deviceInfo = new ConfigDevice(wifiPassword,SSIDisHidden, IpTools
+					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),MainActivity.this);
+			//执行配置线程
+			deviceInfo.configDeviceThread();
+			while(true){
+
+				if(deviceInfo.getConfigResult() == WAIT_RESULT){
+					continue;
+				}
+				if(deviceInfo.getConfigResult() == FIND_DEVID){
+					message.what = FIND_DEV_SUCCEED;
+				}else{
+					message.what = FIND_DEV_TIMEOUT;
+				}
+				handler.sendMessage(message);
+				break;
+			}
+		}
+	}
+	class addDeviceThread extends Thread {
+		@Override
+		public void run() {
+			Message message = new Message();
+			message.what = ADD_DEV_FAIL;
+
+			Gson gson = new Gson();
+
+			String[] paramsName = {"userName","deviceId","devicePassword"};
+			String[] paramsValue = {Cfg.userName,deviceInfo.getDeviceID(),deviceInfo.getDevicePwd()};
+
+			setServerURL addDevSet= new setServerURL();
+
+			if((jsonResult = addDevSet.sendParamToServer("addDeviceForUser", paramsName, paramsValue)).isEmpty()){
+				message.what = Cfg.SERVER_CANT_CONNECT;
+				handler.sendMessage(message);
+				return;
+			}
+			try {
+				getResult = gson.fromJson(jsonResult
+						, com.demo.smarthome.server.ServerReturnResult.class);
+			}
+			catch (JsonSyntaxException e){
+				e.printStackTrace();
+			}
+
+
+			switch (Integer.parseInt(getResult.getCode()))
+			{
+				case Cfg.CODE_SUCCESS:
+					message.what = ADD_DEV_SUCCED;
+					break;
+				default:
+					message.what = ADD_DEV_FAIL;
+					break;
+			}
+			handler.sendMessage(message);
+		}
+
 	}
 
 	// 获取点击事件
@@ -365,38 +507,17 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	/**
-	 * 通过设备id获取设备对象
-	 * 
-	 * @param id
-	 *            设备id
-	 * @return 设备对象
-	 */
-	private Dev getDevById(String id) {
-		if (id == null) {
-			return null;
-		}
-		for (Dev dev : Cfg.listDev) {
-			if (dev.getId().equals(id)) {
-				return dev;
-			}
-		}
-		return null;
-	}
 
 	class MySimpleAdapter extends SimpleAdapter {
 
-		// protected static final int BUTTON_DELETE = 0;
-		// protected static final int BUTTON_ADD = 0;
+
 		public MySimpleAdapter(Context context,
 				List<? extends Map<String, ?>> data, int resource,
 				String[] from, int[] to) {
 			super(context, data, resource, from, to);
-			// TODO Auto-generated constructor stub
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
 			final int mPosition = position;
 			convertView = super.getView(position, convertView, parent);
 			ImageView buttonAdd = (ImageView) convertView
@@ -405,7 +526,6 @@ public class MainActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					// mHandler.obtainMessage(BUTTON_ADD, mPosition, 0)
 					// .sendToTarget();
 
@@ -447,6 +567,39 @@ public class MainActivity extends Activity {
 					deleteAlert.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
+
+							//等待框
+							dialogView = new ProgressDialog(MainActivity.this);
+							dialogView.setTitle("删除设备中");
+							dialogView.setMessage("正在从服务器删除设备,请等待");
+							//点击等待框以外等待框不消失
+							dialogView.setCanceledOnTouchOutside(false);
+							dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
+								@Override
+								public void onCancel(DialogInterface dialog) {
+								}
+							});
+							dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
+									"请等待...", new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+										}
+									});
+							dialogView.show();
+							dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
+									.setEnabled(false);
+
+							dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
+								//屏蔽返回键
+								@Override
+								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+									if (keyCode == KeyEvent.KEYCODE_BACK) {
+										return true;
+									}
+									return false;
+								}
+							});
+
 							new DelDevThread(deleteDevId).start();
 							return;
 						}
@@ -519,4 +672,5 @@ public class MainActivity extends Activity {
 
 		}
 	}
+
 }

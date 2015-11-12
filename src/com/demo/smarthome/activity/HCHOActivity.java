@@ -153,7 +153,6 @@ public class HCHOActivity extends Activity {
 			}
 			handler.sendMessage(message);
 		}
-
 	}
 
 }
