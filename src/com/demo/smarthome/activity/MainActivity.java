@@ -274,7 +274,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onBackPressed(){
 		Intent intent = getIntent();
-
+		Log.d(TAG, "back");
 		if((intent.getStringExtra("activity")).equals("welcome")){
 			intent.setClass(MainActivity.this, LoginActivity.class);
 			startActivity(intent);
@@ -360,7 +360,7 @@ public class MainActivity extends Activity {
 			AlertDialog.Builder myDialog = new AlertDialog.Builder(MainActivity.this)
 					.setTitle("请输入路由器密码");
 			myDialog.setView(layout);
-
+			Log.d(TAG, "click add");
 			myDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -394,12 +394,13 @@ public class MainActivity extends Activity {
 						@Override
 						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 							if (keyCode == KeyEvent.KEYCODE_BACK) {
+								Log.d(TAG, "click back");
 								return true;
 							}
 							return false;
 						}
 					});
-
+					Log.d(TAG, "click add confirm");
 					//扫描设备
 					new ConnectDevThread().start();
 				}

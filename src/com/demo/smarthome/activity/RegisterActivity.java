@@ -298,10 +298,8 @@ public class RegisterActivity extends Activity {
 			String[] paramsName = {"userName", "userPassword","deviceId", "devicePassword"};
 			String[] paramsValue = {userRegName,userRegPassword,deviceInfo.getDeviceID(),deviceInfo.getDevicePwd()};
 
-			setServerURL regiterUser= new setServerURL();
-
 			//需要判断服务器是否开启
-			if((jsonResult = regiterUser.sendParamToServer("register", paramsName, paramsValue)).isEmpty()){
+			if((jsonResult = new setServerURL().sendParamToServer("register", paramsName, paramsValue)).isEmpty()){
 				message.what = SERVER_EXCEPTION;
 				handler.sendMessage(message);
 				return;

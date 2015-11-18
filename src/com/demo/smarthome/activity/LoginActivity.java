@@ -19,12 +19,17 @@ import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.R;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +37,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +46,7 @@ import com.demo.smarthome.server.setServerURL;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-
+import com.demo.smarthome.tools.CheckEmailPhoneTools;
 /**
  * 登录类
  * 
@@ -81,6 +87,7 @@ public class LoginActivity extends Activity {
 	}
 
 	TextView title = null;
+	TextView forgetPassword = null;
 
 	EditText txtName = null;
 	EditText txtPassword = null;
@@ -89,16 +96,21 @@ public class LoginActivity extends Activity {
 
 	String name = "";
 	String password = "";
+	String userMailName ="";
 	boolean isLogin = false;
 	private static final String TAG = "LoginActivity";
 	ConfigService dbService;
 	static final int LOGIN_SUCCEED = 0;
 	static final int PASSWORD_ERROR = 1;
-	static final int GET_DEV_SUCCEED = 2;
-	static final int GET_DEV_ERROR = 3;
+	static final int SEND_PWD2EMAIL_SUCCEED 	= 2;
+	static final int SEND_PWD2EMAIL_ERROR 		= 3;
+	static final int SEND_PWD2EMAIL_EXCEPTION 	= 4;
 	static final int SERVER_ERROR = 7;
 
 	ServerReturnResult loginResult = new ServerReturnResult();
+	ProgressDialog dialogView;
+	String jsonResult;
+	ServerReturnResult getResult = new ServerReturnResult();
 
 	Handler handler = new Handler() {
 
@@ -106,12 +118,10 @@ public class LoginActivity extends Activity {
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
+			dialogView.dismiss();
 			// dataToui();
 			switch (msg.what) {
 			case LOGIN_SUCCEED:
-//				Toast.makeText(LoginActivity.this
-//						, loginResult.getMsg() +loginResult.getCode(), Toast.LENGTH_SHORT)
-//						.show();
 				isLogin = true;
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, txtName.getText()
 						.toString());
@@ -124,28 +134,30 @@ public class LoginActivity extends Activity {
 				intent.setClass(LoginActivity.this, MainActivity.class);
 				startActivity(intent);// 打开新界面
 
-				// 获取设备列表
-				// new GetDevListThread().start();
 				break;
 			case PASSWORD_ERROR:
 
 				Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT)
 						.show();
-				// finish();
-				break;
 
-			case GET_DEV_SUCCEED:
-				Toast.makeText(LoginActivity.this, "获取设备列表成功！",
-						Toast.LENGTH_SHORT).show();
-				// 跳转到设置界面
-				// Intent intent = new Intent();
-				// intent.setClass(LoginActivity.this, MainActivity.class);
-				// startActivity(intent);// 打开新界面
-				// finish();
 				break;
-			case GET_DEV_ERROR:
-				Toast.makeText(LoginActivity.this, "获取设备列表失败！",
-						Toast.LENGTH_SHORT).show();
+			case SEND_PWD2EMAIL_SUCCEED:
+
+				Toast.makeText(LoginActivity.this, "发送密码到邮箱成功!", Toast.LENGTH_SHORT)
+						.show();
+
+				break;
+			case SEND_PWD2EMAIL_ERROR:
+
+				Toast.makeText(LoginActivity.this, "用户不存在!", Toast.LENGTH_SHORT)
+						.show();
+
+				break;
+			case SEND_PWD2EMAIL_EXCEPTION:
+
+				Toast.makeText(LoginActivity.this, "邮箱服务异常!", Toast.LENGTH_SHORT)
+						.show();
+
 				break;
 			case SERVER_ERROR:
 				break;
@@ -179,16 +191,12 @@ public class LoginActivity extends Activity {
 		txtName = (EditText) findViewById(R.id.loginTxtName);
 		txtPassword = (EditText) findViewById(R.id.loginTxtPassword);
 		isAtuoLogin = (CheckBox) findViewById(R.id.rememberUser);
-
+		forgetPassword = (TextView) findViewById(R.id.forgetPassword);
 
 		Button btnOk = (Button) findViewById(R.id.loginBtnOk);
 		btnOk.setOnClickListener(new BtnOkOnClickListener());
 		Button btnReg = (Button) findViewById(R.id.loginBtnReg);
 		btnReg.setOnClickListener(new BtnRegOnClickListener());
-		//Button btnSetup = (Button) findViewById(R.id.loginBtnSetup);
-		//btnSetup.setOnClickListener(new BtnSetupOnClickListener());
-//		Button btnSmartLink = (Button) findViewById(R.id.loginBtnSmartLink);
-//		btnSmartLink.setOnClickListener(new BtnSmartLinkOnClickListener());
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
 
@@ -204,45 +212,92 @@ public class LoginActivity extends Activity {
 			isAtuoLogin.setChecked(false);
 		}
 
+		//找回密码功能
+		forgetPassword.setClickable(true);
+		forgetPassword.setOnClickListener(new clickTextForgetPwd());
+
 		name = txtName.getText().toString();
 		password = txtPassword.getText().toString();
 		if (name.trim().isEmpty()) {
-			// Toast.makeText(getApplicationContext(), "请输入用户名", 0).show();
 			txtName.setFocusable(true);
 			return;
 		}
 		if (password.trim().isEmpty()) {
-			// Toast.makeText(getApplicationContext(), "请输入密码", 0).show();
 			txtPassword.setFocusable(true);
 			return;
 		}
-
-		// new LoginThread().start();
-
-		// txtName.setText("asdf");
-		// txtPassword.setText("asdf");
-		// if(!txtName.getText().toString().isEmpty()){
-		// if(!txtPassword.getText().toString().isEmpty()){
-		// // new LoginThread().start();
-		// // try {
-		// // Thread.sleep(1000);
-		// // } catch (InterruptedException e) {
-		// // // TODO Auto-generated catch block
-		// // e.printStackTrace();
-		// // }
-		// //// if(isLogin){
-		// //// return;
-		// //// }
-		// new LoginThread().start();
-		// }
-		//
-		// }
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
+	}
+
+	//找回密码
+	class clickTextForgetPwd implements OnClickListener {
+		@Override
+		public void onClick(View arg0) {
+			LayoutInflater inflater = LayoutInflater.from(LoginActivity.this);
+			final View layout = inflater.inflate(R.layout.forget_password, null);
+
+			AlertDialog.Builder myDialog = new AlertDialog.Builder(LoginActivity.this)
+					.setTitle("请输入注册的邮箱名");
+			myDialog.setView(layout);
+			myDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					EditText userSetName = (EditText) layout.findViewById(R.id.userMailName);
+					userMailName = userSetName.getText().toString();
+					if (userMailName.isEmpty() ||(!CheckEmailPhoneTools.isEmail(userMailName))) {
+						Toast.makeText(LoginActivity.this, "请输入正确的注册邮箱名！", Toast.LENGTH_SHORT)
+								.show();
+						userSetName.setFocusable(true);
+						return;
+					}
+					dialog.dismiss();
+					//等待框
+					dialogView = new ProgressDialog(LoginActivity.this);
+					dialogView.setTitle("正在找回密码");
+					dialogView.setMessage("正在发送找回密码请求,请等待");
+					//点击等待框以外等待框不消失
+					dialogView.setCanceledOnTouchOutside(false);
+					dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+						}
+					});
+					dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
+							"请等待...", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+								}
+							});
+					dialogView.show();
+					dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
+							.setEnabled(false);
+					//扫描设备时屏蔽返回键
+					dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
+						@Override
+						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+							if (keyCode == KeyEvent.KEYCODE_BACK) {
+								return true;
+							}
+							return false;
+						}
+					});
+					new forgetPwd().start();
+				}
+			});
+			myDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+									int which) {
+					dialog.dismiss();
+				}
+			});
+			myDialog.create().show();
+		}
 	}
 
 	/**
@@ -268,6 +323,38 @@ public class LoginActivity extends Activity {
 				txtPassword.setFocusable(true);
 				return;
 			}
+			//等待框
+			dialogView = new ProgressDialog(LoginActivity.this);
+			dialogView.setTitle("登录中");
+			dialogView.setMessage("正在验证用户信息,请等待");
+			//点击等待框以外等待框不消失
+			dialogView.setCanceledOnTouchOutside(false);
+			dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+				}
+			});
+			dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
+					"请等待...", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+			dialogView.show();
+			dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
+					.setEnabled(false);
+			//扫描设备时屏蔽返回键
+			dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
+				@Override
+				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+					if (keyCode == KeyEvent.KEYCODE_BACK) {
+						Log.d(TAG, "click back");
+						return true;
+					}
+					return false;
+				}
+			});
+
 			Cfg.userName = name;
 			Cfg.userPassword =password;
 			new LoginThread().start();
@@ -314,20 +401,6 @@ public class LoginActivity extends Activity {
 
 	}
 
-//	class BtnSmartLinkOnClickListener implements OnClickListener {
-//
-//		@Override
-//		public void onClick(View v) {
-//			Intent intent = new Intent();
-//			intent.setClass(
-//					LoginActivity.this,
-//					com.espressif.iot.esptouch.demo_activity.EsptouchDemoActivity.class);
-//			startActivity(intent);
-//
-//		}
-//
-//	}
-
 	/**
 	 * 登录
 	 * 
@@ -365,6 +438,54 @@ public class LoginActivity extends Activity {
 					break;
 			}
 
+			handler.sendMessage(message);
+		}
+	}
+
+	/**
+	 * 登录
+	 *
+	 * @author Administrator
+	 *
+	 */
+	class forgetPwd extends Thread {
+
+		@Override
+		public void run() {
+			Message message = new Message();
+			message.what = SEND_PWD2EMAIL_EXCEPTION;
+
+			Gson gson = new Gson();
+			String type = "mail";
+
+			String[] paramsName = {"userName", "type"};
+			String[] paramsValue = {userMailName, type};
+
+
+			if ((jsonResult = new setServerURL().sendParamToServer("findPassword", paramsName, paramsValue)).isEmpty()) {
+				message.what = Cfg.SERVER_CANT_CONNECT;
+				handler.sendMessage(message);
+				return;
+			}
+			try {
+				getResult = gson.fromJson(jsonResult
+						, com.demo.smarthome.server.ServerReturnResult.class);
+			} catch (JsonSyntaxException e) {
+				e.printStackTrace();
+			}
+
+
+			switch (Integer.parseInt(getResult.getCode())) {
+				case Cfg.CODE_SUCCESS:
+					message.what = SEND_PWD2EMAIL_SUCCEED;
+					break;
+				case Cfg.CODE_USER_EXISTED:
+					message.what = SEND_PWD2EMAIL_ERROR;
+					break;
+				default:
+					message.what = SEND_PWD2EMAIL_EXCEPTION;
+					break;
+			}
 			handler.sendMessage(message);
 		}
 	}

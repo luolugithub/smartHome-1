@@ -23,7 +23,8 @@ import java.net.UnknownHostException;
  */
 public class ConfigDevice {
 
-    static final String TAG = "ConfigDevice";
+//    static final String TAG = "ConfigDevice";
+    static final String TAG = "MainActivity";
     static final int WAIT_RESULT  = 0;
     static final int FIND_DEVID = 2;
     static final int CMD_TIMEOUT = 6;
@@ -56,7 +57,7 @@ public class ConfigDevice {
         @Override
         public void run() {
             IEsptouchTask mConfigDevTask;
-
+            Log.d("MainActivity", "ConnectDevThread start");
             //获取路由器SSID
             EspWifiAdminSimple mWifiAdmin = new EspWifiAdminSimple(context);
             //ssid是网络的ID,bssid是接入ap的mac
@@ -67,7 +68,7 @@ public class ConfigDevice {
             //配置设备上网
             mConfigDevTask = new EsptouchTask(apSsid, apBssid, wifiPwd, switchIsHidden, context);
             IEsptouchResult result = mConfigDevTask.executeForResult();
-
+            Log.d("MainActivity", "ConnectDevThread start");
             if (result.isSuc()) {
                 //配置WI-FI后等待设备设置成lanstart模式
                 try {
@@ -93,7 +94,7 @@ public class ConfigDevice {
     }
     public String getDevicePwd(){
         if(findDev) {
-            return deviceId;
+            return devicePwd;
         }else{
             return null;
         }
