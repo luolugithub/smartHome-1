@@ -41,7 +41,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.demo.smarthome.device.Dev;
 import com.demo.smarthome.server.setServerURL;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -91,7 +90,7 @@ public class LoginActivity extends Activity {
 
 	EditText txtName = null;
 	EditText txtPassword = null;
-
+	TextView textVersion = null;
 	CheckBox isAtuoLogin = null;
 
 	String name = "";
@@ -197,6 +196,10 @@ public class LoginActivity extends Activity {
 		btnOk.setOnClickListener(new BtnOkOnClickListener());
 		Button btnReg = (Button) findViewById(R.id.loginBtnReg);
 		btnReg.setOnClickListener(new BtnRegOnClickListener());
+
+		//显示版本号
+		textVersion = (TextView)findViewById(R.id.versionNumber);
+		textVersion.setText("v" + Cfg.versionNumber);
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
 
@@ -381,24 +384,6 @@ public class LoginActivity extends Activity {
 //			intent.putExtras(bundle);
 			startActivity(intent);
 		}
-	}
-
-	/**
-	 * 设置按钮监听类
-	 * 
-	 * @author Administrator
-	 * 
-	 */
-	class BtnSetupOnClickListener implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			Intent intent = new Intent();
-			intent.setClass(LoginActivity.this, SetupDevActivity.class);
-			startActivity(intent);
-
-		}
-
 	}
 
 	/**

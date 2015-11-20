@@ -213,7 +213,10 @@ public class historyDataActivity extends Activity {
         public void onClick(View v) {
 
             finish();
+            Bundle bundleData = new Bundle();
+            bundleData.putString("dataName", dataType);
             Intent intent = new Intent(historyDataActivity.this, historyDataActivity.class);
+            intent.putExtras(bundleData);
             startActivity(intent);
         }
     }
@@ -245,7 +248,6 @@ public class historyDataActivity extends Activity {
         public void run() {
             Message message = new Message();
             message.what = GET_DATE_ERROR;
-
 
             String[] paramsName = {"deviceID"};
             String[] paramsValue = {deviceID};
@@ -284,7 +286,6 @@ public class historyDataActivity extends Activity {
         public void run() {
             Message message = new Message();
             message.what = GET_DATA_FAIL;
-
 
             String[] paramsName = {"deviceID", "date"};
             String[] paramsValue = {deviceID, userSetDate};
@@ -377,8 +378,8 @@ public class historyDataActivity extends Activity {
         int maxValue = 0;
         //找出最大值
         for(int i = 0;i < data.size();i++) {
-            if(maxValue < Integer.parseInt(data.get(i).getPm2_5())){
-                maxValue = Integer.parseInt(data.get(i).getPm2_5());
+            if(maxValue < Integer.parseInt(data.get(i).getPm10())){
+                maxValue = Integer.parseInt(data.get(i).getPm10());
             }
         }
 
@@ -409,8 +410,8 @@ public class historyDataActivity extends Activity {
         int maxValue = 0;
         //找出最大值
         for(int i = 0;i < data.size();i++) {
-            if(maxValue < Integer.parseInt(data.get(i).getPm2_5())){
-                maxValue = Integer.parseInt(data.get(i).getPm2_5());
+            if(maxValue < Integer.parseInt(data.get(i).getTvoc())){
+                maxValue = Integer.parseInt(data.get(i).getTvoc());
             }
         }
 

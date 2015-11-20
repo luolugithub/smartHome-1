@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -125,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="25dp">
+        android:layout_marginTop="30dp">
         <CheckBox
             android:id="@+id/rememberUser"
             android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="80dp"
         android:orientation="horizontal" >
 
         <Button
@@ -165,32 +165,19 @@
             android:background="@drawable/regist_13" />
     </LinearLayout>
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center_vertical|center_horizontal"-->
-        <!--android:layout_marginTop="15dp"-->
-        <!--android:orientation="horizontal" >-->
-
-        <!--&lt;!&ndash;<Button-->
-            <!--android:id="@+id/loginBtnSetup"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@drawable/loging_031" />&ndash;&gt;-->
-
-        <!--<Button-->
-            <!--android:id="@+id/loginBtnSmartLink"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:background="@drawable/loging_111" />-->
-    <!--</LinearLayout>-->
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="15dp" >
+        android:paddingTop="20dp" >
+        <TextView
+            android:id="@+id/versionNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:hint="未知版本"
+            android:textColor="#ff808080"
+            android:textSize="13sp" />
     </LinearLayout>
 
     <LinearLayout

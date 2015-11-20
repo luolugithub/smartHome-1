@@ -180,11 +180,22 @@ public class DeviceDataViewActivity extends Activity {
             if(currentData.getTemperature().length() > 3) {
                 temperature = currentData.getTemperature().substring(0
                         ,currentData.getTemperature().length() - 3);
-                hygrometer = currentData.getTemperature().substring(2);
+                hygrometer = currentData.getTemperature().substring(currentData.getTemperature().length() - 3);
                 //为了美观,不足位用空格填满
                 for(int i = 0;i< 6 - currentData.getTemperature().length();i++){
                     temperature = " " + temperature;
                 }
+                //为了美观,将前面的0换成空格
+                byte[] byteHygrometer= hygrometer.getBytes();
+                for(int i = 0;i< hygrometer.length();i++){
+                    if(byteHygrometer[i] == '0'){
+                        byteHygrometer[i] = ' ';
+                    }else{
+                        break;
+                    }
+                }
+                hygrometer = new String(byteHygrometer);
+
                 itemTem.put("temperature", temperature);
                 itemTem.put("hygrometer", hygrometer);
             }else if(currentData.getTemperature().length() <= 3){
@@ -219,6 +230,13 @@ public class DeviceDataViewActivity extends Activity {
             else{
                 return;
             }
+            //为了美观,去要在前面值前加空格
+            if(tempValue.length() == 1){
+                tempValue = "    " + tempValue;
+            }else if(tempValue.length() == 2){
+                tempValue = "  " + tempValue;
+            }
+
 
             item.put("name", dataTypeTemp.getName());
             item.put("value", tempValue);

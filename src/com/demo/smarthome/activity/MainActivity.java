@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.demo.smarthome.R;
-import com.demo.smarthome.device.Dev;
 import com.demo.smarthome.iprotocol.IProtocol;
 import com.demo.smarthome.protocol.Msg;
 import com.demo.smarthome.protocol.PlProtocol;
@@ -71,6 +70,7 @@ public class MainActivity extends Activity {
 
 	Button btnRefresh = null;
 	Button btnAddDev = null;
+
 	ListView listView;
 	private final String TAG = "MainActivity";
 
@@ -80,11 +80,9 @@ public class MainActivity extends Activity {
 	ConfigDevice deviceInfo;
 	AlertDialog.Builder failAlert;
 
-	Msg msg = new Msg();
 	static final int GET_DEV_SUCCEED = 0;
 	static final int GET_DEV_ERROR = 1;
 	static final int BUTTON_DELETE = 2;
-	static final int BUTTON_CONTROL = 3;
 	static final int DELETE_ERROR = 5;
 	static final int SERVER_CONNECT_ERROR = 6;
 	static final int ADD_DEV_SUCCED 		= 7;
@@ -126,23 +124,6 @@ public class MainActivity extends Activity {
 				finish();
 				tempIntent = new Intent(MainActivity.this, MainActivity.class);
 				startActivity(tempIntent);
-				break;
-			case BUTTON_CONTROL:
-				HashMap<String, Object> data = (HashMap<String, Object>) listView
-						.getItemAtPosition(msg.arg1);
-				String devId = (String) data.get("id");
-
-				if (devId == null) {
-					Toast.makeText(getApplicationContext(), "请重新选择设备", Toast.LENGTH_SHORT)
-							.show();
-					return;
-				}
-				// 跳转到设置界面
-				Cfg.deviceID = devId;
-
-				tempIntent = new Intent(MainActivity.this, DeviceDataViewActivity.class);
-				startActivity(tempIntent);
-
 				break;
 
 			case DELETE_ERROR:
@@ -264,7 +245,7 @@ public class MainActivity extends Activity {
 		btnAddDev = (Button) findViewById(R.id.mainBtnAddDev);
 		btnAddDev.setOnClickListener(new BtnAddDevOnClickListener());
 
-		listView = (ListView) this.findViewById(R.id.devListView);
+		listView = (ListView) findViewById(R.id.devListView);
 
 		new GetDevThread().start();
 
@@ -274,15 +255,17 @@ public class MainActivity extends Activity {
 	@Override
 	public void onBackPressed(){
 		Intent intent = getIntent();
-		Log.d(TAG, "back");
-		if((intent.getStringExtra("activity")).equals("welcome")){
-			intent.setClass(MainActivity.this, LoginActivity.class);
-			startActivity(intent);
-			finish();
-		}else{
+		Bundle bundle = intent.getExtras();
+		if(bundle != null){
+			if (bundle.getString("activity").equals("welcome")) {
+				intent.setClass(MainActivity.this, LoginActivity.class);
+				startActivity(intent);
+				finish();
+			}
+		}
+		else {
 			super.onBackPressed();
 		}
-
 	}
 
 	private void getDevList() {
@@ -521,22 +504,7 @@ public class MainActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final int mPosition = position;
 			convertView = super.getView(position, convertView, parent);
-			ImageView buttonAdd = (ImageView) convertView
-					.findViewById(R.id.devControl);// id为你自定义布局中按钮的id
-			buttonAdd.setOnClickListener(new View.OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					// mHandler.obtainMessage(BUTTON_ADD, mPosition, 0)
-					// .sendToTarget();
-
-					Message message = new Message();
-					message.what = BUTTON_CONTROL;
-					message.arg1 = mPosition;
-					handler.sendMessage(message);
-
-				}
-			});
 			ImageView buttonDelete = (ImageView) convertView
 					.findViewById(R.id.devDelete);
 			buttonDelete.setOnClickListener(new View.OnClickListener() {
@@ -562,7 +530,7 @@ public class MainActivity extends Activity {
 					}
 					//弹出"确定删除"警示框
 					AlertDialog.Builder deleteAlert = new AlertDialog.Builder(MainActivity.this);
-					deleteAlert.setTitle("确定删除该设备?");
+					deleteAlert.setTitle("  确定删除该设备?");
 					deleteAlert.setIcon(R.drawable.delete_alert);
 
 					deleteAlert.setPositiveButton("确定", new DialogInterface.OnClickListener() {

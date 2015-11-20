@@ -183,13 +183,15 @@ public class HistoryDataLineView extends View {
 
 
 			//如果是PM2.5或者PM10,显示的坐标标示不带小数
-			if (pm2_5Flag) {
-				int intAverage = (int) averageValue;
-				drawText(String.valueOf(intAverage * i), blwidh / 2 - dip2px(yTextChange + 2)
-						, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
-			} else {
-				drawText(String.valueOf(averageValue * i), blwidh / 2 - dip2px(yTextChange)
-						, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
+			if( i!= 0) {
+				if (pm2_5Flag) {
+					int intAverage = (int) averageValue;
+					drawText(String.valueOf(intAverage * i), blwidh / 2 - dip2px(yTextChange + 2)
+							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
+				} else {
+					drawText(String.valueOf(averageValue * i), blwidh / 2 - dip2px(yTextChange)
+							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
+				}
 			}
 		}
 		//显示单位
@@ -218,14 +220,14 @@ public class HistoryDataLineView extends View {
 			//最后一个坐标要加(时)
 			if(i == xSpaceCount - 1){
 				drawText(String.valueOf(i*2) + "(时)", blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						- dip2px(xTextChange), bheight + dip2px(30), canvas);
+						- dip2px(xTextChange), bheight + dip2px(35), canvas);
 			}else if(i == 0 || i > 9){
 				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						- dip2px(xTextChange), bheight + dip2px(30), canvas);
+						- dip2px(xTextChange), bheight + dip2px(35), canvas);
 			}
 			else {
 				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						, bheight + dip2px(30), canvas);
+						, bheight + dip2px(35), canvas);
 			}
 
 		}

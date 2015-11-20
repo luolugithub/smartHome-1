@@ -1,5 +1,7 @@
 package com.demo.smarthome.server;
 
+import com.demo.smarthome.staticString.StringRes;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -16,12 +18,12 @@ public class setServerURL {
     /** webservice 锟斤拷锟斤拷路锟斤拷 */
     private String URL = "";
     /** 锟斤拷锟斤拷锟秸硷拷*/
-    String nameSpace = "http://webservice.smarthome.begood.com";
+    String nameSpace = StringRes.nameSpace;
 
     public setServerURL() {
 
-        String serverIp = "172.16.120.12";
-        String serverPort = "8080";
+        String serverIp = StringRes.serverIP;
+        String serverPort = StringRes.serverPort;
 
         URL = "http://" + serverIp + ":" + serverPort
                 + "/essh/services/SmartHomeService";

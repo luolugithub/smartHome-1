@@ -12,7 +12,6 @@ import java.net.UnknownHostException;
 
 import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.dao.DevDao;
-import com.demo.smarthome.device.Dev;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
@@ -20,6 +19,7 @@ import com.demo.smarthome.service.ConfigDevice;
 import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
+import com.demo.smarthome.tools.CheckEmailPhoneTools;
 import com.demo.smarthome.tools.IpTools;
 import com.demo.smarthome.tools.StrTools;
 import com.demo.smarthome.R;
@@ -129,7 +129,7 @@ public class RegisterActivity extends Activity {
 			case CMD_TIMEOUT:
 				dialogView.dismiss();
 
-				failAlert.setTitle(" 注册失败").setIcon(R.drawable.cloud_fail).setMessage("   无法找到本地设备");
+				failAlert.setTitle("无法找到本地设备").setIcon(R.drawable.cloud_fail).setMessage("注册时需要绑定本地设备");
 				failAlert.create().show();
 				break;
 			case USER_EXISTED:
@@ -206,8 +206,8 @@ public class RegisterActivity extends Activity {
 			String rePassword = txtrePassword.getText().toString();
 			wifiPwd = txtWifipassword.getText().toString();
 
-			if (userRegName.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "请输入邮箱地址作为用户名", Toast.LENGTH_SHORT).show();
+			if (userRegName.trim().isEmpty()||(!CheckEmailPhoneTools.isEmail(userRegName))) {
+				Toast.makeText(getApplicationContext(), "请输入正确的邮箱地址作为用户名", Toast.LENGTH_SHORT).show();
 				txtName.setFocusable(true);
 				return;
 			}
