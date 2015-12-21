@@ -1,5 +1,7 @@
 package com.demo.smarthome.server;
 
+import android.util.Log;
+
 import com.demo.smarthome.staticString.StringRes;
 
 import org.ksoap2.SoapEnvelope;
@@ -45,6 +47,7 @@ public class setServerURL {
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
             HttpTransportSE ht = new HttpTransportSE(URL);
+            Log.d("setServer","enverlope:"+envelope.toString());
             ht.call("", envelope);
             ret = String.valueOf(envelope.getResponse());
         } catch (SoapFault e) {

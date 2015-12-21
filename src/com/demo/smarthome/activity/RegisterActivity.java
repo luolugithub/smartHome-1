@@ -71,7 +71,10 @@ public class RegisterActivity extends Activity {
 	EditText txtrePassword = null;
 	EditText txtWifipassword = null;
 	Switch  switchIsHidden;
+	TextView apSSID;
 	ProgressDialog dialogView;
+
+	boolean noWifi = false;
 
 	AlertDialog.Builder failAlert;
 
@@ -84,6 +87,7 @@ public class RegisterActivity extends Activity {
 
 	static final int WAIT_RESULT  = 0;
 	static final int FIND_DEVID = 2;
+	static final int NO_WIFI    = 3;
 	static final int CMD_TIMEOUT = 6;
 
 
@@ -106,8 +110,11 @@ public class RegisterActivity extends Activity {
 				ConfigService dbService = new ConfigDao(RegisterActivity.this.getBaseContext());
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, userRegName);
 				dbService.SaveSysCfgByKey(Cfg.KEY_PASS_WORD, userRegPassword);
+				dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, deviceInfo.getDeviceID());
+				dbService.SaveSysCfgByKey(Cfg.KEY_AUTO_LOGIN , "true");
 				Cfg.userName = userRegName;
 				Cfg.userPassword = userRegPassword;
+				Cfg.currentDeviceID = deviceInfo.getDeviceID();
 
 				dialogView.dismiss();
 
@@ -121,10 +128,16 @@ public class RegisterActivity extends Activity {
 				Bundle bundle = new Bundle();
 				bundle.putString("activity", "register");
 				Intent mainIntent = new Intent();
-				mainIntent.setClass(RegisterActivity.this, MainActivity.class);
+				mainIntent.setClass(RegisterActivity.this, DeviceDataViewActivity.class);
 				mainIntent.putExtras(bundle);
 				startActivity(mainIntent);// 打开新界面
 				finish();
+				break;
+			case NO_WIFI:
+				dialogView.dismiss();
+
+				failAlert.setTitle("无法无线网络").setIcon(R.drawable.cloud_fail).setMessage("需要保持和本地设备在同一网络中");
+				failAlert.create().show();
 				break;
 			case CMD_TIMEOUT:
 				dialogView.dismiss();
@@ -177,19 +190,29 @@ public class RegisterActivity extends Activity {
 		txtrePassword = (EditText) findViewById(R.id.againPassword);
 		txtWifipassword = (EditText) findViewById(R.id.wifiPassword);
 		switchIsHidden = (Switch) findViewById(R.id.wifiIsHidden);
+		//显示SSID
+		apSSID = (TextView)findViewById(R.id.wifiSSID);
+		ConfigDevice forApSSID= new ConfigDevice(RegisterActivity.this);
+		if(forApSSID.getApSSid() == null){
+			noWifi = true;
+		}
+		else{
+			apSSID.setText(forApSSID.getApSSid());
+		}
 		Button btnSetup = (Button) findViewById(R.id.registerBtnReg);
 		btnSetup.setOnClickListener(new BtnRegOnClickListener());
 
 		failAlert = new AlertDialog.Builder(RegisterActivity.this);
 
+
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.register, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.register, menu);
+//		return true;
+//	}
 
 	/**
 	 * 注册 按钮监听类
@@ -201,6 +224,12 @@ public class RegisterActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
+			if(noWifi){
+				failAlert.setTitle("无法无线网络").setIcon(R.drawable.cloud_fail)
+						.setMessage("需要保持和本地设备在同一网络中");
+				failAlert.create().show();
+				return;
+			}
 			userRegName = txtName.getText().toString();
 			userRegPassword = txtPassword.getText().toString();
 			String rePassword = txtrePassword.getText().toString();
@@ -269,6 +298,12 @@ public class RegisterActivity extends Activity {
 
 			deviceInfo = new ConfigDevice(wifiPwd,switchIsHidden.isChecked(),IpTools
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),RegisterActivity.this);
+			//检查是否有网络
+			if(deviceInfo.getApSSid() == null){
+				message.what = CMD_TIMEOUT;
+				handler.sendMessage(message);
+				return;
+			}
 			//执行配置线程
 			deviceInfo.configDeviceThread();
 			while(true){

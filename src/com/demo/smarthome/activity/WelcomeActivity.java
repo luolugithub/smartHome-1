@@ -64,7 +64,10 @@ public class WelcomeActivity extends Activity {
 	static final int UPDATA_SUCCEED  = 4;
 	static final int UPDATA_ERROR    = 5;
 
+	static final int AUTO_LOGIN_NO_DEVID    = 6;
+
 	static final int DIALOG_SHOW    = 8;
+	static final int FINISH		    = 10;
 
 	UpdataInfo info = null;
 	ConfigService dbService;
@@ -76,13 +79,10 @@ public class WelcomeActivity extends Activity {
 
 	Handler handler = new Handler(){
 		public void handleMessage(Message msg){
+			Intent intent = new Intent();
 			switch (msg.what){
 				case LOGIN_SUCCEED:
-					Intent intent = new Intent();
-					Bundle bundle = new Bundle();
-					bundle.putString("activity", "welcome");
-					intent.putExtras(bundle);
-					intent.setClass(WelcomeActivity.this, MainActivity.class);
+					intent.setClass(WelcomeActivity.this, DeviceDataViewActivity.class);
 					startActivity(intent);
 					finish();
 				break;
@@ -109,9 +109,20 @@ public class WelcomeActivity extends Activity {
 					Toast.makeText(getApplicationContext(), "更新文件失败", Toast.LENGTH_SHORT).show();
 					handler.postDelayed(r, 1000);
 					break;
+				case AUTO_LOGIN_NO_DEVID:
+					Bundle bundle = new Bundle();
+					bundle.putString("activity", "login");
+					intent.putExtras(bundle);
+					intent.setClass(WelcomeActivity.this, MainActivity.class);
+					startActivity(intent);
+					finish();
+					break;
 				case DIALOG_SHOW:
 					ProgressDialog.show(WelcomeActivity.this
 							,"安装程序中","正在安装程序,请等待...",false,true);
+					break;
+				case FINISH:
+					finish();
 					break;
 				default:
 					handler.postDelayed(r, 0);
@@ -159,18 +170,30 @@ public class WelcomeActivity extends Activity {
 			Message message = new Message();
 			message.what = LOGIN_ERROR;
 
-			Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
-			Cfg.userPassword = dbService.getCfgByKey(Cfg.KEY_PASS_WORD);
+			String tempName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
+			String tempPwd = dbService.getCfgByKey(Cfg.KEY_PASS_WORD);
+			if(tempName != null && tempPwd != null){
+				Cfg.userName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
+				Cfg.userPassword = dbService.getCfgByKey(Cfg.KEY_PASS_WORD);
+			}
 
-			if(Cfg.userName  == null || Cfg.userPassword == null) {
+			if(Cfg.userName.isEmpty() || Cfg.userPassword.isEmpty()) {
 				return;
+			}
+			String tempDevID = dbService.getCfgByKey(Cfg.KEY_DEVICE_ID);
+			if(tempDevID != null){
+				Cfg.currentDeviceID = tempDevID;
 			}
 
 			loginResult = LoginServer.LoginServerMethod();
 			switch (Integer.parseInt(loginResult.getCode()))
 			{
 				case Cfg.CODE_SUCCESS:
-					message.what = LOGIN_SUCCEED;
+					if(Cfg.currentDeviceID.isEmpty()) {
+						message.what = AUTO_LOGIN_NO_DEVID;
+					}else{
+						message.what = LOGIN_SUCCEED;
+					}
 					break;
 				default:
 					message.what = LOGIN_ERROR;
@@ -263,7 +286,7 @@ public class WelcomeActivity extends Activity {
 		builer.setNegativeButton("取消", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				Message msg = new Message();
-				msg.what = VERSION_HIGHEST;
+				msg.what = FINISH;
 				handler.sendMessage(msg);
 			}
 		});
@@ -327,7 +350,7 @@ public class WelcomeActivity extends Activity {
 			//获取到文件的大小
 			pd.setMax(conn.getContentLength());
 			InputStream is = conn.getInputStream();
-			File file = new File(Environment.getExternalStorageDirectory(), "smartBegood.apk");
+			File file = new File(Environment.getExternalStorageDirectory(), "Begood.apk");
 			FileOutputStream fos = new FileOutputStream(file);
 			BufferedInputStream bis = new BufferedInputStream(is);
 			byte[] buffer = new byte[1024];

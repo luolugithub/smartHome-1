@@ -35,7 +35,10 @@ import com.demo.smarthome.service.Cfg;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +51,6 @@ public class DeviceDataViewActivity extends Activity {
     ListView listView;
     ListView listViewTem;
     Button buttonRefresh = null;
-    int dataCount;
-    String deviceID;
-    String pageNo;
-    String pageSize;
 
     String jsonResult;
 
@@ -62,6 +61,7 @@ public class DeviceDataViewActivity extends Activity {
     Gson gson = new Gson();
 
     DeviceDataSet currentData = new DeviceDataSet();
+    boolean is_device_online = true;
     List<DeviceDataString> deviceListType;
     boolean haveTemperature = false;
     static final int GET_COUNT_SUCCEED     = 0;
@@ -116,13 +116,36 @@ public class DeviceDataViewActivity extends Activity {
 
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
+                Intent intent = new Intent();
+                intent.setClass(DeviceDataViewActivity.this, LoginActivity.class);
+
+                startActivity(intent);
                 finish();
             }
+        });
+        TextView titleText = (TextView) findViewById(R.id.titleHCHOViewText);
+        titleText.setClickable(true);
+        titleText.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View arg0) {
+                onBackPressed();
+            }
         });
 
-        deviceID = Cfg.deviceID;
+        //点击设置
+        TextView titleConfig = (TextView) findViewById(R.id.titleConfig);
+        titleConfig.setClickable(true);
+        titleConfig.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent();
+                intent.setClass(DeviceDataViewActivity.this, MainActivity.class);
+
+                startActivity(intent);
+            }
+        });
 
         listView = (ListView) this.findViewById(R.id.dataListView);
         listViewTem = (ListView) this.findViewById(R.id.horizontalListView);
@@ -132,7 +155,7 @@ public class DeviceDataViewActivity extends Activity {
 
         //等待框
         dialogView = new ProgressDialog(DeviceDataViewActivity.this);
-        dialogView.setTitle("删除设备中");
+        dialogView.setTitle("读取数据中");
         dialogView.setMessage("正在从服务器中读取数据,请等待");
         //点击等待框以外等待框不消失
         dialogView.setCanceledOnTouchOutside(false);
@@ -165,48 +188,75 @@ public class DeviceDataViewActivity extends Activity {
         new getCurrentData().start();
 
     }
+//    //后退按键
+//    @Override
+//    public void onBackPressed(){
+//        Intent intent = new Intent();
+//        intent.setClass(DeviceDataViewActivity.this, LoginActivity.class);
+//
+//        startActivity(intent);
+//        finish();
+//    }
+    //菜单键
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Intent intent = new Intent();
+        intent.setClass(DeviceDataViewActivity.this, MainActivity.class);
+
+        startActivity(intent);
+        return true;
+    }
     //该方法会根据ID区分需要显示那些adpter,温湿度需要单独的adpter类型
     private void showDataList() {
         List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
         List<HashMap<String, Object>> dataTem = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> itemTem = new HashMap<String, Object>();
-        if(deviceID.equals(deviceID))
+        int tempInt;
+        float tempFloat;
+        if(currentData.getType().equals(currentData.getType()))
         {
             //为能够显示特殊字符
             deviceListType = new DeviceType(this).getHchoMonitor();
             String temperature,hygrometer;
-            //显示带有温度和湿度的listView
-            //温湿度值是一个字符串,需要拆分,各占三位,一共6位,如果一共不足6位,说明前面有零补位
-            if(currentData.getTemperature().length() > 3) {
-                temperature = currentData.getTemperature().substring(0
-                        ,currentData.getTemperature().length() - 3);
-                hygrometer = currentData.getTemperature().substring(currentData.getTemperature().length() - 3);
-                //为了美观,不足位用空格填满
-                for(int i = 0;i< 6 - currentData.getTemperature().length();i++){
-                    temperature = " " + temperature;
-                }
-                //为了美观,将前面的0换成空格
-                byte[] byteHygrometer= hygrometer.getBytes();
-                for(int i = 0;i< hygrometer.length();i++){
-                    if(byteHygrometer[i] == '0'){
-                        byteHygrometer[i] = ' ';
-                    }else{
-                        break;
+            String temp_T = "   ";
+            String temp_H = "   ";
+            //如果离线显示空
+            if(is_device_online) {
+
+                if (currentData.getTemperature().length() > 3) {
+                    tempInt = Integer.parseInt(currentData.getTemperature().substring(0
+                            , currentData.getTemperature().length() - 3));
+                    tempFloat = ((float) tempInt) / 10;
+                    temperature = String.valueOf(tempFloat);
+                    hygrometer = currentData.getTemperature().substring(currentData.getTemperature().length() - 3);
+                    //为了美观,不足位用空格填满
+                    for (int i = 0; i < 6 - currentData.getTemperature().length(); i++) {
+                        temperature = " " + temperature;
                     }
-                }
-                hygrometer = new String(byteHygrometer);
+                    //为了美观,将前面的0换成空格
+                    byte[] byteHygrometer = hygrometer.getBytes();
+                    for (int i = 0; i < hygrometer.length(); i++) {
+                        if (byteHygrometer[i] == '0') {
+                            byteHygrometer[i] = ' ';
+                        } else {
+                            break;
+                        }
+                    }
+                    hygrometer = new String(byteHygrometer);
 
-                itemTem.put("temperature", temperature);
-                itemTem.put("hygrometer", hygrometer);
-            }else if(currentData.getTemperature().length() <= 3){
-                itemTem.put("temperature", "  0");
-                hygrometer = currentData.getTemperature();
-                for(int i = 0;i< 3 - currentData.getTemperature().length();i++){
-                    hygrometer = " " + hygrometer;
+                    temp_T = temperature;
+                    temp_H = hygrometer;
+                } else if (currentData.getTemperature().length() <= 3) {
+                    temp_T = "  0";
+                    hygrometer = currentData.getTemperature();
+                    for (int i = 0; i < 3 - currentData.getTemperature().length(); i++) {
+                        hygrometer = " " + hygrometer;
+                    }
+                    temp_H = currentData.getTemperature();
                 }
-                itemTem.put("hygrometer", currentData.getTemperature());
             }
-
+            itemTem.put("temperature", temp_T);
+            itemTem.put("hygrometer", temp_H);
             dataTem.add(itemTem);
             haveTemperature = true;
         }
@@ -214,29 +264,43 @@ public class DeviceDataViewActivity extends Activity {
         if(deviceListType == null) {
             return;
         }
-        String tempValue;
+        String tempValue = "   ";
         for (DeviceDataString dataTypeTemp : deviceListType) {
             HashMap<String, Object> item = new HashMap<String, Object>();
 
-            if((dataTypeTemp.getType()).equals("hcho")){
-                tempValue = currentData.getHcho();
-            }else if((dataTypeTemp.getType()).equals("tvoc")){
-                tempValue = currentData.getTvoc();
-            }else if((dataTypeTemp.getType()).equals("pm2_5")){
-                tempValue = currentData.getPm2_5();
-            }else if((dataTypeTemp.getType()).equals("pm10")) {
-                tempValue = currentData.getPm10();
+            if(is_device_online) {
+                //甲醛和TVOC等数值要除1000
+                if ((dataTypeTemp.getType()).equals("hcho")) {
+                    tempInt = Integer.parseInt(currentData.getHcho());
+                    //防止出现0.0的情况
+                    if (tempInt == 0) {
+                        tempValue = "0";
+                    } else {
+                        tempFloat = ((float) tempInt) / 100;
+                        tempValue = String.valueOf(tempFloat);
+                    }
+                } else if ((dataTypeTemp.getType()).equals("tvoc")) {
+                    tempInt = Integer.parseInt(currentData.getTvoc());
+                    if (tempInt == 0) {
+                        tempValue = "0";
+                    } else {
+                        tempFloat = ((float) tempInt) / 100;
+                        tempValue = String.valueOf(tempFloat);
+                    }
+                } else if ((dataTypeTemp.getType()).equals("pm2_5")) {
+                    tempValue = currentData.getPm2_5();
+                } else if ((dataTypeTemp.getType()).equals("pm10")) {
+                    tempValue = currentData.getPm10();
+                } else {
+                    return;
+                }
+                //为了美观,去要在前面值前加空格
+                if (tempValue.length() == 1) {
+                    tempValue = "    " + tempValue;
+                } else if (tempValue.length() == 2) {
+                    tempValue = "  " + tempValue;
+                }
             }
-            else{
-                return;
-            }
-            //为了美观,去要在前面值前加空格
-            if(tempValue.length() == 1){
-                tempValue = "    " + tempValue;
-            }else if(tempValue.length() == 2){
-                tempValue = "  " + tempValue;
-            }
-
 
             item.put("name", dataTypeTemp.getName());
             item.put("value", tempValue);
@@ -341,12 +405,12 @@ public class DeviceDataViewActivity extends Activity {
         }
     }
 
-        @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_hcho_monitor, menu);
-        return true;
-    }
+//        @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_hcho_monitor, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -370,14 +434,14 @@ public class DeviceDataViewActivity extends Activity {
             Message message = new Message();
             message.what = GET_CURRENT_SUCCED;
 
-            if(deviceID.isEmpty()) {
+            if(Cfg.currentDeviceID.isEmpty()) {
                 message.what = DEVICE_ID_ERROR;
                 handler.sendMessage(message);
                 return;
             }
 
             String[] paramsName = {"deviceID"};
-            String[] paramsValue = {deviceID};
+            String[] paramsValue = {Cfg.currentDeviceID};
 
             setServerURL regiterUser= new setServerURL();
             //需要判断服务器是否开启
@@ -403,6 +467,21 @@ public class DeviceDataViewActivity extends Activity {
                         break;
                     }
                     currentData = deviceData.getRows().get(0);
+                    //如果时间差距超过10分钟,认为设备已离线
+                    SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    try {
+                        Date deviceTime = dfs.parse(currentData.getCreateTime());
+                        Date currentTime = new Date();
+                        if((currentTime.getTime() - deviceTime.getTime())/1000 > 10*60){
+                            is_device_online = false;
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        is_device_online = false;
+                        message.what = GET_CURRENT_FAIL;
+                        break;
+                    }
+
                     message.what = GET_CURRENT_SUCCED;
                     break;
                 default:
@@ -423,7 +502,6 @@ public class DeviceDataViewActivity extends Activity {
     class refreshOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-
             finish();
             Intent intent = new Intent(DeviceDataViewActivity.this, DeviceDataViewActivity.class);
             startActivity(intent);

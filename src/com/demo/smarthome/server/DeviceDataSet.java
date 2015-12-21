@@ -6,6 +6,7 @@ import java.util.Date;
  */
 public class DeviceDataSet {
     String deviceId;
+    String type;
     String createTime;
     String hcho;
     String pm2_5;
@@ -31,6 +32,13 @@ public class DeviceDataSet {
 
     public String getHcho() {
         return hcho;
+    }
+
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setHcho(String hcho) {

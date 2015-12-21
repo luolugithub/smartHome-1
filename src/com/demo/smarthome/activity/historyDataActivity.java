@@ -40,7 +40,6 @@ public class historyDataActivity extends Activity {
 
     TextView title = null;
     Spinner dataSpinner;
-    String deviceID;
     String dataType;
 
     List<String> dateList;
@@ -155,13 +154,13 @@ public class historyDataActivity extends Activity {
         dataSpinner = (Spinner)findViewById(R.id.dataSpinner);
         btnRefresh = (Button)findViewById(R.id.deviceDataRefresh);
         btnRefresh.setOnClickListener(new refreshOnClickListener());
-        deviceID = Cfg.deviceID;
 
-        if(deviceID.isEmpty()) {
+        if(Cfg.currentDeviceID.isEmpty()) {
             Toast.makeText(getApplicationContext(), "设备ID错误", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
+
         historyDataViewItem = (HistoryDataLineView)findViewById(R.id.historyLine);
 
         Bundle bundle = getIntent().getExtras();
@@ -250,7 +249,7 @@ public class historyDataActivity extends Activity {
             message.what = GET_DATE_ERROR;
 
             String[] paramsName = {"deviceID"};
-            String[] paramsValue = {deviceID};
+            String[] paramsValue = {Cfg.currentDeviceID};
 
             setServerURL regiterUser= new setServerURL();
 
@@ -288,11 +287,10 @@ public class historyDataActivity extends Activity {
             message.what = GET_DATA_FAIL;
 
             String[] paramsName = {"deviceID", "date"};
-            String[] paramsValue = {deviceID, userSetDate};
+            String[] paramsValue = {Cfg.currentDeviceID, userSetDate};
 
             setServerURL regiterUser = new setServerURL();
 
-            //锟斤拷要锟叫断凤拷锟斤拷锟斤拷锟角凤拷锟斤拷
             if ((jsonResult = regiterUser.sendParamToServer("getDataBydevIDAndDate", paramsName, paramsValue)).isEmpty()) {
                 message.what = SERVER_CANT_CONNECT;
                 handler.sendMessage(message);
@@ -325,23 +323,23 @@ public class historyDataActivity extends Activity {
             //设置Y轴最大值
             hchoSetYMaxValue(allData);
             //接收服务器发送的数要除1000倍
-            SetDateToline(allData,1000);
+            SetDateToline(allData,type,100);
             historyDataViewItem.setyUnit(this.getResources()
                     .getString(R.string.device_hcho_unit));
 
         }else if(type.equals("pm2_5")) {
-            pmSetYMaxValue(allData);
-            SetDateToline(allData, 1);
+            pm2_5SetYMaxValue(allData);
+            SetDateToline(allData,type, 1);
             historyDataViewItem.setyUnit(this.getResources()
                     .getString(R.string.device_pm2_5_unit));
         }else if(type.equals("pm10")){
-            pmSetYMaxValue(allData);
-            SetDateToline(allData, 1);
+            pm10SetYMaxValue(allData);
+            SetDateToline(allData,type, 1);
             historyDataViewItem.setyUnit(this.getResources()
                     .getString(R.string.device_pm10_unit));
         }else if(type.equals("tvoc")){
             tvocSetYMaxValue(allData);
-            SetDateToline(allData, 1000);
+            SetDateToline(allData,type, 100);
             historyDataViewItem.setyUnit(this.getResources()
                     .getString(R.string.device_tvoc_unit));
         }
@@ -373,7 +371,39 @@ public class historyDataActivity extends Activity {
 
     }
     //最大值1000
-    private void pmSetYMaxValue(List<DeviceDataSet> data){
+    private void pm2_5SetYMaxValue(List<DeviceDataSet> data){
+
+        int maxValue = 0;
+        //找出最大值
+        for(int i = 0;i < data.size();i++) {
+            if(maxValue < Integer.parseInt(data.get(i).getPm2_5())){
+                maxValue = Integer.parseInt(data.get(i).getPm2_5());
+            }
+        }
+
+        if(maxValue > 800){
+            YmaxValue = 1000;
+            YaverageValue = 200;
+        }else if(maxValue>500){
+            YmaxValue = 800;
+            YaverageValue = 100;
+        }else if(maxValue>300){
+            YmaxValue = 500;
+            YaverageValue = 100;
+        }else if(maxValue>200){
+            YmaxValue = 300;
+            YaverageValue = 50;
+        }else if(maxValue>100){
+            YmaxValue = 200;
+            YaverageValue = 40;
+        }else {
+            YmaxValue = 100;
+            YaverageValue = 20;
+        }
+        pmFlag = true;
+    }
+    //最大值1000
+    private void pm10SetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
         //找出最大值
@@ -393,8 +423,8 @@ public class historyDataActivity extends Activity {
             YmaxValue = 500;
             YaverageValue = 100;
         }else if(maxValue>200){
-            YmaxValue = 300.0f;
-            YaverageValue = 50.0f;
+            YmaxValue = 300;
+            YaverageValue = 50;
         }else if(maxValue>100){
             YmaxValue = 200;
             YaverageValue = 40;
@@ -415,7 +445,13 @@ public class historyDataActivity extends Activity {
             }
         }
 
-        if(maxValue > 300){
+        if(maxValue > 800){
+            YmaxValue = 10.0f;
+            YaverageValue = 2.0f;
+        }else if(maxValue>500){
+            YmaxValue = 8.0f;
+            YaverageValue = 1.0f;
+        }else if(maxValue > 300){
             YmaxValue = 5.0f;
             YaverageValue = 0.1f;
         }else if(maxValue>200){
@@ -433,11 +469,11 @@ public class historyDataActivity extends Activity {
     /*
     *   用于组成步长为timeStepLength的数据集合,画曲线时可获得所有
      */
-    private void SetDateToline(List<DeviceDataSet> allData ,int unitChange){
+    private void SetDateToline(List<DeviceDataSet> allData,String dataType,int unitChange){
         String tempTime = userSetDate + " 00:00:00";
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int i,j,diff;
-        Double hchoValue;
+        Double value = 0.0;
         //for draw
         ArrayList<Double> yData = new ArrayList<Double>();
         try{
@@ -447,18 +483,25 @@ public class historyDataActivity extends Activity {
 
                 //毫秒需要转换成秒
                 diff = (int)((CreateTime.getTime() - Start.getTime())/1000);
-                //接收历史数据中储存的时间每条之间间隔为5秒
+                //接收历史数据中储存的时间每条之间间隔为5分钟
                 if(diff < timeStepLength && j < allData.size()) {
-                    //服务器中读取的甲醛数据需要除1000
-                    hchoValue = ((double)Integer.parseInt(allData.get(j).getHcho()))/unitChange;
-
-                    yData.add(hchoValue);
+                    //服务器中读取的数据需要除个单位
+                    if(dataType.equals("hcho")) {
+                        value = ((double) Integer.parseInt(allData.get(j).getHcho())) / unitChange;
+                    }else if(dataType.equals("tvoc")) {
+                        value = ((double) Integer.parseInt(allData.get(j).getTvoc())) / unitChange;
+                    }else if(dataType.equals("pm2_5")) {
+                        value = ((double) Integer.parseInt(allData.get(j).getPm2_5())) / unitChange;
+                    }else if(dataType.equals("pm10")) {
+                        value = ((double) Integer.parseInt(allData.get(j).getPm10())) / unitChange;
+                    }
+                    yData.add(value);
                     j++;
                     if(j < allData.size()) {
                         CreateTime = dfs.parse(allData.get(j).getCreateTime());
                     }
                 }else{
-                    yData.add(0.0);
+                    yData.add(-1.0);
                 }
                 Start.setTime(Start.getTime() + timeStepLength * 1000);
             }

@@ -11,6 +11,7 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import com.demo.smarthome.R;
@@ -23,6 +24,7 @@ import com.demo.smarthome.R;
  **********************************************************/
 public class HistoryDataLineView extends View {
 
+	private static String TAG = "historyDataLineView";
 	private static final int CIRCLE_SIZE = 10;
 	//连接线是曲线还是直线
 	private static enum Linestyle {
@@ -71,7 +73,7 @@ public class HistoryDataLineView extends View {
 	private int marginTop = 50;
 	private int marginBottom = 100;
 
-
+	private static int noData = -1;
 	//Y轴单位
 	private String yUnit;
 
@@ -155,6 +157,7 @@ public class HistoryDataLineView extends View {
 			drawLine(canvas);
 		}
 
+		//把点画出来
 		if(enablePaintPoint){
 			mPaint.setStyle(Style.FILL);
 			for (int i = 0; i < mPoints.length; i++) {
@@ -229,7 +232,6 @@ public class HistoryDataLineView extends View {
 				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
 						, bheight + dip2px(35), canvas);
 			}
-
 		}
 	}
 
@@ -239,8 +241,26 @@ public class HistoryDataLineView extends View {
 		Point endp = new Point();
 		for (int i = 0; i < mPoints.length - 1; i++) {
 
-			startp = mPoints[i];
-			endp = mPoints[i + 1];
+			//说明该时刻设备没有开机,不显示该时刻曲线
+			if(mPoints[i].y == noData ){
+				if(mPoints[i + 1].y == noData) {
+					continue;
+				}else {
+					//0
+					mPoints[i].y = bheight + marginTop;
+				}
+			}
+			startp.x = mPoints[i].x;
+			startp.y = mPoints[i].y;
+			//下一个点如果是没有数值的
+			if(mPoints[i + 1].y == noData){
+				endp.x = mPoints[i + 1].x;
+				endp.y = bheight + marginTop;
+			}
+			else{
+				endp.x = mPoints[i + 1].x;
+				endp.y = mPoints[i + 1].y;
+			}
 			int wt = (startp.x + endp.x) / 2;
 			Point p3 = new Point();
 			Point p4 = new Point();
@@ -262,8 +282,27 @@ public class HistoryDataLineView extends View {
 		Point endp = new Point();
 		for (int i = 0; i < mPoints.length - 1; i++) {
 
-			startp = mPoints[i];
-			endp = mPoints[i + 1];
+			//说明该时刻设备没有开机,不显示该时刻曲线
+			if(mPoints[i].y == noData ){
+				if(mPoints[i + 1].y == noData) {
+					continue;
+				}else {
+					//0
+					mPoints[i].y = bheight + marginTop;
+				}
+			}
+			startp.x = mPoints[i].x;
+			startp.y = mPoints[i].y;
+			//下一个点如果是没有数值的
+			if(mPoints[i + 1].y == noData){
+				endp.x = mPoints[i + 1].x;
+				endp.y = bheight + marginTop;
+			}
+			else{
+				endp.x = mPoints[i + 1].x;
+				endp.y = mPoints[i + 1].y;
+			}
+
 			canvas.drawLine(startp.x, startp.y, endp.x, endp.y, mPaint);
 		}
 	}
@@ -284,12 +323,17 @@ public class HistoryDataLineView extends View {
 		Point[] points = new Point[yRawData.size()];
 		for (int i = 0; i < yRawData.size(); i++) {
 
-			int ph = bheight - (int) (bheight * (yRawData.get(i) /(int) maxValue));
-			//1080P手机分辨率除288如果结果时整型会极为不准确故显示double
-			xPointSpace = (double)(canvasWidth - 2*blwidh) / (yRawData.size()-1);
-			Xvalue = (int)(blwidh + xPointSpace * i);
 
-			points[i] = new Point(Xvalue, ph + marginTop);
+				int ph = bheight - (int) (bheight * (yRawData.get(i) / (int) maxValue));
+				//1080P手机分辨率除288如果结果时整型会极为不准确故显示double
+				xPointSpace = (double) (canvasWidth - 2 * blwidh) / (yRawData.size() - 1);
+				Xvalue = (int) (blwidh + xPointSpace * i);
+			//如果设备没有给服务器发数据就认为没有开机,不显示那一时刻的数据
+			if(yRawData.get(i) >= 0) {
+				points[i] = new Point(Xvalue, ph + marginTop);
+			}else {
+				points[i] = new Point(Xvalue,noData);
+			}
 		}
 		return points;
 	}

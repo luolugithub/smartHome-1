@@ -28,7 +28,9 @@ public class Cfg extends Application  {
 	public final static String KEY_PASS_WORD ="password";
 	public final static String KEY_USER_NAME ="username";
 	public final static String KEY_AUTO_LOGIN ="autoLogin";
-	
+
+	public final static String KEY_DEVICE_ID  ="deviceId";
+
 	//  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·  cloud.ai-thinker.com
 	//	cloud.ai-thinker.com
 	//	admin
@@ -65,10 +67,9 @@ public class Cfg extends Application  {
 	//ÕËºÅ°ó¶¨µÄÉè±¸ÊýÄ¿
 	public static int devNumber;
 	//´¢´æÑ¡¶¨µÄÉè±¸µÄID
-	public static String deviceID = null;
+	public static String currentDeviceID = "";
 
-	//´¢´æÑ¡¶¨µÄÉè±¸µÄID
-	public static String versionNumber = null;
+	public static String versionNumber = "";
 
 //	public final static String DEV_UDP_IPADDR="192.168.5.88"; //192.168.1.255
 	public final static int  DEV_UDP_SEND_PORT=2468;
@@ -98,8 +99,6 @@ public class Cfg extends Application  {
 	public static List<Dev> listDev=new  ArrayList<Dev>();
 	private static List<Dev> listDevScan=new  ArrayList<Dev>();//É¨ï¿½ï¿½ï¿½ï¿½è±?
 
-	public  static String deviceId ="";
-	public  static String devicePwd ="";
 	
 //	public static final int timeDelayDef = 50; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê±ï¿½ï¿½ ms
 //	public static final int timeOutDef = 30 * (1000 / timeDelayDef); // ï¿½ï¿½ï¿½î³¬Ê±Ê±ï¿½ï¿½

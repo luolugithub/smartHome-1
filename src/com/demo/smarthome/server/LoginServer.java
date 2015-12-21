@@ -7,7 +7,7 @@ import com.google.gson.JsonSyntaxException;
 /**
  * Created by leishi on 15/10/26.
  *
- * Í¨¹ýÓÃ»§ÃûÃÜÂëµÇÂ¼µ½·þÎñÆ÷,½«Éè±¸ÁÐ±í´¢´æµ½Cfg.devInfo¾²Ì¬±äÁ¿ÖÐ
+ * Í¨ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½è±¸ï¿½Ð±ï¿½ï¿½æµ½Cfg.devInfoï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  *
  */
 
@@ -47,7 +47,7 @@ public class LoginServer {
             Cfg.devInfo = loginResult.getRows().get(0).split(",");
             Cfg.devNumber = Cfg.devInfo.length;
         }else{
-            Cfg.devInfo = null;
+            Cfg.devInfo = new String[]{};
             Cfg.devNumber = 0;
         }
         return loginResult;

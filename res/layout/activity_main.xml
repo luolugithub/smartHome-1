@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:text="贝谷云平台"
+                android:text="设备列表"
                 android:textColor="#FFFFFF"
                 android:textSize="25sp" />
         </FrameLayout>
@@ -70,19 +70,19 @@
         android:orientation="horizontal" >
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:paddingTop="10dp" >
+    <!--<LinearLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:paddingTop="10dp" >-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="设备列表"
-            android:textSize="25sp" />
-    </LinearLayout>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="设备列表"-->
+            <!--android:textSize="25sp" />-->
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:layout_width="fill_parent"

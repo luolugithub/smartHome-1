@@ -40,6 +40,9 @@ public class ConfigDevice {
     static String deviceId = "";
     static String devicePwd = "";
 
+    public ConfigDevice(Context context) {
+        this.context = context;
+    }
 
     public ConfigDevice(String wifiPassword,boolean IsHidden,String myIP,Context context) {
         wifiPwd = wifiPassword;
@@ -57,7 +60,6 @@ public class ConfigDevice {
         @Override
         public void run() {
             IEsptouchTask mConfigDevTask;
-            Log.d("MainActivity", "ConnectDevThread start");
             //获取路由器SSID
             EspWifiAdminSimple mWifiAdmin = new EspWifiAdminSimple(context);
             //ssid是网络的ID,bssid是接入ap的mac
@@ -68,7 +70,6 @@ public class ConfigDevice {
             //配置设备上网
             mConfigDevTask = new EsptouchTask(apSsid, apBssid, wifiPwd, switchIsHidden, context);
             IEsptouchResult result = mConfigDevTask.executeForResult();
-            Log.d("MainActivity", "ConnectDevThread start");
             if (result.isSuc()) {
                 //配置WI-FI后等待设备设置成lanstart模式
                 try {
@@ -79,6 +80,12 @@ public class ConfigDevice {
             }
             findDevice();
         }
+    }
+
+    public String getApSSid(){
+        EspWifiAdminSimple mWifiAdmin = new EspWifiAdminSimple(context);
+        //ssid是网络的ID,bssid是接入ap的mac
+        return mWifiAdmin.getWifiConnectedSsid();
     }
 
     public int getConfigResult(){
@@ -103,7 +110,6 @@ public class ConfigDevice {
     //扫描本地设备
     private void findDevice(){
         findDev = false;
-
         Cfg.devScanClean();
         String ip = myip;
         if (ip.length() < 4) {
@@ -113,7 +119,6 @@ public class ConfigDevice {
         for (int i = 1; i < 255; i++) {
 
             if (findDev) {
-
                 return;
             }
             new UDPThread(ip, i).start();
@@ -168,6 +173,7 @@ public class ConfigDevice {
                 dSocket = new DatagramSocket(); // 注意此处要先在配置文件里设置权限,否则会抛权限不足的异常
             } catch (SocketException e) {
                 e.printStackTrace();
+                return;
             }
 
             String localPort = dSocket.getLocalPort() + "";
@@ -227,7 +233,6 @@ public class ConfigDevice {
                 e.printStackTrace();
             }
             dSocket.close();
-
         }
     }
 }

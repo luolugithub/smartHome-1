@@ -26,7 +26,15 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/control2_03" />
-
+            <TextView
+                android:id="@+id/titleHCHOViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="45dp"
+                android:layout_marginTop="20dp"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                android:text="注销"/>
             <TextView
                 android:id="@+id/titleDeviceName"
                 android:layout_width="wrap_content"
@@ -35,6 +43,13 @@
                 android:text="甲醛检测仪"
                 android:textColor="#FFFFFF"
                 android:textSize="25sp" />
+            <TextView
+                android:id="@+id/titleConfig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="340dp"
+                android:layout_marginTop ="13dp"
+                android:background="@drawable/config" />
         </FrameLayout>
     </LinearLayout>
     <LinearLayout

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.demo.smarthome.R;
+import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.iprotocol.IProtocol;
 import com.demo.smarthome.protocol.Msg;
 import com.demo.smarthome.protocol.PlProtocol;
@@ -14,6 +15,7 @@ import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.service.ConfigDevice;
+import com.demo.smarthome.service.ConfigService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
 import com.demo.smarthome.tools.IpTools;
@@ -61,6 +63,7 @@ import android.view.LayoutInflater;
  */
 public class MainActivity extends Activity {
 
+	//后台转到前台
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -100,6 +103,7 @@ public class MainActivity extends Activity {
 
 	ProgressDialog dialogView;
 	Intent tempIntent;
+	ConfigService dbService;
 
 	Handler handler = new Handler() {
 
@@ -138,11 +142,13 @@ public class MainActivity extends Activity {
 			case FIND_DEV_SUCCEED:
 				dialogView.dismiss();
 				//如果该设备已经存在
-				for (String devID : Cfg.devInfo) {
-					if(deviceInfo.getDeviceID().equals(devID)){
-						failAlert.setTitle(" 添加失败").setIcon(R.drawable.cloud_fail).setMessage("   没有新的本地设备");
-						failAlert.create().show();
-						return;
+				if(Cfg.devInfo != null) {
+					for (String devID : Cfg.devInfo) {
+						if (deviceInfo.getDeviceID().equals(devID)) {
+							failAlert.setTitle(" 添加失败").setIcon(R.drawable.cloud_fail).setMessage("   没有新的本地设备");
+							failAlert.create().show();
+							return;
+						}
 					}
 				}
 				failAlert.setTitle(" 添加本地设备").setMessage("   是否添加本地设备\n  设备ID:"+ deviceInfo.getDeviceID())
@@ -150,7 +156,6 @@ public class MainActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-
 						//等待框
 						dialogView = new ProgressDialog(MainActivity.this);
 						dialogView.setTitle("添加设备到云端");
@@ -225,18 +230,10 @@ public class MainActivity extends Activity {
 		TextView title = (TextView) findViewById(R.id.titleMain);
 		title.setClickable(true);
 		title.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = getIntent();
-
-				if((intent.getStringExtra("activity")).equals("welcome")){
-					intent.setClass(MainActivity.this, LoginActivity.class);
-					startActivity(intent);
-				}
-				finish();
+				onBackPressed();
 			}
-
 		});
 
 		btnRefresh = (Button) findViewById(R.id.setupBtnRefresh);
@@ -246,6 +243,8 @@ public class MainActivity extends Activity {
 		btnAddDev.setOnClickListener(new BtnAddDevOnClickListener());
 
 		listView = (ListView) findViewById(R.id.devListView);
+
+		dbService = new ConfigDao(MainActivity.this.getBaseContext());
 
 		new GetDevThread().start();
 
@@ -257,7 +256,7 @@ public class MainActivity extends Activity {
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		if(bundle != null){
-			if (bundle.getString("activity").equals("welcome")) {
+			if (bundle.getString("activity").equals("login")) {
 				intent.setClass(MainActivity.this, LoginActivity.class);
 				startActivity(intent);
 				finish();
@@ -272,7 +271,15 @@ public class MainActivity extends Activity {
 		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
 
 		if(Cfg.devInfo == null) {
+			Toast.makeText(MainActivity.this, "请添加设备", Toast.LENGTH_SHORT)
+					.show();
 			return;
+		}
+		//如果没有选择过设备,让他选择.
+		if(Cfg.currentDeviceID.isEmpty())
+		{
+			Toast.makeText(MainActivity.this, "请选择设备", Toast.LENGTH_SHORT)
+					.show();
 		}
 		for (String devID : Cfg.devInfo) {
 			HashMap<String, Object> item = new HashMap<String, Object>();
@@ -292,11 +299,11 @@ public class MainActivity extends Activity {
 		listView.setOnItemClickListener(new ItemClickListener());
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.main, menu);
+//		return true;
+//	}
 
 
 	//将设备列表储存到Cfg.devInfo静态变量中
@@ -343,7 +350,6 @@ public class MainActivity extends Activity {
 			AlertDialog.Builder myDialog = new AlertDialog.Builder(MainActivity.this)
 					.setTitle("请输入路由器密码");
 			myDialog.setView(layout);
-			Log.d(TAG, "click add");
 			myDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -377,13 +383,11 @@ public class MainActivity extends Activity {
 						@Override
 						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
 							if (keyCode == KeyEvent.KEYCODE_BACK) {
-								Log.d(TAG, "click back");
 								return true;
 							}
 							return false;
 						}
 					});
-					Log.d(TAG, "click add confirm");
 					//扫描设备
 					new ConnectDevThread().start();
 				}
@@ -482,7 +486,9 @@ public class MainActivity extends Activity {
 				return;
 			}
 			// 跳转到设置界面
-			Cfg.deviceID = devId;
+			Cfg.currentDeviceID = devId;
+			//保存选择设备
+			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
 
 			Intent tempIntent = new Intent();
 			tempIntent.setClass(MainActivity.this, DeviceDataViewActivity.class);

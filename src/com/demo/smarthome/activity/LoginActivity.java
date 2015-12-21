@@ -53,37 +53,6 @@ import com.demo.smarthome.tools.CheckEmailPhoneTools;
  * 
  */
 public class LoginActivity extends Activity {
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-
-	}
-
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-
-		// if(Cfg.register){
-		// try {
-		// Thread.sleep(1000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// txtName.setText(Cfg.regUserName);
-		// txtPassword.setText(Cfg.regUserPass);
-		// new LoginThread().start();
-		// try {
-		// Thread.sleep(1000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// new LoginThread().start();
-		// }
-	}
 
 	TextView title = null;
 	TextView forgetPassword = null;
@@ -92,7 +61,6 @@ public class LoginActivity extends Activity {
 	EditText txtPassword = null;
 	TextView textVersion = null;
 	CheckBox isAtuoLogin = null;
-
 	String name = "";
 	String password = "";
 	String userMailName ="";
@@ -118,7 +86,6 @@ public class LoginActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			dialogView.dismiss();
-			// dataToui();
 			switch (msg.what) {
 			case LOGIN_SUCCEED:
 				isLogin = true;
@@ -129,10 +96,24 @@ public class LoginActivity extends Activity {
 				dbService.SaveSysCfgByKey(Cfg.KEY_AUTO_LOGIN
 						, String.valueOf(isAtuoLogin.isChecked()));
 
-				Intent intent = new Intent();
-				intent.setClass(LoginActivity.this, MainActivity.class);
-				startActivity(intent);// 打开新界面
 
+				//如果该账号只绑定了一台设备(或者已经绑定了设备),直接进入实时设备数据界面,否则要去设置设备界面
+				if(Cfg.devInfo.length == 1 || !Cfg.currentDeviceID.isEmpty()){
+					dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID
+							, Cfg.devInfo[0]);
+					Cfg.currentDeviceID = Cfg.devInfo[0];
+					Intent intent = new Intent();
+					intent.setClass(LoginActivity.this, DeviceDataViewActivity.class);
+					startActivity(intent);
+				}
+				else {
+					Bundle bundle = new Bundle();
+					bundle.putString("activity", "login");
+					Intent intent = new Intent();
+					intent.putExtras(bundle);
+					intent.setClass(LoginActivity.this, MainActivity.class);
+					startActivity(intent);// 打开新界面
+				}
 				break;
 			case PASSWORD_ERROR:
 
@@ -169,6 +150,19 @@ public class LoginActivity extends Activity {
 	};
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		txtName.setText(dbService.getCfgByKey(Cfg.KEY_USER_NAME));
+		txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
+		if(dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
+			isAtuoLogin.setChecked(true);
+		}
+		else {
+			isAtuoLogin.setChecked(false);
+		}
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE); // 注意顺序
@@ -198,21 +192,27 @@ public class LoginActivity extends Activity {
 		btnReg.setOnClickListener(new BtnRegOnClickListener());
 
 		//显示版本号
-		textVersion = (TextView)findViewById(R.id.versionNumber);
+		textVersion = (TextView) findViewById(R.id.versionNumber);
 		textVersion.setText("v" + Cfg.versionNumber);
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
 
-		//从数据库中取出用户名密码
-
-		txtName.setText(dbService.getCfgByKey(Cfg.KEY_USER_NAME));
-		txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
-
-		if(dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
-			isAtuoLogin.setChecked(true);
+		//从数据库中取出用户名密码 自动登录
+		String tempName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
+		String tempPwd = dbService.getCfgByKey(Cfg.KEY_PASS_WORD);
+		if(tempName == null || tempPwd == null) {
+			txtName.setText(dbService.getCfgByKey(Cfg.KEY_USER_NAME));
+			txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
 		}
-		else {
-			isAtuoLogin.setChecked(false);
+
+		if (dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN) == null) {
+			isAtuoLogin.setChecked(true);
+		} else {
+			if (dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
+				isAtuoLogin.setChecked(true);
+			} else {
+				isAtuoLogin.setChecked(false);
+			}
 		}
 
 		//找回密码功能
@@ -231,11 +231,11 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.login, menu);
+//		return true;
+//	}
 
 	//找回密码
 	class clickTextForgetPwd implements OnClickListener {
