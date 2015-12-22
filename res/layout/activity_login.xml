@@ -137,8 +137,8 @@
             android:id="@+id/forgetPassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:text="忘记密码"
+            android:layout_marginLeft="45dp"
+            android:text="忘记密码了?"
             android:textColor="#4876FF"
             android:textSize="18sp" />
     </LinearLayout>

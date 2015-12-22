@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.smarthome.R;
+import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.device.DeviceDataString;
 import com.demo.smarthome.device.DeviceType;
 import com.demo.smarthome.server.DeviceDataResult;
@@ -44,12 +46,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.demo.smarthome.server.DeviceDataSet;
-
+import com.demo.smarthome.service.ConfigService;
 public class DeviceDataViewActivity extends Activity {
 
     TextView title = null;
     ListView listView;
-    ListView listViewTem;
+//    ListView listViewTem;
     Button buttonRefresh = null;
 
     String jsonResult;
@@ -72,6 +74,7 @@ public class DeviceDataViewActivity extends Activity {
     static final int DELETE_ERROR          = 5;
     static final int SERVER_CANT_CONNECT   = 8;
     static final int SERVE_EXCEPTION       = 9;
+    static final int CHOSE_DEVICE_NULL     = 10;
 
     Handler handler = new Handler() {
 
@@ -79,7 +82,7 @@ public class DeviceDataViewActivity extends Activity {
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             super.handleMessage(msg);
-
+            Intent intent = new Intent();
             switch (msg.what) {
 
                 case GET_COUNT_ERROR:
@@ -93,8 +96,24 @@ public class DeviceDataViewActivity extends Activity {
                     break;
                 case GET_CURRENT_FAIL:
                     dialogView.dismiss();
-                    Toast.makeText(DeviceDataViewActivity.this, "获取数据失败", Toast.LENGTH_SHORT)
+                    Toast.makeText(DeviceDataViewActivity.this, "获取数据失败,请重新选择设备", Toast.LENGTH_SHORT)
                             .show();
+
+                    intent.setClass(DeviceDataViewActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                    break;
+                case CHOSE_DEVICE_NULL:
+                    dialogView.dismiss();
+                    ConfigService dbService = new ConfigDao(DeviceDataViewActivity.this.getBaseContext());
+                    Cfg.currentDeviceID = "";
+                    dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
+
+                    Toast.makeText(DeviceDataViewActivity.this, "所选设备没有数据", Toast.LENGTH_SHORT)
+                            .show();
+                    intent.setClass(DeviceDataViewActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                     break;
                 default:
                     break;
@@ -129,7 +148,11 @@ public class DeviceDataViewActivity extends Activity {
 
             @Override
             public void onClick(View arg0) {
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(DeviceDataViewActivity.this, LoginActivity.class);
+
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -148,10 +171,10 @@ public class DeviceDataViewActivity extends Activity {
         });
 
         listView = (ListView) this.findViewById(R.id.dataListView);
-        listViewTem = (ListView) this.findViewById(R.id.horizontalListView);
+//        listViewTem = (ListView) this.findViewById(R.id.horizontalListView);
 
-        buttonRefresh = (Button) findViewById(R.id.deviceDataRefresh);
-        buttonRefresh.setOnClickListener(new refreshOnClickListener());
+//        buttonRefresh = (Button) findViewById(R.id.deviceDataRefresh);
+//        buttonRefresh.setOnClickListener(new refreshOnClickListener());
 
         //等待框
         dialogView = new ProgressDialog(DeviceDataViewActivity.this);
@@ -206,135 +229,222 @@ public class DeviceDataViewActivity extends Activity {
         startActivity(intent);
         return true;
     }
-    //该方法会根据ID区分需要显示那些adpter,温湿度需要单独的adpter类型
+
     private void showDataList() {
-        List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
-        List<HashMap<String, Object>> dataTem = new ArrayList<HashMap<String, Object>>();
-        HashMap<String, Object> itemTem = new HashMap<String, Object>();
-        int tempInt;
-        float tempFloat;
-        if(currentData.getType().equals(currentData.getType()))
-        {
-            //为能够显示特殊字符
-            deviceListType = new DeviceType(this).getHchoMonitor();
-            String temperature,hygrometer;
-            String temp_T = "   ";
-            String temp_H = "   ";
-            //如果离线显示空
-            if(is_device_online) {
 
-                if (currentData.getTemperature().length() > 3) {
-                    tempInt = Integer.parseInt(currentData.getTemperature().substring(0
-                            , currentData.getTemperature().length() - 3));
-                    tempFloat = ((float) tempInt) / 10;
-                    temperature = String.valueOf(tempFloat);
-                    hygrometer = currentData.getTemperature().substring(currentData.getTemperature().length() - 3);
-                    //为了美观,不足位用空格填满
-                    for (int i = 0; i < 6 - currentData.getTemperature().length(); i++) {
-                        temperature = " " + temperature;
-                    }
-                    //为了美观,将前面的0换成空格
-                    byte[] byteHygrometer = hygrometer.getBytes();
-                    for (int i = 0; i < hygrometer.length(); i++) {
-                        if (byteHygrometer[i] == '0') {
-                            byteHygrometer[i] = ' ';
-                        } else {
-                            break;
-                        }
-                    }
-                    hygrometer = new String(byteHygrometer);
-
-                    temp_T = temperature;
-                    temp_H = hygrometer;
-                } else if (currentData.getTemperature().length() <= 3) {
-                    temp_T = "  0";
-                    hygrometer = currentData.getTemperature();
-                    for (int i = 0; i < 3 - currentData.getTemperature().length(); i++) {
-                        hygrometer = " " + hygrometer;
-                    }
-                    temp_H = currentData.getTemperature();
-                }
-            }
-            itemTem.put("temperature", temp_T);
-            itemTem.put("hygrometer", temp_H);
-            dataTem.add(itemTem);
-            haveTemperature = true;
-        }
-
-        if(deviceListType == null) {
-            return;
-        }
-        String tempValue = "   ";
-        for (DeviceDataString dataTypeTemp : deviceListType) {
-            HashMap<String, Object> item = new HashMap<String, Object>();
-
-            if(is_device_online) {
-                //甲醛和TVOC等数值要除1000
-                if ((dataTypeTemp.getType()).equals("hcho")) {
-                    tempInt = Integer.parseInt(currentData.getHcho());
-                    //防止出现0.0的情况
-                    if (tempInt == 0) {
-                        tempValue = "0";
-                    } else {
-                        tempFloat = ((float) tempInt) / 100;
-                        tempValue = String.valueOf(tempFloat);
-                    }
-                } else if ((dataTypeTemp.getType()).equals("tvoc")) {
-                    tempInt = Integer.parseInt(currentData.getTvoc());
-                    if (tempInt == 0) {
-                        tempValue = "0";
-                    } else {
-                        tempFloat = ((float) tempInt) / 100;
-                        tempValue = String.valueOf(tempFloat);
-                    }
-                } else if ((dataTypeTemp.getType()).equals("pm2_5")) {
-                    tempValue = currentData.getPm2_5();
-                } else if ((dataTypeTemp.getType()).equals("pm10")) {
-                    tempValue = currentData.getPm10();
-                } else {
-                    return;
-                }
-                //为了美观,去要在前面值前加空格
-                if (tempValue.length() == 1) {
-                    tempValue = "    " + tempValue;
-                } else if (tempValue.length() == 2) {
-                    tempValue = "  " + tempValue;
-                }
-            }
-
-            item.put("name", dataTypeTemp.getName());
-            item.put("value", tempValue);
-            item.put("unit", dataTypeTemp.getUnit());
-            data.add(item);
-        }
         // 创建SimpleAdapter适配器将数据绑定到item显示控件上
-        SimpleAdapter adapter = new MySimpleAdapter(this, data,
-                R.layout.activity_device_adapter, new String[] { "name", "value","unit"},
-                new int[] { R.id.adapterTypeName, R.id.adapterValue,R.id.adapterUnit});
+        MyBaseAdapter adapter = new MyBaseAdapter();
 
         // 实现列表的显示
         listView.setAdapter(adapter);
         //删除分割线
         listView.setDivider(null);
         listView.setOnItemClickListener(new ItemClickListener());
-        //显示带有温度和湿度的listView
-        if(haveTemperature){
-            SimpleAdapter adapterTem = new MySimpleAdapter(this, dataTem,
-                    R.layout.activity_device_adapter_tem, new String[] { "temperature", "hygrometer"},
-                    new int[] { R.id.adapterValueTem, R.id.adapterValueDam});
-            listViewTem.setAdapter(adapterTem);
-            listViewTem.setDivider(null);
-            listViewTem.setOnItemClickListener(new ItemTemClickListener());
+    }
+    //显示在list中的类型
+    static final int LIST_HCHO = 0;
+    static final int LIST_TVOC = 1;
+    static final int LIST_PM2_5 = 2;
+    static final int LIST_PM10 = 3;
+    static final int LIST_TEMPERATURE = 4;
+
+    public int setListTypeByDeviceType(int position){
+        if(currentData.getType().equals(currentData.getType())){
+            switch (position){
+                case 0:
+                    return LIST_HCHO;
+                case 1:
+                    return LIST_TVOC;
+                case 2:
+                    return LIST_PM2_5;
+                case 3:
+                    return LIST_PM10;
+                case 4:
+                    return LIST_TEMPERATURE;
+                default:
+                    return LIST_HCHO;
+            }
         }
+        return LIST_HCHO;
     }
 
-    class MySimpleAdapter extends SimpleAdapter {
+    private class MyBaseAdapter extends BaseAdapter {
+        public static final int DECVICE_NO_TEMPERATURE = 1;
+        public static final int DECVICE_TEMPERATURE = 2;
 
-        public MySimpleAdapter(Context context,
-                               List<? extends Map<String, ?>> data, int resource,
-                               String[] from, int[] to) {
-            super(context, data, resource, from, to);
+        public static final int TYPE_NOT_TEMPERATURE = 0;
+        public static final int TYPE_TEMPERATURE = 1;
 
+        public static final int HCHO_DETECTOR = 5;
+
+        int viewTypeCount = 1;
+        int count = 1;
+        int TemperaturePosition = 4;
+        MyBaseAdapter (){
+            if(currentData.getType().equals(currentData.getType())){
+                viewTypeCount = DECVICE_TEMPERATURE;
+                count = 3;
+                TemperaturePosition = LIST_TEMPERATURE;
+            }
+        }
+
+        //根据position获取对应item使用的View类型。
+        @Override
+        public int getItemViewType(int position) {
+            if(setListTypeByDeviceType(position) == TemperaturePosition){
+                return TYPE_TEMPERATURE;
+            }
+            else {
+                return TYPE_NOT_TEMPERATURE;
+            }
+
+        }
+        //返回item使用的View类型的数量，默认为1。
+        @Override
+        public int getViewTypeCount() {
+            return viewTypeCount;
+        }
+        //返回数据源中数据项的总数量
+        @Override
+        public int getCount() {
+            return count;
+        }
+        //根据position从数据源中获取数据项
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+        //根据position从数据源中获取数据项ID
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+        //温湿度值不可点击
+        @Override
+        public boolean isEnabled(int position) {
+            if(setListTypeByDeviceType(position) == TemperaturePosition){
+                return false;
+            }
+            return true;
+        }
+        //该函数以后要记得改动,太长了
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if(convertView == null) {
+                TextView typeName;
+                TextView adapterValue;
+                TextView adapterUnit;
+                TextView tempteratureText;
+                TextView hygrometerText;
+
+                int tempInt;
+                float tempFloat;
+
+                //如果是除了温湿度以外的adapter
+                if(getItemViewType(position) == TYPE_NOT_TEMPERATURE) {
+
+                        String tempValue = "   ";
+                        convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter, parent, false);
+
+                        typeName = (TextView) convertView.findViewById(R.id.adapterTypeName);
+                        adapterValue = (TextView) convertView.findViewById(R.id.adapterValue);
+                        adapterUnit = (TextView) convertView.findViewById(R.id.adapterUnit);
+                        //甲醛和TVOC等数值要除1000
+                        if (setListTypeByDeviceType(position) == LIST_HCHO) {
+                            tempInt = Integer.parseInt(currentData.getHcho());
+                            //防止出现0.0的情况
+                            if (tempInt == 0) {
+                                tempValue = "0";
+                            } else {
+                                tempFloat = ((float) tempInt) / 100;
+                                tempValue = String.valueOf(tempFloat);
+                            }
+                            typeName.setText(convertView.getResources().getString(R.string.device_hcho_name));
+                            adapterUnit.setText(convertView.getResources().getString(R.string.device_hcho_unit));
+                        } else if (setListTypeByDeviceType(position) == LIST_TVOC) {
+                            tempInt = Integer.parseInt(currentData.getTvoc());
+                            if (tempInt == 0) {
+                                tempValue = "0";
+                            } else {
+                                tempFloat = ((float) tempInt) / 100;
+                                tempValue = String.valueOf(tempFloat);
+                            }
+                            typeName.setText(convertView.getResources().getString(R.string.device_tvoc_name));
+                            adapterUnit.setText(convertView.getResources().getString(R.string.device_tvoc_unit));
+                        } else if (setListTypeByDeviceType(position) == LIST_PM2_5) {
+                            tempValue = currentData.getPm2_5();
+                            typeName.setText(convertView.getResources().getString(R.string.device_pm2_5_name));
+                            adapterUnit.setText(convertView.getResources().getString(R.string.device_pm2_5_unit));
+                        } else if (setListTypeByDeviceType(position) == LIST_PM10) {
+                            tempValue = currentData.getPm10();
+                            typeName.setText(convertView.getResources().getString(R.string.device_pm10_name));
+                            adapterUnit.setText(convertView.getResources().getString(R.string.device_pm10_unit));
+                        }
+                        //为了美观,去要在前面值前加空格
+                        if (tempValue.length() == 1) {
+                            tempValue = "    " + tempValue;
+                        } else if (tempValue.length() == 2) {
+                            tempValue = "  " + tempValue;
+                        }
+                        if(is_device_online) {
+                            adapterValue.setText(tempValue);
+                        }
+                        else{
+                            adapterValue.setText("");
+                        }
+
+                } else {
+                    String temperature,hygrometer;
+                    String temp_T = "   ";
+                    String temp_H = "   ";
+
+                    convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_tem, parent, false);
+                    tempteratureText = (TextView) convertView.findViewById(R.id.adapterValueTem);
+                    hygrometerText = (TextView) convertView.findViewById(R.id.adapterValueDam);
+
+                    if (currentData.getTemperature().length() > 3) {
+                        tempInt = Integer.parseInt(currentData.getTemperature().substring(0
+                                , currentData.getTemperature().length() - 3));
+                        tempFloat = ((float) tempInt) / 10;
+                        temperature = String.valueOf(tempFloat);
+                        hygrometer = currentData.getTemperature().substring(currentData.getTemperature().length() - 3);
+                        //为了美观,不足位用空格填满
+                        for (int i = 0; i < 6 - currentData.getTemperature().length(); i++) {
+                            temperature = " " + temperature;
+                        }
+                        //为了美观,将前面的0换成空格
+                        byte[] byteHygrometer = hygrometer.getBytes();
+                        for (int i = 0; i < hygrometer.length(); i++) {
+                            if (byteHygrometer[i] == '0') {
+                                byteHygrometer[i] = ' ';
+                            } else {
+                                break;
+                            }
+                        }
+                        hygrometer = new String(byteHygrometer);
+
+                        temp_T = temperature;
+                        temp_H = hygrometer;
+                    } else if (currentData.getTemperature().length() <= 3) {
+                        temp_T = "  0";
+                        hygrometer = currentData.getTemperature();
+                        for (int i = 0; i < 3 - currentData.getTemperature().length(); i++) {
+                            hygrometer = " " + hygrometer;
+                        }
+                        temp_H = currentData.getTemperature();
+                    }
+                    if(is_device_online) {
+                        tempteratureText.setText(temp_T);
+                        hygrometerText.setText(temp_H);
+                    }
+                    else{
+                        tempteratureText.setText("");
+                        hygrometerText.setText("");
+                    }
+                }
+            }
+            return convertView;
         }
     }
     // 获取点击listView事件
@@ -342,27 +452,18 @@ public class DeviceDataViewActivity extends Activity {
 
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
-            ListView TempListView = (ListView) parent;
-            HashMap<String, Object> data = (HashMap<String, Object>) TempListView
-                    .getItemAtPosition(position);
 
-            String dataName = (String) data.get("name");
             Bundle bundleData = new Bundle();
 
-            if (dataName == null) {
-                Toast.makeText(getApplicationContext(), "获取历史数据失败", Toast.LENGTH_SHORT)
-                        .show();
-                return;
-            }
 
-            if(dataName.equals(getString(R.string.device_hcho_name))){
+            if(setListTypeByDeviceType(position) == LIST_HCHO){
                 bundleData.putString("dataName", "hcho");
             }
-            else if(dataName.equals(getString(R.string.device_pm2_5_name))){
+            else if(setListTypeByDeviceType(position) == LIST_PM2_5){
                 bundleData.putString("dataName", "pm2_5");
-            }else if(dataName.equals(getString(R.string.device_pm10_name))){
+            }else if(setListTypeByDeviceType(position) == LIST_PM10){
                 bundleData.putString("dataName", "pm10");
-            }else if(dataName.equals(getString(R.string.device_tvoc_name))){
+            }else if(setListTypeByDeviceType(position) == LIST_TVOC){
                 bundleData.putString("dataName", "tvoc");
             }
             else{
@@ -379,53 +480,26 @@ public class DeviceDataViewActivity extends Activity {
         }
     }
 
-    // 点击温湿度事件
-    private final class ItemTemClickListener implements AdapterView.OnItemClickListener {
-
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            //现在温湿度不支持历史数据查询
-            if(true){
-                return;
-            }
-            ListView TempListView = (ListView) parent;
-            HashMap<String, Object> data = (HashMap<String, Object>) TempListView
-                    .getItemAtPosition(position);
-
-            Bundle dataDevId = new Bundle();
-
-            // 跳转到设置界面
-            dataDevId.putString("dataName", "temperature");
-
-            Intent tempIntent = new Intent();
-            tempIntent.setClass(DeviceDataViewActivity.this, historyDataActivity.class);
-            tempIntent.putExtras(dataDevId);
-            startActivity(tempIntent);
-
-        }
-    }
-
 //        @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.menu_hcho_monitor, menu);
 //        return true;
 //    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     class getCurrentData extends Thread {
 
@@ -485,7 +559,7 @@ public class DeviceDataViewActivity extends Activity {
                     message.what = GET_CURRENT_SUCCED;
                     break;
                 default:
-                    message.what = GET_CURRENT_FAIL;
+                    message.what = CHOSE_DEVICE_NULL;
                     break;
             }
             handler.sendMessage(message);
@@ -499,13 +573,13 @@ public class DeviceDataViewActivity extends Activity {
      * @author Administrator
      *
      */
-    class refreshOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            finish();
-            Intent intent = new Intent(DeviceDataViewActivity.this, DeviceDataViewActivity.class);
-            startActivity(intent);
-        }
-    }
+//    class refreshOnClickListener implements View.OnClickListener {
+//        @Override
+//        public void onClick(View v) {
+//            finish();
+//            Intent intent = new Intent(DeviceDataViewActivity.this, DeviceDataViewActivity.class);
+//            startActivity(intent);
+//        }
+//    }
 
 }

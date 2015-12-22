@@ -638,6 +638,9 @@ public class MainActivity extends Activity {
 			{
 				case Cfg.CODE_SUCCESS:
 					message.what = BUTTON_DELETE;
+					if(id.equals(dbService.getCfgByKey(Cfg.KEY_DEVICE_ID))){
+						dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,"");
+					}
 					break;
 				default:
 					message.what = DELETE_ERROR;

@@ -7,7 +7,7 @@ import com.google.gson.JsonSyntaxException;
 /**
  * Created by leishi on 15/10/26.
  *
- * ͨ���û��������¼��������,���豸�б��浽Cfg.devInfo��̬������
+ *
  *
  */
 

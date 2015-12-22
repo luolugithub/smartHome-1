@@ -95,13 +95,17 @@ public class LoginActivity extends Activity {
 						.getText().toString());
 				dbService.SaveSysCfgByKey(Cfg.KEY_AUTO_LOGIN
 						, String.valueOf(isAtuoLogin.isChecked()));
-
-
 				//如果该账号只绑定了一台设备(或者已经绑定了设备),直接进入实时设备数据界面,否则要去设置设备界面
-				if(Cfg.devInfo.length == 1 || !Cfg.currentDeviceID.isEmpty()){
+				if(Cfg.devInfo.length == 1){
 					dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID
 							, Cfg.devInfo[0]);
 					Cfg.currentDeviceID = Cfg.devInfo[0];
+				}else {
+					Cfg.currentDeviceID = dbService.getCfgByKey(Cfg.KEY_DEVICE_ID);
+				}
+
+				if(!Cfg.currentDeviceID.isEmpty()){
+
 					Intent intent = new Intent();
 					intent.setClass(LoginActivity.this, DeviceDataViewActivity.class);
 					startActivity(intent);
@@ -154,11 +158,11 @@ public class LoginActivity extends Activity {
 		super.onResume();
 		txtName.setText(dbService.getCfgByKey(Cfg.KEY_USER_NAME));
 		txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
-		if(dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
-			isAtuoLogin.setChecked(true);
+		if(dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("false")) {
+			isAtuoLogin.setChecked(false);
 		}
 		else {
-			isAtuoLogin.setChecked(false);
+			isAtuoLogin.setChecked(true);
 		}
 	}
 
@@ -205,14 +209,10 @@ public class LoginActivity extends Activity {
 			txtPassword.setText(dbService.getCfgByKey(Cfg.KEY_PASS_WORD));
 		}
 
-		if (dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN) == null) {
-			isAtuoLogin.setChecked(true);
+		if (dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("false")) {
+			isAtuoLogin.setChecked(false);
 		} else {
-			if (dbService.getCfgByKey(Cfg.KEY_AUTO_LOGIN).equals("true")) {
-				isAtuoLogin.setChecked(true);
-			} else {
-				isAtuoLogin.setChecked(false);
-			}
+			isAtuoLogin.setChecked(true);
 		}
 
 		//找回密码功能
@@ -428,7 +428,7 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * 登录
+	 * 找回密码
 	 *
 	 * @author Administrator
 	 *
