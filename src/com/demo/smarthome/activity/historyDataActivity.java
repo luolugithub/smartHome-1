@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.demo.smarthome.view.HistoryDataLineView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.demo.smarthome.view.MyDialogView;
 
 public class historyDataActivity extends Activity {
 
@@ -51,7 +52,7 @@ public class historyDataActivity extends Activity {
     DeviceDataResult historyData = new DeviceDataResult();
 
     HistoryDataLineView historyDataViewItem;
-    ProgressDialog dialogView;
+    MyDialogView dialogView;
 
     String userSetDate;
 
@@ -91,7 +92,7 @@ public class historyDataActivity extends Activity {
 
             switch (msg.what) {
                 case GET_DATE_SUCCEED:
-                    dialogView.dismiss();
+                    dialogView.closeMyDialog();
                     mAdapter = new ArrayAdapter<String>(historyDataActivity.this,android.R.layout.simple_spinner_item, dateList);
 
                     mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -113,7 +114,7 @@ public class historyDataActivity extends Activity {
                     });
                     break;
                 case GET_DATE_ERROR:
-                    dialogView.dismiss();
+                    dialogView.closeMyDialog();
                         break;
                 case GET_DATA_SUCCED:
 
@@ -167,36 +168,8 @@ public class historyDataActivity extends Activity {
         dataType = bundle.getString("dataName");
 
         //等待框
-        dialogView = new ProgressDialog(historyDataActivity.this);
-        dialogView.setTitle("读取数据中");
-        dialogView.setMessage("正在从服务器中读取历史数据,请等待");
-        //点击等待框以外等待框不消失
-        dialogView.setCanceledOnTouchOutside(false);
-        dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-            }
-        });
-        dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-                "请等待...", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        dialogView.show();
-        dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(false);
-
-        dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            //屏蔽返回键
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    return true;
-                }
-                return false;
-            }
-        });
+        dialogView = new MyDialogView(historyDataActivity.this);
+        dialogView.showMyDialog("读取数据中", "正在从服务器中读取历史数据,请等待");
 
         new getDateList().start();
 

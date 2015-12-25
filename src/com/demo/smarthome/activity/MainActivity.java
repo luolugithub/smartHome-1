@@ -19,6 +19,7 @@ import com.demo.smarthome.service.ConfigService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
 import com.demo.smarthome.tools.IpTools;
+import com.demo.smarthome.view.MyDialogView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -101,7 +102,7 @@ public class MainActivity extends Activity {
 	String jsonResult;
 	ServerReturnResult getResult = new ServerReturnResult();
 
-	ProgressDialog dialogView;
+	MyDialogView dialogView;
 	Intent tempIntent;
 	ConfigService dbService;
 
@@ -115,6 +116,7 @@ public class MainActivity extends Activity {
 			switch (msg.what) {
 
 			case GET_DEV_SUCCEED:
+				dialogView.closeMyDialog();
 				getDevList();
 				break;
 			case GET_DEV_ERROR:
@@ -122,7 +124,7 @@ public class MainActivity extends Activity {
 				break;
 
 			case BUTTON_DELETE:
-				dialogView.dismiss();
+				dialogView.closeMyDialog();
 				Toast.makeText(getApplicationContext(), "成功删除设备", Toast.LENGTH_SHORT)
 						.show();
 				finish();
@@ -131,7 +133,7 @@ public class MainActivity extends Activity {
 				break;
 
 			case DELETE_ERROR:
-				dialogView.dismiss();
+				dialogView.closeMyDialog();
 				Toast.makeText(MainActivity.this, "删除设备失败！", Toast.LENGTH_SHORT)
 						.show();
 
@@ -140,7 +142,7 @@ public class MainActivity extends Activity {
 
 				break;
 			case FIND_DEV_SUCCEED:
-				dialogView.dismiss();
+				dialogView.closeMyDialog();
 				//如果该设备已经存在
 				if(Cfg.devInfo != null) {
 					for (String devID : Cfg.devInfo) {
@@ -157,37 +159,8 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						//等待框
-						dialogView = new ProgressDialog(MainActivity.this);
-						dialogView.setTitle("添加设备到云端");
-						dialogView.setMessage("正在添加本地设备到云端,请等待");
-						//点击等待框以外等待框不消失
-						dialogView.setCanceledOnTouchOutside(false);
-						dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-							@Override
-							public void onCancel(DialogInterface dialog) {
-							}
-						});
-						dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-								"请等待...", new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-									}
-								});
-						dialogView.show();
-						dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-								.setEnabled(false);
-
-						dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-							//屏蔽返回键
-							@Override
-							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-								if (keyCode == KeyEvent.KEYCODE_BACK) {
-									return true;
-								}
-								return false;
-							}
-						});
-
+						dialogView = new MyDialogView(MainActivity.this);
+						dialogView.showMyDialog("添加设备到云端", "正在添加本地设备到云端,请等待");
 						new addDeviceThread().start();
 					}
 				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -199,13 +172,13 @@ public class MainActivity extends Activity {
 				failAlert.create().show();
 					break;
 			case FIND_DEV_TIMEOUT:
-				dialogView.dismiss();
+				dialogView.closeMyDialog();
 
 				failAlert.setTitle(" 添加失败").setIcon(R.drawable.cloud_fail).setMessage("   无法找到本地设备");
 				failAlert.create().show();
 					break;
 			case ADD_DEV_SUCCED:
-				dialogView.dismiss();
+				dialogView.closeMyDialog();
 				Toast.makeText(MainActivity.this, "添加设备成功", Toast.LENGTH_SHORT)
 						.show();
 				finish();
@@ -245,7 +218,9 @@ public class MainActivity extends Activity {
 		listView = (ListView) findViewById(R.id.devListView);
 
 		dbService = new ConfigDao(MainActivity.this.getBaseContext());
-
+		//等待框
+		dialogView = new MyDialogView(MainActivity.this);
+		dialogView.showMyDialog("正在获取设备", "正在从服务器获取设备,请等待");
 		new GetDevThread().start();
 
 	}
@@ -359,35 +334,8 @@ public class MainActivity extends Activity {
 					dialog.dismiss();
 
 					//等待框
-					dialogView = new ProgressDialog(MainActivity.this);
-					dialogView.setTitle("正在添加设备");
-					dialogView.setMessage("正在扫描本地智能硬件,请等待");
-					//点击等待框以外等待框不消失
-					dialogView.setCanceledOnTouchOutside(false);
-					dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						@Override
-						public void onCancel(DialogInterface dialog) {
-						}
-					});
-					dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-							"请等待...", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-								}
-							});
-					dialogView.show();
-					dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-							.setEnabled(false);
-					//扫描设备时屏蔽返回键
-					dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-						@Override
-						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-							if (keyCode == KeyEvent.KEYCODE_BACK) {
-								return true;
-							}
-							return false;
-						}
-					});
+					dialogView = new MyDialogView(MainActivity.this);
+					dialogView.showMyDialog("正在添加设备", "正在扫描本地智能硬件,请等待");
 					//扫描设备
 					new ConnectDevThread().start();
 				}
@@ -544,36 +492,8 @@ public class MainActivity extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 
 							//等待框
-							dialogView = new ProgressDialog(MainActivity.this);
-							dialogView.setTitle("删除设备中");
-							dialogView.setMessage("正在从服务器删除设备,请等待");
-							//点击等待框以外等待框不消失
-							dialogView.setCanceledOnTouchOutside(false);
-							dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-								@Override
-								public void onCancel(DialogInterface dialog) {
-								}
-							});
-							dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-									"请等待...", new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int which) {
-										}
-									});
-							dialogView.show();
-							dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-									.setEnabled(false);
-
-							dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-								//屏蔽返回键
-								@Override
-								public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-									if (keyCode == KeyEvent.KEYCODE_BACK) {
-										return true;
-									}
-									return false;
-								}
-							});
+							dialogView = new MyDialogView(MainActivity.this);
+							dialogView.showMyDialog("删除设备中", "正在从服务器删除设备,请等待");
 
 							new DelDevThread(deleteDevId).start();
 							return;

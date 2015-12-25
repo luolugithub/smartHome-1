@@ -42,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.smarthome.server.setServerURL;
+import com.demo.smarthome.view.MyDialogView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -75,7 +76,7 @@ public class LoginActivity extends Activity {
 	static final int SERVER_ERROR = 7;
 
 	ServerReturnResult loginResult = new ServerReturnResult();
-	ProgressDialog dialogView;
+	MyDialogView dialogView;
 	String jsonResult;
 	ServerReturnResult getResult = new ServerReturnResult();
 
@@ -85,7 +86,7 @@ public class LoginActivity extends Activity {
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
-			dialogView.dismiss();
+			dialogView.closeMyDialog();
 			switch (msg.what) {
 			case LOGIN_SUCCEED:
 				isLogin = true;
@@ -260,35 +261,8 @@ public class LoginActivity extends Activity {
 					}
 					dialog.dismiss();
 					//等待框
-					dialogView = new ProgressDialog(LoginActivity.this);
-					dialogView.setTitle("正在找回密码");
-					dialogView.setMessage("正在发送找回密码请求,请等待");
-					//点击等待框以外等待框不消失
-					dialogView.setCanceledOnTouchOutside(false);
-					dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-						@Override
-						public void onCancel(DialogInterface dialog) {
-						}
-					});
-					dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-							"请等待...", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-								}
-							});
-					dialogView.show();
-					dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-							.setEnabled(false);
-					//扫描设备时屏蔽返回键
-					dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-						@Override
-						public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-							if (keyCode == KeyEvent.KEYCODE_BACK) {
-								return true;
-							}
-							return false;
-						}
-					});
+					dialogView = new MyDialogView(LoginActivity.this);
+					dialogView.showMyDialog("正在找回密码", "正在发送找回密码请求,请等待");
 					new forgetPwd().start();
 				}
 			});
@@ -327,43 +301,13 @@ public class LoginActivity extends Activity {
 				return;
 			}
 			//等待框
-			dialogView = new ProgressDialog(LoginActivity.this);
-			dialogView.setTitle("登录中");
-			dialogView.setMessage("正在验证用户信息,请等待");
-			//点击等待框以外等待框不消失
-			dialogView.setCanceledOnTouchOutside(false);
-			dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-				}
-			});
-			dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-					"请等待...", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					});
-			dialogView.show();
-			dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-					.setEnabled(false);
-			//扫描设备时屏蔽返回键
-			dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-				@Override
-				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-					if (keyCode == KeyEvent.KEYCODE_BACK) {
-						Log.d(TAG, "click back");
-						return true;
-					}
-					return false;
-				}
-			});
+			dialogView = new MyDialogView(LoginActivity.this);
+			dialogView.showMyDialog("登录中", "正在验证用户信息,请等待");
 
 			Cfg.userName = name;
 			Cfg.userPassword =password;
 			new LoginThread().start();
-
 		}
-
 	}
 
 	/**

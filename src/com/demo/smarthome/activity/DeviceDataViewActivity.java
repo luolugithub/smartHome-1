@@ -1,59 +1,49 @@
 package com.demo.smarthome.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.smarthome.R;
 import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.device.DeviceDataString;
-import com.demo.smarthome.device.DeviceType;
 import com.demo.smarthome.server.DeviceDataResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.demo.smarthome.server.DeviceDataSet;
 import com.demo.smarthome.service.ConfigService;
-public class DeviceDataViewActivity extends Activity {
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+
+public class DeviceDataViewActivity extends Activity implements OnRefreshListener{
 
     TextView title = null;
+    TextView pullRefreshText;
     ListView listView;
-//    ListView listViewTem;
-    Button buttonRefresh = null;
-
+//    pull refresh
+    SwipeRefreshLayout refresh_layout;
+    boolean refresh_flag = false;
     String jsonResult;
 
     DeviceDataResult deviceData = new DeviceDataResult();
@@ -68,13 +58,12 @@ public class DeviceDataViewActivity extends Activity {
     boolean haveTemperature = false;
     static final int GET_COUNT_SUCCEED     = 0;
     static final int GET_COUNT_ERROR       = 1;
-    static final int DEVICE_ID_ERROR       = 2;
+    static final int CHOSE_DEVICE_NULL       = 2;
     static final int GET_CURRENT_SUCCED    = 3;
     static final int GET_CURRENT_FAIL      = 4;
     static final int DELETE_ERROR          = 5;
     static final int SERVER_CANT_CONNECT   = 8;
     static final int SERVE_EXCEPTION       = 9;
-    static final int CHOSE_DEVICE_NULL     = 10;
 
     Handler handler = new Handler() {
 
@@ -86,17 +75,21 @@ public class DeviceDataViewActivity extends Activity {
             switch (msg.what) {
 
                 case GET_COUNT_ERROR:
-
-
                     break;
                 case GET_CURRENT_SUCCED:
-
-                    dialogView.dismiss();
+                    if(refresh_flag){
+                        refresh_layout.setRefreshing(false);
+                        refresh_flag = false;
+                        pullRefreshText.setText("下拉刷新");
+                    }
+                    else{
+                        dialogView.dismiss();
+                    }
                     showDataList();
                     break;
                 case GET_CURRENT_FAIL:
                     dialogView.dismiss();
-                    Toast.makeText(DeviceDataViewActivity.this, "获取数据失败,请重新选择设备", Toast.LENGTH_SHORT)
+                    Toast.makeText(DeviceDataViewActivity.this, "连接服务器失败", Toast.LENGTH_SHORT)
                             .show();
 
                     intent.setClass(DeviceDataViewActivity.this, MainActivity.class);
@@ -171,11 +164,14 @@ public class DeviceDataViewActivity extends Activity {
         });
 
         listView = (ListView) this.findViewById(R.id.dataListView);
-//        listViewTem = (ListView) this.findViewById(R.id.horizontalListView);
 
-//        buttonRefresh = (Button) findViewById(R.id.deviceDataRefresh);
-//        buttonRefresh.setOnClickListener(new refreshOnClickListener());
-
+        //官方下拉刷新的控件
+        refresh_layout = (SwipeRefreshLayout) this.findViewById(R.id.refresh_layout);
+        refresh_layout.setColorSchemeResources(R.color.green, R.color.viewfinder_frame, R.color.blue_50, R.color.viewfinder_laser);
+        //下拉刷新监听器
+        refresh_layout.setOnRefreshListener(this);
+        //"下拉刷新"
+        pullRefreshText = (TextView) this.findViewById(R.id.pullRefreshText);
         //等待框
         dialogView = new ProgressDialog(DeviceDataViewActivity.this);
         dialogView.setTitle("读取数据中");
@@ -208,7 +204,7 @@ public class DeviceDataViewActivity extends Activity {
             }
         });
 
-        new getCurrentData().start();
+        new getCurrentDataThread().start();
 
     }
 //    //后退按键
@@ -220,6 +216,23 @@ public class DeviceDataViewActivity extends Activity {
 //        startActivity(intent);
 //        finish();
 //    }
+
+    //下拉触发的函数
+    @Override
+    public void onRefresh() {
+
+        refresh_flag = true;
+        pullRefreshText.setText("正在刷新");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                message.what = getCurrentData();
+                handler.sendMessage(message);
+            }
+        }).start();
+    }
+
     //菜单键
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -240,6 +253,7 @@ public class DeviceDataViewActivity extends Activity {
         //删除分割线
         listView.setDivider(null);
         listView.setOnItemClickListener(new ItemClickListener());
+
     }
     //显示在list中的类型
     static final int LIST_HCHO = 0;
@@ -277,13 +291,14 @@ public class DeviceDataViewActivity extends Activity {
 
         public static final int HCHO_DETECTOR = 5;
 
-        int viewTypeCount = 1;
-        int count = 1;
-        int TemperaturePosition = 4;
+        int viewTypeCount;
+        int count ;
+        int TemperaturePosition ;
         MyBaseAdapter (){
+            //根据类型显示listView的类型
             if(currentData.getType().equals(currentData.getType())){
                 viewTypeCount = DECVICE_TEMPERATURE;
-                count = 3;
+                count = HCHO_DETECTOR;
                 TemperaturePosition = LIST_TEMPERATURE;
             }
         }
@@ -501,68 +516,66 @@ public class DeviceDataViewActivity extends Activity {
 //        return super.onOptionsItemSelected(item);
 //    }
 
-    class getCurrentData extends Thread {
+    //获取当前数据
+    class getCurrentDataThread extends Thread {
 
         @Override
         public void run() {
             Message message = new Message();
-            message.what = GET_CURRENT_SUCCED;
-
-            if(Cfg.currentDeviceID.isEmpty()) {
-                message.what = DEVICE_ID_ERROR;
-                handler.sendMessage(message);
-                return;
-            }
-
-            String[] paramsName = {"deviceID"};
-            String[] paramsValue = {Cfg.currentDeviceID};
-
-            setServerURL regiterUser= new setServerURL();
-            //需要判断服务器是否开启
-            if((jsonResult = regiterUser.sendParamToServer("getCurrentDeviceData", paramsName
-                    , paramsValue)).isEmpty()){
-                message.what = SERVER_CANT_CONNECT;
-                handler.sendMessage(message);
-                return;
-            }
-            try {
-                deviceData = gson.fromJson(jsonResult, DeviceDataResult.class);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-            switch (Integer.parseInt(deviceData.getCode()))
-            {
-                case Cfg.CODE_SUCCESS:
-                    if(deviceData.getRows().size() != 1)
-                    {
-                        message.what = GET_CURRENT_FAIL;
-                        break;
-                    }
-                    currentData = deviceData.getRows().get(0);
-                    //如果时间差距超过10分钟,认为设备已离线
-                    SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    try {
-                        Date deviceTime = dfs.parse(currentData.getCreateTime());
-                        Date currentTime = new Date();
-                        if((currentTime.getTime() - deviceTime.getTime())/1000 > 10*60){
-                            is_device_online = false;
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        is_device_online = false;
-                        message.what = GET_CURRENT_FAIL;
-                        break;
-                    }
-
-                    message.what = GET_CURRENT_SUCCED;
-                    break;
-                default:
-                    message.what = CHOSE_DEVICE_NULL;
-                    break;
-            }
+            message.what = getCurrentData();
             handler.sendMessage(message);
+        }
+
+    }
+
+    int getCurrentData(){
+
+        if(Cfg.currentDeviceID.isEmpty()) {
+            return CHOSE_DEVICE_NULL;
+        }
+
+        String[] paramsName = {"deviceID"};
+        String[] paramsValue = {Cfg.currentDeviceID};
+
+        setServerURL regiterUser= new setServerURL();
+        //需要判断服务器是否开启
+        if((jsonResult = regiterUser.sendParamToServer("getCurrentDeviceData", paramsName
+                , paramsValue)).isEmpty()){
+            return SERVER_CANT_CONNECT;
+        }
+        try {
+            deviceData = gson.fromJson(jsonResult, DeviceDataResult.class);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return  CHOSE_DEVICE_NULL;
+        }
+
+        switch (Integer.parseInt(deviceData.getCode()))
+        {
+            case Cfg.CODE_SUCCESS:
+                if(deviceData.getRows().size() != 1)
+                {
+                    return  GET_CURRENT_FAIL;
+                }
+                currentData = deviceData.getRows().get(0);
+                //如果时间差距超过10分钟,认为设备已离线
+                SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    Date deviceTime = dfs.parse(currentData.getCreateTime());
+                    Date currentTime = new Date();
+                    if((currentTime.getTime() - deviceTime.getTime())/1000 > 10*60){
+                        is_device_online = false;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    is_device_online = false;
+                    return  GET_CURRENT_FAIL;
+                }
+
+                return GET_CURRENT_SUCCED;
+            default:
+                return  CHOSE_DEVICE_NULL;
         }
 
     }

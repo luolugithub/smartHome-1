@@ -135,7 +135,7 @@ public class WelcomeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // ×¢ï¿½ï¿½Ë³ï¿½ï¿½
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_welcome);
 		//»¶Ó­½çÃæ×î¶à3Ãë
 		startTimestamp = System.currentTimeMillis();

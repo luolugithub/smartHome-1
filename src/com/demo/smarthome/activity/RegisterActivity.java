@@ -23,6 +23,7 @@ import com.demo.smarthome.tools.CheckEmailPhoneTools;
 import com.demo.smarthome.tools.IpTools;
 import com.demo.smarthome.tools.StrTools;
 import com.demo.smarthome.R;
+import com.demo.smarthome.view.MyDialogView;
 import com.espressif.iot.esptouch.EsptouchTask;
 import com.espressif.iot.esptouch.IEsptouchResult;
 import com.espressif.iot.esptouch.IEsptouchTask;
@@ -72,7 +73,7 @@ public class RegisterActivity extends Activity {
 	EditText txtWifipassword = null;
 	Switch  switchIsHidden;
 	TextView apSSID;
-	ProgressDialog dialogView;
+	MyDialogView dialogView;
 
 	boolean noWifi = false;
 
@@ -101,7 +102,7 @@ public class RegisterActivity extends Activity {
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
+			dialogView.closeMyDialog();
 			super.handleMessage(msg);
 
 			switch (msg.what) {
@@ -116,7 +117,7 @@ public class RegisterActivity extends Activity {
 				Cfg.userPassword = userRegPassword;
 				Cfg.currentDeviceID = deviceInfo.getDeviceID();
 
-				dialogView.dismiss();
+				dialogView.closeMyDialog();
 
 				Toast.makeText(RegisterActivity.this, "注册新用户成功!",
 						Toast.LENGTH_SHORT).show();
@@ -134,31 +135,26 @@ public class RegisterActivity extends Activity {
 				finish();
 				break;
 			case NO_WIFI:
-				dialogView.dismiss();
 
 				failAlert.setTitle("无法无线网络").setIcon(R.drawable.cloud_fail).setMessage("需要保持和本地设备在同一网络中");
 				failAlert.create().show();
 				break;
 			case CMD_TIMEOUT:
-				dialogView.dismiss();
 
 				failAlert.setTitle("无法找到本地设备").setIcon(R.drawable.cloud_fail).setMessage("注册时需要绑定本地设备");
 				failAlert.create().show();
 				break;
 			case USER_EXISTED:
-				dialogView.dismiss();
 
 				failAlert.setTitle(" 注册失败").setIcon(R.drawable.cloud_fail).setMessage("   用户已经存在");
 				failAlert.create().show();
 				break;
 			case SERVER_EXCEPTION:
-				dialogView.dismiss();
 
 				failAlert.setTitle(" 注册失败").setIcon(R.drawable.cloud_fail).setMessage("   服务器异常");
 				failAlert.create().show();
 				break;
 			default:
-				dialogView.dismiss();
 
 				failAlert.setTitle(" 注册失败").setIcon(R.drawable.cloud_fail).setMessage("   注册新用户失败");
 				failAlert.create().show();
@@ -257,33 +253,8 @@ public class RegisterActivity extends Activity {
 			}
 
 			//等待框
-			dialogView = new ProgressDialog(RegisterActivity.this);
-			dialogView.setTitle("正在注册中");
-			dialogView.setMessage("正在配置智能硬件,请等待");
-			dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-				}
-			});
-			dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-					"请等待...", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					});
-			dialogView.show();
-			dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-					.setEnabled(false);
-
-			dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-				@Override
-				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-					if (keyCode == KeyEvent.KEYCODE_BACK) {
-						return true;
-					}
-					return false;
-				}
-			});
+			dialogView = new MyDialogView(RegisterActivity.this);
+			dialogView.showMyDialog("正在获取设备", "正在从服务器获取设备,请等待");
 
 			new ConnectDevThread().start();
 		}
