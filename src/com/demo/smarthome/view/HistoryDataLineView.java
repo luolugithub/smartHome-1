@@ -13,8 +13,13 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.demo.smarthome.R;
+import com.demo.smarthome.service.Cfg;
+
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**********************************************************
  * @文件作者：sl
@@ -137,14 +142,13 @@ public class HistoryDataLineView extends View {
 		if(!isInitDatafinish){
 			return;
 		}
-		//已在android6.0版本被废弃,有时间要修改一下
 
 		// 画直线（横向和纵向）,坐标标示随着类型不同会改变
 		drawAllXLine(canvas);
 		drawAllYLine(canvas);
 		// 点的操作设置
 		mPoints = getPoints();
-
+		//为了适应低版本的手机
 		mPaint.setColor(res.getColor(R.color.viewfinder_laser));
 		mPaint.setStrokeWidth(dip2px(mPaintWidth));
 		mPaint.setStyle(Style.STROKE);
@@ -206,7 +210,11 @@ public class HistoryDataLineView extends View {
 	 * 画所有纵向表格，包括Y轴
 	 */
 	private void drawAllYLine(Canvas canvas) {
-
+		//当分辨率是480时时间标志会和X轴重叠,所以要向下偏移时间
+		int offset = 0;
+		if(Cfg.phoneWidth == 480){
+			offset = dip2px(10);
+		}
 		for (int i = 0; i < xSpaceCount; i++) {
 
 			//轴坐标线颜色不一样
@@ -223,14 +231,14 @@ public class HistoryDataLineView extends View {
 			//最后一个坐标要加(时)
 			if(i == xSpaceCount - 1){
 				drawText(String.valueOf(i*2) + "(时)", blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						- dip2px(xTextChange), bheight + dip2px(35), canvas);
+						- dip2px(xTextChange), bheight + dip2px(35) + offset, canvas);
 			}else if(i == 0 || i > 9){
 				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						- dip2px(xTextChange), bheight + dip2px(35), canvas);
+						- dip2px(xTextChange), bheight + dip2px(35)+ offset, canvas);
 			}
 			else {
 				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						, bheight + dip2px(35), canvas);
+						, bheight + dip2px(35)+ offset, canvas);
 			}
 		}
 	}

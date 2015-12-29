@@ -6,6 +6,10 @@ import java.util.List;
 import com.demo.smarthome.device.Dev;
 
 import android.app.Application;
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 
 /**
@@ -104,6 +108,9 @@ public class Cfg extends Application  {
 //	public static final int timeOutDef = 30 * (1000 / timeDelayDef); // 锟斤拷锟筋超时时锟斤拷
 //																		// 20锟斤拷
 //	public static final int timeReSendTimeDef = 5 * (1000 / timeDelayDef); // 锟斤拷锟斤拷锟截凤拷锟斤拷时时锟斤拷
+
+	//获取手机分辨率 1080代表1080p,1440代表2K分辨率,480代表480*800
+	public static int phoneWidth = 1080;
 
 	public static Dev getDevById(String id) {
 		Dev dev = null;

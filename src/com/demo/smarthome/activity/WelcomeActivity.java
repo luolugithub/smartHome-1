@@ -17,6 +17,7 @@ import com.google.gson.JsonSyntaxException;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -27,11 +28,14 @@ import android.os.Handler;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Xml;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -139,6 +143,8 @@ public class WelcomeActivity extends Activity {
 		setContentView(R.layout.activity_welcome);
 		//欢迎界面最多3秒
 		startTimestamp = System.currentTimeMillis();
+		//初始化手机分辨率变量
+		initPhoneConfig(WelcomeActivity.this);
 		new CheckVersionThread().start();
 	}
 
@@ -278,7 +284,7 @@ public class WelcomeActivity extends Activity {
 		//当点确定按钮时从服务器上下载 新的apk 然后安装
 		builer.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i(TAG,"下载apk,更新");
+				Log.i(TAG, "下载apk,更新");
 				downLoadApk();
 			}
 		});
@@ -369,6 +375,23 @@ public class WelcomeActivity extends Activity {
 		}
 		else{
 			return null;
+		}
+	}
+	//保存手机分辨率到Cfg.phoneWidth
+	private DisplayMetrics dm = new DisplayMetrics();
+	private void initPhoneConfig(Context context) {
+
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		wm.getDefaultDisplay().getMetrics(dm);
+		//当分辨率较低的时候,需要将显示画布改变下尺寸
+		if(dm.widthPixels <= 480 && dm.heightPixels <= 800){
+			Cfg.phoneWidth = 480;
+		}else if(dm.widthPixels <= 768 && dm.heightPixels <= 1280){
+			Cfg.phoneWidth = 720;
+		}else if(dm.widthPixels <= 1200 && dm.heightPixels <= 1920){
+			Cfg.phoneWidth = 1080;
+		}else if(dm.widthPixels >= 1440 && dm.heightPixels >= 2560){
+			Cfg.phoneWidth = 1440;
 		}
 	}
 }

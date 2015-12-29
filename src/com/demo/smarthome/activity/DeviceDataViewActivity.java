@@ -167,7 +167,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
 
         //官方下拉刷新的控件
         refresh_layout = (SwipeRefreshLayout) this.findViewById(R.id.refresh_layout);
-        refresh_layout.setColorSchemeResources(R.color.green, R.color.viewfinder_frame, R.color.blue_50, R.color.viewfinder_laser);
+        refresh_layout.setColorSchemeResources(R.color.green, R.color.blue_50, R.color.viewfinder_laser);
         //下拉刷新监听器
         refresh_layout.setOnRefreshListener(this);
         //"下拉刷新"
@@ -360,7 +360,13 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                 if(getItemViewType(position) == TYPE_NOT_TEMPERATURE) {
 
                         String tempValue = "   ";
-                        convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter, parent, false);
+                        if(Cfg.phoneWidth == 480){
+                            convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_low, parent, false);
+                        }else if(Cfg.phoneWidth == 1440){
+                            convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_high, parent, false);
+                        }else{
+                            convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter, parent, false);
+                        }
 
                         typeName = (TextView) convertView.findViewById(R.id.adapterTypeName);
                         adapterValue = (TextView) convertView.findViewById(R.id.adapterValue);
@@ -409,12 +415,18 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                             adapterValue.setText("");
                         }
 
-                } else {
+                } else if(getItemViewType(position) == TYPE_TEMPERATURE){
                     String temperature,hygrometer;
                     String temp_T = "   ";
                     String temp_H = "   ";
+                    if(Cfg.phoneWidth == 480){
+                        convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_tem_low, parent, false);
+                    }else if(Cfg.phoneWidth == 1440){
+                        convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_tem_high, parent, false);
+                    }else {
+                        convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_tem, parent, false);
+                    }
 
-                    convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_tem, parent, false);
                     tempteratureText = (TextView) convertView.findViewById(R.id.adapterValueTem);
                     hygrometerText = (TextView) convertView.findViewById(R.id.adapterValueDam);
 
@@ -579,20 +591,5 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
         }
 
     }
-
-    /**
-     * 刷新 按钮监听事件
-     *
-     * @author Administrator
-     *
-     */
-//    class refreshOnClickListener implements View.OnClickListener {
-//        @Override
-//        public void onClick(View v) {
-//            finish();
-//            Intent intent = new Intent(DeviceDataViewActivity.this, DeviceDataViewActivity.class);
-//            startActivity(intent);
-//        }
-//    }
 
 }

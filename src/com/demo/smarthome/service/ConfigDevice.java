@@ -66,7 +66,6 @@ public class ConfigDevice {
             String apSsid = mWifiAdmin.getWifiConnectedSsid();
             String apBssid = mWifiAdmin.getWifiConnectedBssid();
 
-
             //配置设备上网
             mConfigDevTask = new EsptouchTask(apSsid, apBssid, wifiPwd, switchIsHidden, context);
             IEsptouchResult result = mConfigDevTask.executeForResult();

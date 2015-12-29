@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/line" />
+    </LinearLayout>
+
+    <!-- ID -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/adapterTypeNameTem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="35dp"
+                android:text="温度"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/adapterValueTem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="75dp"
+                android:layout_marginTop="10dp"
+                android:text="000"
+                android:textSize="55sp" />
+            <TextView
+                android:id="@+id/adapterUnitTem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="170dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/device_temperature_unit"
+                android:textSize="25sp" />
+            <!-- 竖线-->
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:layout_marginLeft="205dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/vertaical_line" />
+            <TextView
+                android:id="@+id/adapterTypeNameDam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="210dp"
+                android:layout_marginTop="35dp"
+                android:text="湿度"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/adapterValueDam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="270dp"
+                android:layout_marginTop="10dp"
+                android:text="000"
+                android:textSize="55sp" />
+            <TextView
+                android:id="@+id/adapterUnitDam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="370dp"
+                android:layout_marginTop="35dp"
+                android:text="@string/device_hygrometer_unit"
+                android:textSize="25sp" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/line" />
+
+</LinearLayout>

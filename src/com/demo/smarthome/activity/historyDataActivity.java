@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.demo.smarthome.R;
@@ -20,6 +21,7 @@ import com.demo.smarthome.server.DeviceDataResult;
 import com.demo.smarthome.server.DeviceDataSet;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
+import com.demo.smarthome.tools.BitmapTools;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.demo.smarthome.server.ServerReturnResult;
@@ -53,10 +55,10 @@ public class historyDataActivity extends Activity {
 
     HistoryDataLineView historyDataViewItem;
     MyDialogView dialogView;
+    TextView viewType;
 
     String userSetDate;
 
-    Button btnRefresh;
     //用于设置坐标系的Y轴最大值
     float YmaxValue;
     //用于设备每个Y轴标度的大小
@@ -100,6 +102,7 @@ public class historyDataActivity extends Activity {
                     dataSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            dialogView.showMyDialog("读取数据中", "正在从服务器中读取历史数据,请等待");
                             userSetDate = dateList.get(position);
                             if (userSetDate.isEmpty()) {
                                 Toast.makeText(getApplicationContext(), "日期数据错误", Toast.LENGTH_SHORT)
@@ -124,6 +127,7 @@ public class historyDataActivity extends Activity {
                         return;
                     }
                     drawLineByHistoryData(dataType,allDataList);
+                    dialogView.closeMyDialog();
                         break;
                 case GET_DATA_FAIL:
                         break;
@@ -153,8 +157,6 @@ public class historyDataActivity extends Activity {
 
         });
         dataSpinner = (Spinner)findViewById(R.id.dataSpinner);
-        btnRefresh = (Button)findViewById(R.id.deviceDataRefresh);
-        btnRefresh.setOnClickListener(new refreshOnClickListener());
 
         if(Cfg.currentDeviceID.isEmpty()) {
             Toast.makeText(getApplicationContext(), "设备ID错误", Toast.LENGTH_SHORT)
@@ -166,54 +168,69 @@ public class historyDataActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         dataType = bundle.getString("dataName");
+        //显示数据的类型
+        viewType = (TextView) findViewById(R.id.viewType);
+        if(dataType.isEmpty()){
+            Toast.makeText(getApplicationContext(), "数据错误", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        //根据屏幕分辨率绘制历史数据曲线画布的大小
+        if(Cfg.phoneWidth == 480){
+            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    BitmapTools.dp2px(historyDataActivity.this,280)));
+        }else if(Cfg.phoneWidth == 1440){
+            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    BitmapTools.dp2px(historyDataActivity.this, 400)));
+        }
 
+        if(dataType.equals("hcho")){
+            viewType.setText("甲醛");
+        }else if(dataType.equals("pm2_5")) {
+            viewType.setText("PM2.5");
+        }else if(dataType.equals("pm10")){
+            viewType.setText("PM10");
+        }else if(dataType.equals("tvoc")){
+            viewType.setText("TVOC");
+        }else {
+            Toast.makeText(getApplicationContext(), "数据错误", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
         //等待框
         dialogView = new MyDialogView(historyDataActivity.this);
         dialogView.showMyDialog("读取数据中", "正在从服务器中读取历史数据,请等待");
 
+
         new getDateList().start();
 
     }
-    /**
-     * 刷新 按钮监听事件
-     *
-     * @author Administrator
-     *
-     */
-    class refreshOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
 
-            finish();
-            Bundle bundleData = new Bundle();
-            bundleData.putString("dataName", dataType);
-            Intent intent = new Intent(historyDataActivity.this, historyDataActivity.class);
-            intent.putExtras(bundleData);
-            startActivity(intent);
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_history_data, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_history_data, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     class getDateList extends Thread {
 
         @Override

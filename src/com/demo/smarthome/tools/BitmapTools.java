@@ -2,6 +2,7 @@ package com.demo.smarthome.tools;
 
 import java.io.ByteArrayOutputStream;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -158,5 +159,11 @@ public class BitmapTools {
 				matrix, true);
 		return new BitmapDrawable(newbmp);
 	}
-
+	/**
+	 * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+	 */
+	public static int dp2px(Context context,float dipValue){
+		final float scale=context.getResources().getDisplayMetrics().density;
+		return (int)(dipValue*scale+0.5f);
+	}
 }
