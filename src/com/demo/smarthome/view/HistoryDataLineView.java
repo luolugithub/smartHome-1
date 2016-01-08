@@ -176,18 +176,19 @@ public class HistoryDataLineView extends View {
 	 */
 	private void drawAllXLine(Canvas canvas) {
 
+		Paint XlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		for (int i = 0; i < spacingHeight + 1; i++) {
 			//轴坐标线颜色不一样
 			if( i == 0){
-				mPaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				XlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
+						bheight - (bheight / spacingHeight) * i + marginTop, XlinePaint);
 			}else{
-
-				mPaint.setColor(res.getColor(R.color.help_button_view));
+				linePaint.setColor(res.getColor(R.color.help_button_view));
+				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
+						bheight - (bheight / spacingHeight) * i + marginTop, linePaint);
 			}
-
-			canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
-					bheight - (bheight / spacingHeight) * i + marginTop, mPaint);
-
 
 			//如果是PM2.5或者PM10,显示的坐标标示不带小数
 			if( i!= 0) {
@@ -215,18 +216,22 @@ public class HistoryDataLineView extends View {
 		if(Cfg.phoneWidth == 480){
 			offset = dip2px(10);
 		}
+		Paint YlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		for (int i = 0; i < xSpaceCount; i++) {
 
 			//轴坐标线颜色不一样
 			if( i == 0){
-				mPaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				YlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
+						+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, YlinePaint);
 			}else{
-
-				mPaint.setColor(res.getColor(R.color.help_button_view));
+				linePaint.setColor(res.getColor(R.color.help_button_view));
+				canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
+						+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, linePaint);
 			}
 
-			canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
-					+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, mPaint);
+
 			//当坐标标示是两位数的画多向左移动一点,为了美观.X轴和Y轴公用0点,0点也要左移
 			//最后一个坐标要加(时)
 			if(i == xSpaceCount - 1){

@@ -35,15 +35,20 @@
                 android:layout_marginTop="35dp"
                 android:text="温度"
                 android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/adapterValueTem"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="75dp"
-                android:layout_marginTop="10dp"
-                android:text="000"
-                android:textSize="55sp" />
+                android:layout_marginLeft="70dp"
+                android:gravity="right" >
+                <TextView
+                    android:id="@+id/adapterValueTem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="000"
+                    android:textSize="55sp" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/adapterUnitTem"
                 android:layout_width="wrap_content"
@@ -67,15 +72,19 @@
                 android:layout_marginTop="35dp"
                 android:text="湿度"
                 android:textSize="25sp" />
-
+            <LinearLayout
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="265dp"
+                android:gravity="right" >
             <TextView
                 android:id="@+id/adapterValueDam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="270dp"
                 android:layout_marginTop="10dp"
                 android:text="000"
                 android:textSize="55sp" />
+            </LinearLayout>
             <TextView
                 android:id="@+id/adapterUnitDam"
                 android:layout_width="wrap_content"

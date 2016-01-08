@@ -203,7 +203,6 @@ public class historyDataActivity extends Activity {
         dialogView = new MyDialogView(historyDataActivity.this);
         dialogView.showMyDialog("读取数据中", "正在从服务器中读取历史数据,请等待");
 
-
         new getDateList().start();
 
     }

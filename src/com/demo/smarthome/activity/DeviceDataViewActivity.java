@@ -359,7 +359,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                 //如果是除了温湿度以外的adapter
                 if(getItemViewType(position) == TYPE_NOT_TEMPERATURE) {
 
-                        String tempValue = "   ";
+                        String tempValue = "";
                         if(Cfg.phoneWidth == 480){
                             convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_low, parent, false);
                         }else if(Cfg.phoneWidth == 1440){
@@ -402,12 +402,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                             typeName.setText(convertView.getResources().getString(R.string.device_pm10_name));
                             adapterUnit.setText(convertView.getResources().getString(R.string.device_pm10_unit));
                         }
-                        //为了美观,去要在前面值前加空格
-                        if (tempValue.length() == 1) {
-                            tempValue = "    " + tempValue;
-                        } else if (tempValue.length() == 2) {
-                            tempValue = "  " + tempValue;
-                        }
+
                         if(is_device_online) {
                             adapterValue.setText(tempValue);
                         }
@@ -416,9 +411,8 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                         }
 
                 } else if(getItemViewType(position) == TYPE_TEMPERATURE){
-                    String temperature,hygrometer;
-                    String temp_T = "   ";
-                    String temp_H = "   ";
+                    String temperature = "";
+                    String hygrometer = "";
                     if(Cfg.phoneWidth == 480){
                         convertView = getLayoutInflater().inflate(R.layout.activity_device_adapter_tem_low, parent, false);
                     }else if(Cfg.phoneWidth == 1440){
@@ -436,11 +430,8 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                         tempFloat = ((float) tempInt) / 10;
                         temperature = String.valueOf(tempFloat);
                         hygrometer = currentData.getTemperature().substring(currentData.getTemperature().length() - 3);
-                        //为了美观,不足位用空格填满
-                        for (int i = 0; i < 6 - currentData.getTemperature().length(); i++) {
-                            temperature = " " + temperature;
-                        }
-                        //为了美观,将前面的0换成空格
+
+                        //将前面的0换成空格
                         byte[] byteHygrometer = hygrometer.getBytes();
                         for (int i = 0; i < hygrometer.length(); i++) {
                             if (byteHygrometer[i] == '0') {
@@ -451,19 +442,13 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                         }
                         hygrometer = new String(byteHygrometer);
 
-                        temp_T = temperature;
-                        temp_H = hygrometer;
                     } else if (currentData.getTemperature().length() <= 3) {
-                        temp_T = "  0";
+                        temperature = "0";
                         hygrometer = currentData.getTemperature();
-                        for (int i = 0; i < 3 - currentData.getTemperature().length(); i++) {
-                            hygrometer = " " + hygrometer;
-                        }
-                        temp_H = currentData.getTemperature();
                     }
                     if(is_device_online) {
-                        tempteratureText.setText(temp_T);
-                        hygrometerText.setText(temp_H);
+                        tempteratureText.setText(temperature);
+                        hygrometerText.setText(hygrometer);
                     }
                     else{
                         tempteratureText.setText("");

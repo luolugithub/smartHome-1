@@ -71,6 +71,7 @@ public class WelcomeActivity extends Activity {
 	static final int AUTO_LOGIN_NO_DEVID    = 6;
 
 	static final int DIALOG_SHOW    = 8;
+	static final int CONNECT_SERVER_FAIL    = 9;
 	static final int FINISH		    = 10;
 
 	UpdataInfo info = null;
@@ -124,6 +125,17 @@ public class WelcomeActivity extends Activity {
 				case DIALOG_SHOW:
 					ProgressDialog.show(WelcomeActivity.this
 							,"安装程序中","正在安装程序,请等待...",false,true);
+					break;
+				case CONNECT_SERVER_FAIL:
+					AlertDialog.Builder failAlert = new AlertDialog.Builder(WelcomeActivity.this);
+					failAlert.setTitle("无法连接到服务器").setIcon(R.drawable.cloud_fail).setMessage("请确定是否连接了网络")
+							.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									WelcomeActivity.this.finish();
+								}
+							});
+					failAlert.create().show();
 					break;
 				case FINISH:
 					finish();
@@ -230,6 +242,7 @@ public class WelcomeActivity extends Activity {
 				URL url = new URL(path);
 				HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
 				conn.setConnectTimeout(5000);
+				conn.setReadTimeout(5000);
 				InputStream is =conn.getInputStream();
 				info =  getUpdataInfo(is);
 				if(!info.getVersion().equals(Cfg.versionNumber)) {
@@ -237,6 +250,7 @@ public class WelcomeActivity extends Activity {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				msg.what = CONNECT_SERVER_FAIL;
 			}
 			handler.sendMessage(msg);
 		}
