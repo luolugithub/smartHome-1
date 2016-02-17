@@ -17,7 +17,7 @@ public class MyDialogView {
     }
     public void showMyDialog(String title,String text){
         //不能同时显示两个dialog
-        if(dialogView == null || showDialogFlag == true){
+        if(showDialogFlag == true){
             return;
         }
         dialogView.setTitle(title);
@@ -51,8 +51,8 @@ public class MyDialogView {
         showDialogFlag = true;
     }
     public void closeMyDialog(){
-        //关闭dialog前先判断是否关闭
-        if(dialogView == null || showDialogFlag == false){
+        //关闭dialog前先判断是否已关闭
+        if(showDialogFlag == false){
             return;
         }
         dialogView.dismiss();

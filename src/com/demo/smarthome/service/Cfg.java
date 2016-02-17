@@ -42,8 +42,7 @@ public class Cfg extends Application  {
 	//  ï¿½ï¿½ï¿½Ôµï¿½Ö· tangdengan.xicp.net
 //	public final static String WEBSERVICE_SERVER_URL="http://182.139.160.79:8020/service/s.asmx";
 	public final static String WEBSERVICE_SERVER_URL="http://cloud.ai-thinker.com/service/s.asmx";
-	//ç”¨äºç™¾åº¦APIçš„KEYç ?,ç°ç»‘å®šå¼€å‘è?…çŸ³ç£Šçš„è´¦å·
-	public final static String APIKEY="63cb0c1770c622f9287d62868c079989";
+
 	public final static String TCP_SERVER_URL="cloud.ai-thinker.com";
 //	public final static String WEBSERVICE_SERVER_URL="http://tangdengan.xicp.net:8020/service/s.asmx";
 //	public final static String TCP_SERVER_URL="tangdengan.xicp.net";
@@ -53,7 +52,7 @@ public class Cfg extends Application  {
 	public final static int  TCP_SERVER_PORT=6009;
 
 
-	//ÓÃÓÚ·şÎñÆ÷·µ»Ø´úÂë
+	//ï¿½ï¿½ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½ï¿½ï¿½
 	public final static int REG_SUCCESS 			= 0;
 	public final static int REG_ERROR   			= 1;
 	public final static int SERVER_CANT_CONNECT    	= 6;
@@ -62,15 +61,16 @@ public class Cfg extends Application  {
 	public final static int REG_EXCEPTION   		= 9;
 
 	public final static int CODE_SUCCESS 		= 000;
+	public final static int CODE_NULL_CODE 		= 222;
 	public final static int CODE_PWD_ERROR   	= 777;
 	public final static int CODE_USER_EXISTED   = 888;
 	public final static int CODE_EXCEPTION   	= 999;
 
-	//·şÎñÆ÷·µ»ØµÄÉè±¸ĞÅÏ¢
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½è±¸ï¿½ï¿½Ï¢
 	public static String[] devInfo;
-	//ÕËºÅ°ó¶¨µÄÉè±¸ÊıÄ¿
+	//ï¿½ËºÅ°ó¶¨µï¿½ï¿½è±¸ï¿½ï¿½Ä¿
 	public static int devNumber;
-	//´¢´æÑ¡¶¨µÄÉè±¸µÄID
+	//ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ID
 	public static String currentDeviceID = "";
 
 	public static String versionNumber = "";
@@ -78,7 +78,7 @@ public class Cfg extends Application  {
 //	public final static String DEV_UDP_IPADDR="192.168.5.88"; //192.168.1.255
 	public final static int  DEV_UDP_SEND_PORT=2468;
 	public final static int  DEV_UDP_SEND_DELAY=100;
-	public final static int  DEV_UDP_READ_DELAY=15; //udp É¨ï¿½ï¿½È´ï¿?15ï¿½ï¿½
+	public final static int  DEV_UDP_READ_DELAY=15; //udp É¨ï¿½ï¿½È´ï¿½?15ï¿½ï¿½
 
 	public final static String DEV_UDP_IPADDR="192.168.4.1";
 	public final static int  DEV_UDP_PORT=8001;
@@ -101,7 +101,7 @@ public class Cfg extends Application  {
 	public  static String regUserPass ="";
 	
 	public static List<Dev> listDev=new  ArrayList<Dev>();
-	private static List<Dev> listDevScan=new  ArrayList<Dev>();//É¨ï¿½ï¿½ï¿½ï¿½è±?
+	private static List<Dev> listDevScan=new  ArrayList<Dev>();//É¨ï¿½ï¿½ï¿½ï¿½ï¿½?
 
 	
 //	public static final int timeDelayDef = 50; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê±ï¿½ï¿½ ms
@@ -109,7 +109,7 @@ public class Cfg extends Application  {
 //																		// 20ï¿½ï¿½
 //	public static final int timeReSendTimeDef = 5 * (1000 / timeDelayDef); // ï¿½ï¿½ï¿½ï¿½ï¿½Ø·ï¿½ï¿½ï¿½Ê±Ê±ï¿½ï¿½
 
-	//»ñÈ¡ÊÖ»ú·Ö±æÂÊ 1080´ú±í1080p,1440´ú±í2K·Ö±æÂÊ,480´ú±í480*800
+	//ï¿½ï¿½È¡ï¿½Ö»ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ 1080ï¿½ï¿½ï¿½ï¿½1080p,1440ï¿½ï¿½ï¿½ï¿½2Kï¿½Ö±ï¿½ï¿½ï¿½,480ï¿½ï¿½ï¿½ï¿½480*800
 	public static int phoneWidth = 1080;
 
 	public static Dev getDevById(String id) {

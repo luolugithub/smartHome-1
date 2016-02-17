@@ -129,7 +129,7 @@
         <CheckBox
             android:id="@+id/rememberUser"
             android:layout_height="wrap_content"
-            android:text="是否自动登录"
+            android:text="自动登录"
             android:textSize="18sp"
             android:checked="false"
             android:layout_width="wrap_content" />

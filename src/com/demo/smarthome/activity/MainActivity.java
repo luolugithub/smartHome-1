@@ -207,7 +207,7 @@ public class MainActivity extends Activity {
 			public void onClick(View arg0) {
 				onBackPressed();
 			}
-		});
+		}) ;
 
 		btnRefresh = (Button) findViewById(R.id.setupBtnRefresh);
 		btnRefresh.setOnClickListener(new BtnRefreshOnClickListener());

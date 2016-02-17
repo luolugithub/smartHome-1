@@ -9,6 +9,7 @@ import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.service.ConfigService;
 import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.staticString.StringRes;
+import com.demo.smarthome.tools.NetworkStatusTools;
 import com.demo.smarthome.tools.StrTools;
 import com.demo.smarthome.tools.MD5Tools;
 import com.demo.smarthome.updata.UpdataInfo;
@@ -22,12 +23,10 @@ import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
+import android.os.*;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Message;
+import android.os.Process;
 import android.util.DisplayMetrics;
 import android.util.Xml;
 import android.view.Menu;
@@ -76,7 +75,7 @@ public class WelcomeActivity extends Activity {
 
 	UpdataInfo info = null;
 	ConfigService dbService;
-
+	AlertDialog.Builder failAlert;
 	ServerReturnResult loginResult = new ServerReturnResult();
 	long startTimestamp;
 
@@ -127,8 +126,8 @@ public class WelcomeActivity extends Activity {
 							,"安装程序中","正在安装程序,请等待...",false,true);
 					break;
 				case CONNECT_SERVER_FAIL:
-					AlertDialog.Builder failAlert = new AlertDialog.Builder(WelcomeActivity.this);
-					failAlert.setTitle("无法连接到服务器").setIcon(R.drawable.cloud_fail).setMessage("请确定是否连接了网络")
+					failAlert = new AlertDialog.Builder(WelcomeActivity.this);
+					failAlert.setTitle("无法连接到服务器").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer)
 							.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
@@ -153,6 +152,19 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_welcome);
+		//不开启网络就终止程序
+		if(!NetworkStatusTools.isNetworkAvailable(WelcomeActivity.this)){
+			failAlert = new AlertDialog.Builder(WelcomeActivity.this);
+			failAlert.setTitle("无法连接到服务器").setIcon(R.drawable.cloud_fail).setMessage("请确定是否连接了网络")
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							android.os.Process.killProcess(android.os.Process.myPid());
+						}
+					});
+			failAlert.create().show();
+			return;
+		}
 		//欢迎界面最多3秒
 		startTimestamp = System.currentTimeMillis();
 		//初始化手机分辨率变量
@@ -160,12 +172,12 @@ public class WelcomeActivity extends Activity {
 		new CheckVersionThread().start();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.welcome, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.welcome, menu);
+//		return true;
+//	}
 
 	//不需要更新和没有自动登录情况,在欢迎界面等三秒进入登录界面
 	Runnable r = new Runnable() {
@@ -196,6 +208,7 @@ public class WelcomeActivity extends Activity {
 			}
 
 			if(Cfg.userName.isEmpty() || Cfg.userPassword.isEmpty()) {
+				handler.sendMessage(message);
 				return;
 			}
 			String tempDevID = dbService.getCfgByKey(Cfg.KEY_DEVICE_ID);

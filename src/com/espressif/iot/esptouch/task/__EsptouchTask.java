@@ -142,6 +142,8 @@ public class __EsptouchTask implements __IEsptouchTask {
 													mParameter.getEsptouchResultIpLen());
 									mEsptouchResult = new EsptouchResult(true,
 											mBssid, inetAddress);
+									Log.i(TAG,
+											"receive is successful," +"inetAddress:"+inetAddress);
 								}
 								mIsSuc = true;
 								break;

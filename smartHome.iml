@@ -89,5 +89,6 @@
     <orderEntry type="library" exported="" name="ksoap2-android-assembly-2.4-jar-with-dependencies" level="project" />
     <orderEntry type="library" exported="" name="1_ksoap2-android-assembly-2.4-jar-with-dependencies" level="project" />
     <orderEntry type="library" exported="" name="zxing" level="project" />
+    <orderEntry type="library" exported="" name="AMap_Location_v2.3.0_20160112" level="project" />
   </component>
 </module>

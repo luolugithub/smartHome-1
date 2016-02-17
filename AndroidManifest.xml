@@ -16,18 +16,27 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--用于访问网络，网络定位需要上网-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
-
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 往sdcard中写入数据的权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-
+    <!-- 用于读取手机当前的状态-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <!-- 允许读写系统设置-->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <!--用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 
 
-    <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
+
+
     <!-- 在sdcard中创建/删除文件的权限 -->
     <application
         android:name=".service.Cfg"
@@ -38,6 +47,13 @@
         <uses-library android:name="android.test.runner" />
 
         <service android:name=".service.SocketService" />
+
+        //定位服务
+        <service android:name="com.amap.api.location.APSService"></service>
+        //申请的高德地图的key
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="744c883d37941bcc708790b3f9480f03">
+
+        </meta-data>
 
         <activity
             android:name=".activity.WelcomeActivity"
@@ -69,14 +85,18 @@
         <activity
             android:name=".activity.DeviceDataViewActivity"
             android:label="@string/title_activity_device_view"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.historyDataActivity"
             android:label="@string/title_activity_history_data"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
-
+        <activity
+            android:name=".activity.WeatherActivity"
+            android:label="@string/title_activity_weather"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

@@ -77,6 +77,7 @@ public class ConfigDevice {
                     e.printStackTrace();
                 }
             }
+
             findDevice();
         }
     }

@@ -149,6 +149,19 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             }
         });
 
+        //点击跳转到天气界面
+        TextView getWeatherText = (TextView) findViewById(R.id.getWeather);
+        getWeatherText.setClickable(true);
+        getWeatherText.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent();
+                intent.setClass(DeviceDataViewActivity.this, WeatherActivity.class);
+                startActivity(intent);
+            }
+        });
+
         //点击设置
         TextView titleConfig = (TextView) findViewById(R.id.titleConfig);
         titleConfig.setClickable(true);
@@ -170,7 +183,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
         refresh_layout.setColorSchemeResources(R.color.green, R.color.blue_50, R.color.viewfinder_laser);
         //下拉刷新监听器
         refresh_layout.setOnRefreshListener(this);
-        //"下拉刷新"
+        //下拉刷新
         pullRefreshText = (TextView) this.findViewById(R.id.pullRefreshText);
         //等待框
         dialogView = new ProgressDialog(DeviceDataViewActivity.this);
@@ -263,7 +276,8 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
     static final int LIST_TEMPERATURE = 4;
 
     public int setListTypeByDeviceType(int position){
-        if(currentData.getType().equals(currentData.getType())){
+//        if(currentData.getType().equals(currentData.getType())){
+        if(true){
             switch (position){
                 case 0:
                     return LIST_HCHO;

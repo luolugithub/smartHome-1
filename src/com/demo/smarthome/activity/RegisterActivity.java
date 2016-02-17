@@ -19,6 +19,7 @@ import com.demo.smarthome.service.ConfigDevice;
 import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
+import com.demo.smarthome.staticString.StringRes;
 import com.demo.smarthome.tools.CheckEmailPhoneTools;
 import com.demo.smarthome.tools.IpTools;
 import com.demo.smarthome.tools.StrTools;
@@ -136,7 +137,7 @@ public class RegisterActivity extends Activity {
 				break;
 			case NO_WIFI:
 
-				failAlert.setTitle("无法无线网络").setIcon(R.drawable.cloud_fail).setMessage("需要保持和本地设备在同一网络中");
+				failAlert.setTitle("无线网络错误").setIcon(R.drawable.cloud_fail).setMessage("需要保持和本地设备在同一网络中");
 				failAlert.create().show();
 				break;
 			case CMD_TIMEOUT:
@@ -151,7 +152,7 @@ public class RegisterActivity extends Activity {
 				break;
 			case SERVER_EXCEPTION:
 
-				failAlert.setTitle(" 注册失败").setIcon(R.drawable.cloud_fail).setMessage("   服务器异常");
+				failAlert.setTitle(" 注册失败").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer);
 				failAlert.create().show();
 				break;
 			default:
@@ -271,7 +272,7 @@ public class RegisterActivity extends Activity {
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),RegisterActivity.this);
 			//检查是否有网络
 			if(deviceInfo.getApSSid() == null){
-				message.what = CMD_TIMEOUT;
+				message.what = NO_WIFI;
 				handler.sendMessage(message);
 				return;
 			}

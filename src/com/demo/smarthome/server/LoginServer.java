@@ -35,6 +35,7 @@ public class LoginServer {
         setServerURL regiterUser = new setServerURL();
 
         if((jsonResult = regiterUser.sendParamToServer(methodName, paramsName, paramsValue)).isEmpty()){
+            loginResult.setCode(String.valueOf(Cfg.SERVER_CANT_CONNECT));
             return loginResult;
         }
         try {
