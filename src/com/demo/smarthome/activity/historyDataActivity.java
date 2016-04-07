@@ -59,12 +59,12 @@ public class historyDataActivity extends Activity {
 
     String userSetDate;
 
-    //用于设置坐标系的Y轴最大值
+    //???????????????Y??????
     float YmaxValue;
-    //用于设备每个Y轴标度的大小
+    //?????豸???Y??????С
     float YaverageValue;
 
-    //如果是PM2.5或PM10
+    //?????PM2.5??PM10
     boolean pmFlag = false;
 
     //time step length (second)
@@ -102,10 +102,10 @@ public class historyDataActivity extends Activity {
                     dataSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            dialogView.showMyDialog("读取数据中", "正在从服务器中读取历史数据,请等待");
+                            dialogView.showMyDialog("?????????", "???????????ж?????????,????");
                             userSetDate = dateList.get(position);
                             if (userSetDate.isEmpty()) {
-                                Toast.makeText(getApplicationContext(), "日期数据错误", Toast.LENGTH_SHORT)
+                                Toast.makeText(getApplicationContext(), "???????????", Toast.LENGTH_SHORT)
                                         .show();
                                 return;
                             }
@@ -122,7 +122,7 @@ public class historyDataActivity extends Activity {
                 case GET_DATA_SUCCED:
 
                     if(dataType.isEmpty()||allDataList == null) {
-                        Toast.makeText(getApplicationContext(), "数据错误", Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(), "???????", Toast.LENGTH_SHORT)
                                 .show();
                         return;
                     }
@@ -142,7 +142,7 @@ public class historyDataActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE); // 注意顺序
+        requestWindowFeature(Window.FEATURE_NO_TITLE); // ??????
 
         setContentView(R.layout.activity_history_data);
 
@@ -159,7 +159,7 @@ public class historyDataActivity extends Activity {
         dataSpinner = (Spinner)findViewById(R.id.dataSpinner);
 
         if(Cfg.currentDeviceID.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "设备ID错误", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "?豸ID????", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
@@ -168,14 +168,14 @@ public class historyDataActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         dataType = bundle.getString("dataName");
-        //显示数据的类型
+        //????????????
         viewType = (TextView) findViewById(R.id.viewType);
         if(dataType.isEmpty()){
-            Toast.makeText(getApplicationContext(), "数据错误", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "???????", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
-        //根据屏幕分辨率绘制历史数据曲线画布的大小
+        //????????????????????????????????С
         if(Cfg.phoneWidth == 480){
             historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -187,7 +187,7 @@ public class historyDataActivity extends Activity {
         }
 
         if(dataType.equals("hcho")){
-            viewType.setText("甲醛");
+            viewType.setText("???");
         }else if(dataType.equals("pm2_5")) {
             viewType.setText("PM2.5");
         }else if(dataType.equals("pm10")){
@@ -195,13 +195,13 @@ public class historyDataActivity extends Activity {
         }else if(dataType.equals("tvoc")){
             viewType.setText("TVOC");
         }else {
-            Toast.makeText(getApplicationContext(), "数据错误", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "???????", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
-        //等待框
+        //?????
         dialogView = new MyDialogView(historyDataActivity.this);
-        dialogView.showMyDialog("读取数据中", "正在从服务器中读取历史数据,请等待");
+        dialogView.showMyDialog("?????????", "???????????ж?????????,????");
 
         new getDateList().start();
 
@@ -303,15 +303,15 @@ public class historyDataActivity extends Activity {
             handler.sendMessage(message);
         }
     }
-    //根据类型画出数据曲线
+    //???????????????????
     private int drawLineByHistoryData(String type,List<DeviceDataSet> allData){
 
         int result = DRAW_FAIL;
 
         if(type.equals("hcho")){
-            //设置Y轴最大值
+            //????Y??????
             hchoSetYMaxValue(allData);
-            //接收服务器发送的数要除1000倍
+            //???????????????????1000??
             SetDateToline(allData,type,100);
             historyDataViewItem.setyUnit(this.getResources()
                     .getString(R.string.device_hcho_unit));
@@ -336,11 +336,11 @@ public class historyDataActivity extends Activity {
         return result;
     }
 
-    //根据hcho数据最大值确定Y轴最大值
+    //????hcho???????????Y??????
     private void hchoSetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //找出最大值
+        //???????
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getHcho())) {
                 maxValue = Integer.parseInt(data.get(i).getHcho());
@@ -357,13 +357,12 @@ public class historyDataActivity extends Activity {
             YmaxValue = 1.0f;
             YaverageValue = 0.2f;
         }
-
     }
-    //最大值1000
+    //????1000
     private void pm2_5SetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //找出最大值
+        //???????
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getPm2_5())){
                 maxValue = Integer.parseInt(data.get(i).getPm2_5());
@@ -391,11 +390,11 @@ public class historyDataActivity extends Activity {
         }
         pmFlag = true;
     }
-    //最大值1000
+    //????1000
     private void pm10SetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //找出最大值
+        //???????
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getPm10())){
                 maxValue = Integer.parseInt(data.get(i).getPm10());
@@ -423,11 +422,11 @@ public class historyDataActivity extends Activity {
         }
         pmFlag = true;
     }
-    //最大值5.00
+    //????5.00
     private void tvocSetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //找出最大值
+        //???????
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getTvoc())){
                 maxValue = Integer.parseInt(data.get(i).getTvoc());
@@ -456,7 +455,7 @@ public class historyDataActivity extends Activity {
     }
 
     /*
-    *   用于组成步长为timeStepLength的数据集合,画曲线时可获得所有
+    *   ???????????timeStepLength?????????,???????????????
      */
     private void SetDateToline(List<DeviceDataSet> allData,String dataType,int unitChange){
         String tempTime = userSetDate + " 00:00:00";
@@ -470,11 +469,11 @@ public class historyDataActivity extends Activity {
             Date CreateTime = dfs.parse(allData.get(0).getCreateTime());
             for(i = 0,j=0; i < stepCount ;i++){
 
-                //毫秒需要转换成秒
+                //??????????????
                 diff = (int)((CreateTime.getTime() - Start.getTime())/1000);
-                //接收历史数据中储存的时间每条之间间隔为5分钟
+                //????????????д????????????????5????
                 if(diff < timeStepLength && j < allData.size()) {
-                    //服务器中读取的数据需要除个单位
+                    //???????ж?????????????????λ
                     if(dataType.equals("hcho")) {
                         value = ((double) Integer.parseInt(allData.get(j).getHcho())) / unitChange;
                     }else if(dataType.equals("tvoc")) {

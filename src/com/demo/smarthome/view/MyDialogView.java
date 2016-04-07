@@ -16,7 +16,7 @@ public class MyDialogView {
         dialogView = new ProgressDialog(context);
     }
     public void showMyDialog(String title,String text){
-        //不能同时显示两个dialog
+        //?????????????dialog
         if(showDialogFlag == true){
             return;
         }
@@ -30,7 +30,7 @@ public class MyDialogView {
             }
         });
         dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-                "请等待...", new DialogInterface.OnClickListener() {
+                "请等待", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -50,8 +50,12 @@ public class MyDialogView {
         });
         showDialogFlag = true;
     }
+    public boolean isDialogRunning()
+    {
+        return showDialogFlag;
+    }
     public void closeMyDialog(){
-        //关闭dialog前先判断是否已关闭
+        //???dialog????ж????????
         if(showDialogFlag == false){
             return;
         }

@@ -38,5 +38,7 @@
     <string name="updated_just_now">刚刚更新</string>
     <string name="time_error">时间有问题</string>
     <string name="title_activity_weather">WeatherActivity</string>
+    <string name="title_activity_device_realtime_data">DeviceRealtimeDataActivity</string>
+    <string name="title_activity_device_history_data_activitiy">DeviceHistoryDataActivitiy</string>
 
 </resources>

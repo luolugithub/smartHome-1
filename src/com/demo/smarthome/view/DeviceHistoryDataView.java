@@ -1,7 +1,5 @@
 package com.demo.smarthome.view;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -11,27 +9,29 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
+
 import com.demo.smarthome.R;
 import com.demo.smarthome.service.Cfg;
 
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**********************************************************
- * @ÎÄ¼ş×÷Õß£ºsl
- * @ÎÄ¼şÃèÊö£º»­³öÇúÏßÍ¼
- * @´´½¨ÈÕÆÚ:2015-11-07
- * ×¢Òâ :ÓÉÓÚĞèÇó×ÜÊÇ¸ü¸Ä,µ¼ÖÂÀïÃæ´úÂëÂß¼­½ÏÎª¸´ÔÓ,·Ç±ØÒªÇë²»ÒªĞŞ¸Ä
+ * @æ–‡ä»¶ä½œè€…ï¼šsl
+ * @æ–‡ä»¶æè¿°ï¼šç”»å‡ºæ›²çº¿å›¾
+ * @åˆ›å»ºæ—¥æœŸ:2016-03-31
+ * @æœ€åä¸€æ¬¡ä¿®æ”¹:
+ * æ³¨æ„ :ç”±äºéœ€æ±‚æ€»æ˜¯æ›´æ”¹,å¯¼è‡´é‡Œé¢ä»£ç é€»è¾‘è¾ƒä¸ºå¤æ‚,éå¿…è¦è¯·ä¸è¦ä¿®æ”¹.
+ * 		æˆ‘å·²ç»ä¸æ„¿æ„å†çœ‹ä¸€éä¸ªç±»é‡Œé¢çš„ä»£ç äº†.
  **********************************************************/
-public class HistoryDataLineView extends View {
+public class DeviceHistoryDataView extends View {
 
 	private static String TAG = "historyDataLineView";
 	private static final int CIRCLE_SIZE = 10;
-	//Á¬½ÓÏßÊÇÇúÏß»¹ÊÇÖ±Ïß
+	//è¿æ¥çº¿æ˜¯æ›²çº¿è¿˜æ˜¯ç›´çº¿
 	private static enum Linestyle {
 		Line, Curve
 	}
@@ -49,63 +49,64 @@ public class HistoryDataLineView extends View {
 	private int canvasHeight;
 	private int canvasWidth;
 	private int bheight = 0;
-	//×óÓÒ¿í¶ÈÁôµÄ±ß
+	//å·¦å³å®½åº¦ç•™çš„è¾¹
 	private int blwidh;
 	private boolean isMeasure = true;
-	//Èç¹ûÊÇPM2.5»òÕßPM10,ÖÃÕæ
-	boolean pm2_5Flag;
 	/**
-	 * YÖá×î´óÖµ
+	 * Yè½´æœ€å¤§å€¼
 	 */
 	private float maxValue;
 	/**
-	 * YÖá¼ä¾àÖµ
+	 * Yè½´é—´è·å€¼
 	 */
 	private float averageValue;
 
+	//the type of the data
+	int dataType = 1;
+	static final int type_day                  = 1;
+	static final int type_week                 = 2;
+	static final int type_month                = 3;
 
-	//XÖá±êÊ¾Î¢µ÷
+	//Xè½´æ ‡ç¤ºå¾®è°ƒ
 	private static final int xTextChange =5;
-	//YÖá±êÊ¾Î¢µ÷
+	//Yè½´æ ‡ç¤ºå¾®è°ƒ
 	private static final int yTextChange =5;
-	//YÖáµ¥Î»Î»ÖÃµ÷Õû,ÏòÏÂµÄ³Ì¶È
+	//Yè½´å•ä½ä½ç½®è°ƒæ•´,å‘ä¸‹çš„ç¨‹åº¦
 	private static final int yTextUnit = 10;
 
-	//XÖá×ø±êÊı´ÓÁãµãµ½24µã,Ã¿Á½Ğ¡Ê±Ò»¸öµã
-	private static final int xSpaceCount = 13;
+	//Xè½´åæ ‡æ•°
+	private int xSpaceCount = 13;
 
-	//¶¥²¿µ×²¿Áô°×
+	//é¡¶éƒ¨åº•éƒ¨ç•™ç™½
 	private int marginTop = 50;
 	private int marginBottom = 100;
 
 	private static int noData = -1;
-	//YÖáµ¥Î»
-	private String yUnit;
 
-	//±ÊµÄ´ÖÏ¸³Ì¶È
+	//ç¬”çš„ç²—ç»†ç¨‹åº¦
 	private static final float mPaintWidth = 2.0f;
-	//ÊÇ·ñÏÔÊ¾×ø±êµÄĞ¡µã
+	//æ˜¯å¦æ˜¾ç¤ºåæ ‡çš„å°ç‚¹
 	private static final boolean enablePaintPoint = false;
 	/**
-	 * ÇúÏßÉÏ×ÜµãÊı
+	 * æ›²çº¿ä¸Šæ€»ç‚¹æ•°
 	 */
 	private Point[] mPoints;
 	/**
-	 * ×İ×ø±êÖµ
+	 * çºµåæ ‡å€¼
 	 */
 	private ArrayList<Double> yRawData;
 	/**
-	 * ºá×ø±êÖµ
+	 * æ¨ªåæ ‡å€¼
 	 */
 
 	private int spacingHeight;
 
-	public HistoryDataLineView(Context context)
+	public DeviceHistoryDataView(Context context)
 	{
 		this(context, null);
 	}
 
-	public HistoryDataLineView(Context context, AttributeSet attrs) {
+	public DeviceHistoryDataView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		this.mContext = context;
 		initView();
@@ -113,9 +114,9 @@ public class HistoryDataLineView extends View {
 
 	private void initView() {
 		this.res = mContext.getResources();
-		//¿¹¾â³İĞ§¹û
+		//æŠ—é”¯é½¿æ•ˆæœ
 		this.mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		//»ñÈ¡·Ö±æÂÊµÄÀà
+		//è·å–åˆ†è¾¨ç‡çš„ç±»
 		dm = new DisplayMetrics();
 		WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 		wm.getDefaultDisplay().getMetrics(dm);
@@ -129,7 +130,7 @@ public class HistoryDataLineView extends View {
 			this.canvasWidth = getWidth();
 			if (bheight == 0)
 				bheight = (int) (canvasHeight - marginBottom);
-			//×óÓÒÁ½±ßÁô°×
+			//å·¦å³ä¸¤è¾¹ç•™ç™½
 			blwidh = dip2px(30);
 			isMeasure = false;
 		}
@@ -138,21 +139,21 @@ public class HistoryDataLineView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 
-		//³õÊ¼»¯Î´Íê³É²»»­ÇúÏß
+		//åˆå§‹åŒ–æœªå®Œæˆä¸ç”»æ›²çº¿
 		if(!isInitDatafinish){
 			return;
 		}
 
-		// »­Ö±Ïß£¨ºáÏòºÍ×İÏò£©,×ø±ê±êÊ¾Ëæ×ÅÀàĞÍ²»Í¬»á¸Ä±ä
+		// ç”»ç›´çº¿ï¼ˆæ¨ªå‘å’Œçºµå‘ï¼‰,åæ ‡æ ‡ç¤ºéšç€ç±»å‹ä¸åŒä¼šæ”¹å˜
 		drawAllXLine(canvas);
 		drawAllYLine(canvas);
-		// µãµÄ²Ù×÷ÉèÖÃ
+		// ç‚¹çš„æ“ä½œè®¾ç½®
 		mPoints = getPoints();
-		//ÎªÁËÊÊÓ¦µÍ°æ±¾µÄÊÖ»ú
+		//ä¸ºäº†é€‚åº”ä½ç‰ˆæœ¬çš„æ‰‹æœº
 		mPaint.setColor(res.getColor(R.color.viewfinder_laser));
 		mPaint.setStrokeWidth(dip2px(mPaintWidth));
 		mPaint.setStyle(Style.STROKE);
-		//ÇúÏß»¹ÊÇÖ±Ïß
+		//æ›²çº¿è¿˜æ˜¯ç›´çº¿
 		if (mStyle == Linestyle.Curve) {
 
 			drawScrollLine(canvas);
@@ -161,7 +162,7 @@ public class HistoryDataLineView extends View {
 			drawLine(canvas);
 		}
 
-		//°Ñµã»­³öÀ´
+		//æŠŠç‚¹ç”»å‡ºæ¥
 		if(enablePaintPoint){
 			mPaint.setStyle(Style.FILL);
 			for (int i = 0; i < mPoints.length; i++) {
@@ -172,14 +173,14 @@ public class HistoryDataLineView extends View {
 	}
 
 	/**
-	 *  »­ËùÓĞºáÏò±í¸ñ£¬°üÀ¨XÖá
+	 *  ç”»æ‰€æœ‰æ¨ªå‘è¡¨æ ¼ï¼ŒåŒ…æ‹¬Xè½´
 	 */
 	private void drawAllXLine(Canvas canvas) {
 
 		Paint XlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		for (int i = 0; i < spacingHeight + 1; i++) {
-			//Öá×ø±êÏßÑÕÉ«²»Ò»Ñù
+			//è½´åæ ‡çº¿é¢œè‰²ä¸ä¸€æ ·
 			if( i == 0){
 				XlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
 				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
@@ -189,38 +190,58 @@ public class HistoryDataLineView extends View {
 				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
 						bheight - (bheight / spacingHeight) * i + marginTop, linePaint);
 			}
-
-			//Èç¹ûÊÇPM2.5»òÕßPM10,ÏÔÊ¾µÄ×ø±ê±êÊ¾²»´øĞ¡Êı
-			if( i!= 0) {
-				if (pm2_5Flag) {
-					int intAverage = (int) averageValue;
-					drawText(String.valueOf(intAverage * i), blwidh / 2 - dip2px(yTextChange + 2)
-							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
-				} else {
-					drawText(String.valueOf(averageValue * i), blwidh / 2 - dip2px(yTextChange)
-							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
+			if(i == 0) {
+				if(dataType == type_day){
+					continue;
+				}else {
+					//æ˜¾ç¤ºçš„åæ ‡0ç‚¹ä¸å¸¦å°æ•°
+					drawText("  0", blwidh / 2 - dip2px(yTextChange)
+							, bheight - (bheight / spacingHeight) * i + marginTop , canvas);
 				}
+			}else {
+				drawText(String.valueOf(averageValue * i), blwidh / 2 - dip2px(yTextChange)
+						, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
 			}
+
 		}
-		//ÏÔÊ¾µ¥Î»
-		drawText(String.valueOf("(" + yUnit + ")"), blwidh / 2 - dip2px(yTextChange) - dip2px(5)
-				,  dip2px(yTextUnit), canvas);
+		//æ˜¾ç¤ºå•ä½
+		drawText(String.valueOf("(" + getResources().getString(R.string.device_pm2_5_unit) + ")")
+				, blwidh / 2 - dip2px(yTextChange) - dip2px(5),  dip2px(yTextUnit), canvas);
 	}
 
 	/**
-	 * »­ËùÓĞ×İÏò±í¸ñ£¬°üÀ¨YÖá
+	 * ç”»æ‰€æœ‰çºµå‘è¡¨æ ¼ï¼ŒåŒ…æ‹¬Yè½´
 	 */
 	private void drawAllYLine(Canvas canvas) {
-		//µ±·Ö±æÂÊÊÇ480Ê±Ê±¼ä±êÖ¾»áºÍXÖáÖØµş,ËùÒÔÒªÏòÏÂÆ«ÒÆÊ±¼ä
+		//å½“åˆ†è¾¨ç‡æ˜¯480æ—¶æ—¶é—´æ ‡å¿—ä¼šå’ŒXè½´é‡å ,æ‰€ä»¥è¦å‘ä¸‹åç§»æ—¶é—´
 		int offset = 0;
 		if(Cfg.phoneWidth == 480){
 			offset = dip2px(10);
 		}
 		Paint YlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+
+		SimpleDateFormat dfs = new SimpleDateFormat("MM-dd");
+		ArrayList<String> Xtext = new ArrayList();
+		if(dataType == type_week) {
+			for (int i = 0; i < xSpaceCount; i++){
+				Calendar cal = Calendar.getInstance();
+				//7th day before today
+				cal.add(Calendar.DAY_OF_MONTH, -(6-i));
+				Xtext.add(dfs.format(cal.getTime()));
+			}
+		}else if(dataType == type_month) {
+			for (int i = 0; i < xSpaceCount; i++){
+				Calendar cal = Calendar.getInstance();
+				//7th day before today
+				cal.add(Calendar.DAY_OF_MONTH, -(29-3*i));
+				Xtext.add(dfs.format(cal.getTime()));
+			}
+		}
 		for (int i = 0; i < xSpaceCount; i++) {
 
-			//Öá×ø±êÏßÑÕÉ«²»Ò»Ñù
+			//è½´åæ ‡çº¿é¢œè‰²ä¸ä¸€æ ·
 			if( i == 0){
 				YlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
 				canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
@@ -231,19 +252,28 @@ public class HistoryDataLineView extends View {
 						+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, linePaint);
 			}
 
-
-			//µ±×ø±ê±êÊ¾ÊÇÁ½Î»ÊıµÄ»­¶àÏò×óÒÆ¶¯Ò»µã,ÎªÁËÃÀ¹Û.XÖáºÍYÖá¹«ÓÃ0µã,0µãÒ²Òª×óÒÆ
-			//×îºóÒ»¸ö×ø±êÒª¼Ó(Ê±)
-			if(i == xSpaceCount - 1){
-				drawText(String.valueOf(i*2) + "(Ê±)", blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						- dip2px(xTextChange), bheight + dip2px(35) + offset, canvas);
-			}else if(i == 0 || i > 9){
-				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						- dip2px(xTextChange), bheight + dip2px(35)+ offset, canvas);
+			if(dataType == type_day) {
+				//å½“åæ ‡æ ‡ç¤ºæ˜¯ä¸¤ä½æ•°çš„ç”»å¤šå‘å·¦ç§»åŠ¨ä¸€ç‚¹,ä¸ºäº†ç¾è§‚.Xè½´å’ŒYè½´å…¬ç”¨0ç‚¹,0ç‚¹ä¹Ÿè¦å·¦ç§»
+				//æœ€åä¸€ä¸ªåæ ‡è¦åŠ (æ—¶)
+				if (i == xSpaceCount - 1) {
+					drawText(String.valueOf(i * 2) + "(h)", blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i
+							- dip2px(xTextChange), bheight + dip2px(35) + offset, canvas);
+				} else if (i == 0 || i >= 5) {
+					drawText(String.valueOf(i * 2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i
+							- dip2px(xTextChange), bheight + dip2px(35) + offset, canvas);
+				} else {
+					drawText(String.valueOf(i * 2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i
+							- dip2px(4), bheight + dip2px(35) + offset, canvas);
+				}
 			}
-			else {
-				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
-						, bheight + dip2px(35)+ offset, canvas);
+			else if(dataType == type_week) {
+					drawText(Xtext.get(i), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i
+							- dip2px(15), bheight + dip2px(35) + offset, canvas);
+
+			}else if(dataType == type_month) {
+				drawText(Xtext.get(i), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i
+						- dip2px(15), bheight + dip2px(35) + offset, canvas);
+
 			}
 		}
 	}
@@ -254,7 +284,7 @@ public class HistoryDataLineView extends View {
 		Point endp = new Point();
 		for (int i = 0; i < mPoints.length - 1; i++) {
 
-			//ËµÃ÷¸ÃÊ±¿ÌÉè±¸Ã»ÓĞ¿ª»ú,²»ÏÔÊ¾¸ÃÊ±¿ÌÇúÏß
+			//è¯´æ˜è¯¥æ—¶åˆ»è®¾å¤‡æ²¡æœ‰å¼€æœº,ä¸æ˜¾ç¤ºè¯¥æ—¶åˆ»æ›²çº¿
 			if(mPoints[i].y == noData ){
 				if(mPoints[i + 1].y == noData) {
 					continue;
@@ -265,7 +295,7 @@ public class HistoryDataLineView extends View {
 			}
 			startp.x = mPoints[i].x;
 			startp.y = mPoints[i].y;
-			//ÏÂÒ»¸öµãÈç¹ûÊÇÃ»ÓĞÊıÖµµÄ
+			//ä¸‹ä¸€ä¸ªç‚¹å¦‚æœæ˜¯æ²¡æœ‰æ•°å€¼çš„
 			if(mPoints[i + 1].y == noData){
 				endp.x = mPoints[i + 1].x;
 				endp.y = bheight + marginTop;
@@ -295,7 +325,7 @@ public class HistoryDataLineView extends View {
 		Point endp = new Point();
 		for (int i = 0; i < mPoints.length - 1; i++) {
 
-			//ËµÃ÷¸ÃÊ±¿ÌÉè±¸Ã»ÓĞ¿ª»ú,²»ÏÔÊ¾¸ÃÊ±¿ÌÇúÏß
+			//è¯´æ˜è¯¥æ—¶åˆ»è®¾å¤‡æ²¡æœ‰å¼€æœº,ä¸æ˜¾ç¤ºè¯¥æ—¶åˆ»æ›²çº¿
 			if(mPoints[i].y == noData ){
 				if(mPoints[i + 1].y == noData) {
 					continue;
@@ -306,7 +336,7 @@ public class HistoryDataLineView extends View {
 			}
 			startp.x = mPoints[i].x;
 			startp.y = mPoints[i].y;
-			//ÏÂÒ»¸öµãÈç¹ûÊÇÃ»ÓĞÊıÖµµÄ
+			//ä¸‹ä¸€ä¸ªç‚¹å¦‚æœæ˜¯æ²¡æœ‰æ•°å€¼çš„
 			if(mPoints[i + 1].y == noData){
 				endp.x = mPoints[i + 1].x;
 				endp.y = bheight + marginTop;
@@ -336,12 +366,10 @@ public class HistoryDataLineView extends View {
 		Point[] points = new Point[yRawData.size()];
 		for (int i = 0; i < yRawData.size(); i++) {
 
-
 				int ph = bheight - (int) (bheight * (yRawData.get(i) / (int) maxValue));
-				//1080PÊÖ»ú·Ö±æÂÊ³ı288Èç¹û½á¹ûÊ±ÕûĞÍ»á¼«Îª²»×¼È·¹ÊÏÔÊ¾double
 				xPointSpace = (double) (canvasWidth - 2 * blwidh) / (yRawData.size() - 1);
 				Xvalue = (int) (blwidh + xPointSpace * i);
-			//Èç¹ûÉè±¸Ã»ÓĞ¸ø·şÎñÆ÷·¢Êı¾İ¾ÍÈÏÎªÃ»ÓĞ¿ª»ú,²»ÏÔÊ¾ÄÇÒ»Ê±¿ÌµÄÊı¾İ
+			//å¦‚æœè®¾å¤‡æ²¡æœ‰ç»™æœåŠ¡å™¨å‘æ•°æ®å°±è®¤ä¸ºæ²¡æœ‰å¼€æœº,ä¸æ˜¾ç¤ºé‚£ä¸€æ—¶åˆ»çš„æ•°æ®
 			if(yRawData.get(i) >= 0) {
 				points[i] = new Point(Xvalue, ph + marginTop);
 			}else {
@@ -351,16 +379,26 @@ public class HistoryDataLineView extends View {
 		return points;
 	}
 
-	public void setData(ArrayList<Double> yRawData, float maxValue, float averageValue,boolean pmFlag) {
+	public void setData(ArrayList<Double> yRawData, float maxValue, float averageValue,int type) {
 
 		this.maxValue = maxValue;
 		this.averageValue = averageValue;
 		this.mPoints = new Point[yRawData.size()];
 		this.yRawData = yRawData;
 		this.spacingHeight = (int)(maxValue / averageValue);
+		this.dataType = type;
+		if(type == type_day)
+		{
+			xSpaceCount = 13;
+		}else if(type == type_week)
+		{
+			xSpaceCount = 8;
+		}else if(type == type_month)
+		{
+			xSpaceCount = 11;
+		}
 		isInitDatafinish = true;
-		this.pm2_5Flag = pmFlag;
-		//ÖØĞÂµ÷ÓÃonDraw
+		//é‡æ–°è°ƒç”¨onDraw
 		postInvalidate();
 	}
 
@@ -394,11 +432,8 @@ public class HistoryDataLineView extends View {
 		this.bheight = bheight;
 	}
 
-	public void setyUnit(String yUnit) {
-		this.yUnit = yUnit;
-	}
 	/**
-	 * ¸ù¾İÊÖ»úµÄ·Ö±æÂÊ´Ó dp µÄµ¥Î» ×ª³ÉÎª px(ÏñËØ)
+	 * æ ¹æ®æ‰‹æœºçš„åˆ†è¾¨ç‡ä» dp çš„å•ä½ è½¬æˆä¸º px(åƒç´ )
 	 */
 	private int dip2px(float dpValue)
 	{

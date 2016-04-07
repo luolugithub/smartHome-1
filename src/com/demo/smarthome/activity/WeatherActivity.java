@@ -34,7 +34,7 @@ import com.demo.smarthome.weather.WeatherInfoDataResult;
 import com.google.gson.Gson;
 
 /**
-*   获取所在城市的功能使用的是高德API，高德的登录名为shileifavorite@163.com 密码是130890。
+*   ?????????е????????????API???????????shileifavorite@163.com ??????130890??
 *
  * */
 public class WeatherActivity extends Activity {
@@ -47,33 +47,33 @@ public class WeatherActivity extends Activity {
     static final int SERVER_CANT_CONNECT  = 9;
     MyDialogView dialogView;
 
-    //声明AMapLocationClient类对象
+    //????AMapLocationClient?????
     protected AMapLocationClient mLocationClient;
-    //声明定位回调监听器
+    //??????λ?????????
     protected AMapLocationListener mLocationListener;
-    //声明mLocationOption对象
+    //????mLocationOption????
     protected AMapLocationClientOption mLocationOption = null;
-    //定位错误信息
-    private String ErrorInfo = " 获取天气信息失败";
+    //??λ???????
+    private String ErrorInfo = " ?????????????";
 
-    //服务器获取数据
+    //?????????????
     WeatherInfo weatherInfoText;
 //    Gson gson;
 //    WeatherInfoDataResult weatherData;
 //    String jsonResult;
 
-    //纬度
+    //γ??
 //    protected String mLongitude ="";
-    //经度
+    //????
 //    protected String mLatitude = "";
-    //省
+    //?
     protected String mProvince = "";
-    //城市
+    //????
     protected String mCity = "";
-    //区县
+    //????
     protected String mDistrict = "";
 
-    //警告框
+    //?????
     AlertDialog.Builder failAlert;
 
     Handler handler = new Handler() {
@@ -85,21 +85,21 @@ public class WeatherActivity extends Activity {
             switch (msg.what) {
                 case GET_WEATHER_SUCCEED:
                     StringBuffer cityTitle = new StringBuffer();
-                    cityTitle.append(mCity + "市\n");
-                    cityTitle.append(weatherInfoText.getWeatherInfo() + "(未付费)");
+                    cityTitle.append(mCity + "??\n");
+                    cityTitle.append(weatherInfoText.getWeatherInfo() + "(δ????)");
                     ((TextView)findViewById(R.id.TempText)).setText(cityTitle.toString());
                     StringBuffer weatherText = new StringBuffer();
-                    weatherText.append("温度:" +weatherInfoText.getTemperature() +"(假的)\n");
-                    weatherText.append("湿度:" +weatherInfoText.getHumidity() +"(假的)\n");
-                    weatherText.append("空气质量:(未付费)" +weatherInfoText.getAirQuality() +"\n");
+                    weatherText.append("???:" +weatherInfoText.getTemperature() +"(???)\n");
+                    weatherText.append("???:" +weatherInfoText.getHumidity() +"(???)\n");
+                    weatherText.append("????????:(δ????)" +weatherInfoText.getAirQuality() +"\n");
                     weatherText.append("PM2.5:" +weatherInfoText.getPm2_5() +"\n");
                     weatherText.append("PM10:" +weatherInfoText.getPm10() +"\n");
                     ((TextView)findViewById(R.id.TempText2)).setText(weatherText.toString());
                     break;
                 case GET_CITY_ERROR:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("获取城市天气失败").setIcon(R.drawable.cloud_fail).setMessage(ErrorInfo)
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("??????????????").setIcon(R.drawable.cloud_fail).setMessage(ErrorInfo)
+                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -109,8 +109,8 @@ public class WeatherActivity extends Activity {
                 break;
                 case CITY_NOT_SUPPORT:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("获取城市天气失败").setIcon(R.drawable.cloud_fail).setMessage(mCity + " 该城市不支持天气查询")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("??????????????").setIcon(R.drawable.cloud_fail).setMessage(mCity + " ?ó??в???????????")
+                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -120,8 +120,8 @@ public class WeatherActivity extends Activity {
                 break;
                 case SERVER_JSON_ERROR:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("云服务器故障").setIcon(R.drawable.cloud_fail).setMessage(mCity + " 天气查询错误")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail).setMessage(mCity + " ???????????")
+                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -131,8 +131,8 @@ public class WeatherActivity extends Activity {
                 break;
                 case SERVER_CANT_CONNECT:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("云服务器故障").setIcon(R.drawable.cloud_fail).setMessage("请联系贝谷科技售后服务部!")
-                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail).setMessage("?????????????????!")
+                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -158,11 +158,11 @@ public class WeatherActivity extends Activity {
             }
         });
 
-        //不开启网络就终止程序
+        //??????????????????
         if(!NetworkStatusTools.isNetworkAvailable(WeatherActivity.this)){
             failAlert = new AlertDialog.Builder(WeatherActivity.this);
-            failAlert.setTitle("无法连接到网络").setIcon(R.drawable.cloud_fail).setMessage("请确定是否连接了网络")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            failAlert.setTitle("????????????").setIcon(R.drawable.cloud_fail).setMessage("??????????????????")
+                    .setPositiveButton("???", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
@@ -176,97 +176,97 @@ public class WeatherActivity extends Activity {
 
 
     }
-    //初始化定位
+    //???????λ
     protected void initLoaction(){
         mLocationClient = null;
         mLocationListener = new AMapLocationListener() {
-            //定位回调监听，当定位完成后调用此方法
+            //??λ?????????????λ???????????
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 getLocationResult(aMapLocation);
             }
         };
-        //初始化定位
+        //???????λ
         mLocationClient = new AMapLocationClient(getApplicationContext());
-        //设置定位回调监听
+        //?????λ???????
         mLocationClient.setLocationListener(mLocationListener);
 
-        //初始化定位参数
+        //???????λ????
         mLocationOption = new AMapLocationClientOption();
-        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        //高精度定位模式：会同时使用网络定位和GPS定位，优先返回最高精度的定位结果；
-        //低功耗定位模式：不会使用GPS，只会使用网络定位（Wi-Fi和基站定位）；
-        //仅用设备定位模式：不需要连接网络，只使用GPS进行定位，这种模式下不支持室内环境的定位。
+        //?????λ????????????Battery_Saving??????????Device_Sensors????豸??
+        //??????λ??????????????綨λ??GPS??λ?????????????????λ?????
+        //??????λ???????????GPS???????????綨λ??Wi-Fi??????λ????
+        //?????豸??λ????????????????磬????GPS???ж?λ????????????????????????λ??
 
         mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-        //设置是否返回地址信息（默认返回地址信息）
+        //????????????????????????????
         mLocationOption.setNeedAddress(true);
-        //设置是只定位一次
+        //?????????λ???
         mLocationOption.setOnceLocation(true);
 
 
-        //设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
+        //??????????????GPS??λ????????30????GPS??з????λ???????????綨λ
 //        mLocationOption.setGpsFirst(true);
 
-        //给定位客户端对象设置定位参数
+        //????λ?????????????λ????
         mLocationClient.setLocationOption(mLocationOption);
-        //启动定位
+        //??????λ
         mLocationClient.startLocation();
 
-        //等待框
+        //?????
         dialogView = new MyDialogView(WeatherActivity.this);
-        dialogView.showMyDialog("正在定位", "正在定位");
+        dialogView.showMyDialog("?????λ", "?????λ");
     }
 
-    //获取定位结果
+    //?????λ???
     public void getLocationResult(AMapLocation amapLocation) {
 
         Message msg = new Message();
 
         if (amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
-                //定位成功回调信息，设置相关消息
+                //??λ?????????????????????
 
-                mProvince = amapLocation.getProvince();//省信息
-                //城市信息 (如果带"市"字去掉 "市")
-                if(amapLocation.getCity().contains("市")) {
-                    mCity = (amapLocation.getCity().split("市"))[0];//城市信息 (去掉 "市")
+                mProvince = amapLocation.getProvince();//????
+                //??????? (?????"??"????? "??")
+                if(amapLocation.getCity().contains("??")) {
+                    mCity = (amapLocation.getCity().split("??"))[0];//??????? (??? "??")
                 }else{
                     mCity = amapLocation.getCity();
                 }
-                mDistrict = amapLocation.getDistrict();//城区信息
-//                mLatitude = String.valueOf(amapLocation.getLatitude());//获取纬度
-//                mLongitude = String.valueOf(amapLocation.getLongitude());//获取经度
-//                amapLocation.getLocationType();//获取当前定位结果来源
-//                amapLocation.getAccuracy();//获取精度信息
+                mDistrict = amapLocation.getDistrict();//???????
+//                mLatitude = String.valueOf(amapLocation.getLatitude());//???γ??
+//                mLongitude = String.valueOf(amapLocation.getLongitude());//???????
+//                amapLocation.getLocationType();//????????λ??????
+//                amapLocation.getAccuracy();//??????????
 //                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //                Date date = new Date(amapLocation.getTime());
-//                df.format(date);//定位时间
-//                amapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
-//                amapLocation.getCountry();//国家信息
+//                df.format(date);//??λ???
+//                amapLocation.getAddress();//????????option??????isNeedAddress?false??????д????????綨λ????л??е???????GPS??λ?????????????
+//                amapLocation.getCountry();//???????
 
-//                amapLocation.getStreet();//街道信息
-//                amapLocation.getStreetNum();//街道门牌号信息
-//                amapLocation.getCityCode();//城市编码
-//                amapLocation.getAdCode();//地区编码
-                //定位信息调试信息
+//                amapLocation.getStreet();//??????
+//                amapLocation.getStreetNum();//???????????
+//                amapLocation.getCityCode();//???б???
+//                amapLocation.getAdCode();//????????
+                //??λ??????????
                 String result = getLocationStr(amapLocation);
                 Log.i(TAG, result);
-                //如果定位到的城市不支持天气查询
+                //?????λ??????в???????????
                 if(WeatherInformationTools.isCitySupportGetWeather(mCity) == false){
                     msg.what = CITY_NOT_SUPPORT;
                     handler.sendMessage(msg);
                     return;
                 }
-                //定位城市成功后从服务器获取数据
+                //??λ???г?????????????????
                 new getWeatherFromServerThread().start();
             } else {
                 StringBuffer sb = new StringBuffer();
-                //定位失败
-                sb.append("定位失败" + "\n");
-                sb.append("错误码:" + amapLocation.getErrorCode() + "\n");
-                sb.append("错误信息:" + amapLocation.getErrorInfo() + "\n");
-                sb.append("错误描述:" + amapLocation.getLocationDetail() + "\n");
+                //??λ???
+                sb.append("??λ???" + "\n");
+                sb.append("??????:" + amapLocation.getErrorCode() + "\n");
+                sb.append("???????:" + amapLocation.getErrorInfo() + "\n");
+                sb.append("????????:" + amapLocation.getLocationDetail() + "\n");
                 ErrorInfo = sb.toString();
                 Log.e(TAG,ErrorInfo);
                 msg.what = GET_CITY_ERROR;
@@ -275,7 +275,7 @@ public class WeatherActivity extends Activity {
         }
 
     }
-    //获取当前数据
+    //??????????
     class getWeatherFromServerThread extends Thread {
 
         @Override
@@ -291,7 +291,7 @@ public class WeatherActivity extends Activity {
 
             setServerURL regiterUser = new setServerURL();
 
-            //需要判断服务器是否开启
+            //????ж???????????
             if((jsonResult = regiterUser.sendParamToServer("getWeatherInfoByCityName", paramsName
                     , paramsValue)).isEmpty()){
                 message.what = SERVER_CANT_CONNECT;
@@ -331,8 +331,8 @@ public class WeatherActivity extends Activity {
         super.onDestroy();
         if (null != mLocationClient) {
             /**
-             * 如果AMapLocationClient是在当前Activity实例化的，
-             * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
+             * ???AMapLocationClient??????Activity????????
+             * ??Activity??onDestroy?????????AMapLocationClient??onDestroy
              */
             mLocationClient.onDestroy();
             mLocationClient = null;
@@ -341,7 +341,7 @@ public class WeatherActivity extends Activity {
     }
 
     /**
-     * 根据定位结果返回定位信息的字符串
+     * ?????λ????????λ??????????
      * @param
      * @return
      */
@@ -350,40 +350,40 @@ public class WeatherActivity extends Activity {
             return null;
         }
         StringBuffer sb = new StringBuffer();
-        //errCode等于0代表定位成功，其他的为定位失败，具体的可以参照官网定位错误码说明
+        //errCode????0????λ??????????????λ????????????????????λ?????????
         if(location.getErrorCode() == 0){
-            sb.append("定位成功" + "\n");
-            sb.append("定位类型: " + location.getLocationType() + "\n");
-            sb.append("经    度    : " + location.getLongitude() + "\n");
-            sb.append("纬    度    : " + location.getLatitude() + "\n");
-            sb.append("精    度    : " + location.getAccuracy() + "米" + "\n");
-            sb.append("提供者    : " + location.getProvider() + "\n");
+            sb.append("??λ???" + "\n");
+            sb.append("??λ????: " + location.getLocationType() + "\n");
+            sb.append("??    ??    : " + location.getLongitude() + "\n");
+            sb.append("γ    ??    : " + location.getLatitude() + "\n");
+            sb.append("??    ??    : " + location.getAccuracy() + "??" + "\n");
+            sb.append("????    : " + location.getProvider() + "\n");
 
             if (location.getProvider().equalsIgnoreCase(
                     android.location.LocationManager.GPS_PROVIDER)) {
-                // 以下信息只有提供者是GPS时才会有
-                sb.append("速    度    : " + location.getSpeed() + "米/秒" + "\n");
-                sb.append("角    度    : " + location.getBearing() + "\n");
-                // 获取当前提供定位服务的卫星个数
-                sb.append("星    数    : "
+                // ????????????????GPS??????
+                sb.append("??    ??    : " + location.getSpeed() + "??/??" + "\n");
+                sb.append("??    ??    : " + location.getBearing() + "\n");
+                // ??????????λ????????????
+                sb.append("??    ??    : "
                         + location.getSatellites() + "\n");
             } else {
-                // 提供者是GPS时是没有以下信息的
-                sb.append("国    家    : " + location.getCountry() + "\n");
-                sb.append("省            : " + location.getProvince() + "\n");
-                sb.append("市            : " + location.getCity() + "\n");
-                sb.append("城市编码 : " + location.getCityCode() + "\n");
-                sb.append("区            : " + location.getDistrict() + "\n");
-                sb.append("区域 码   : " + location.getAdCode() + "\n");
-                sb.append("地    址    : " + location.getAddress() + "\n");
-                sb.append("兴趣点    : " + location.getPoiName() + "\n");
+                // ??????GPS???????????????
+                sb.append("??    ??    : " + location.getCountry() + "\n");
+                sb.append("?            : " + location.getProvince() + "\n");
+                sb.append("??            : " + location.getCity() + "\n");
+                sb.append("???б??? : " + location.getCityCode() + "\n");
+                sb.append("??            : " + location.getDistrict() + "\n");
+                sb.append("???? ??   : " + location.getAdCode() + "\n");
+                sb.append("??    ?    : " + location.getAddress() + "\n");
+                sb.append("?????    : " + location.getPoiName() + "\n");
             }
         } else {
-            //定位失败
-            sb.append("定位失败" + "\n");
-            sb.append("错误码:" + location.getErrorCode() + "\n");
-            sb.append("错误信息:" + location.getErrorInfo() + "\n");
-            sb.append("错误描述:" + location.getLocationDetail() + "\n");
+            //??λ???
+            sb.append("??λ???" + "\n");
+            sb.append("??????:" + location.getErrorCode() + "\n");
+            sb.append("???????:" + location.getErrorInfo() + "\n");
+            sb.append("????????:" + location.getLocationDetail() + "\n");
         }
         return sb.toString();
     }

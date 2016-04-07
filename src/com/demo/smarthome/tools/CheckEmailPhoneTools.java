@@ -16,7 +16,7 @@ public class CheckEmailPhoneTools {
         return m.matches();
     }
     //验证是否是有效手机号
-    private static boolean isPhoneNumber(String mobiles){
+    public static boolean isPhoneNumber(String mobiles){
         Pattern p = Pattern.compile("^((13[0-9])|(15[0-9])|(18[0-9]))\\d{8}$");
         Matcher m = p.matcher(mobiles);
         return m.matches();

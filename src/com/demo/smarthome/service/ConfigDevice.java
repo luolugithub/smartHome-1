@@ -24,7 +24,7 @@ import java.net.UnknownHostException;
 public class ConfigDevice {
 
 //    static final String TAG = "ConfigDevice";
-    static final String TAG = "MainActivity";
+    static final String TAG = "ConfigDevice";
     static final int WAIT_RESULT  = 0;
     static final int FIND_DEVID = 2;
     static final int CMD_TIMEOUT = 6;
@@ -72,13 +72,19 @@ public class ConfigDevice {
             if (result.isSuc()) {
                 //配置WI-FI后等待设备设置成lanstart模式
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(50);
+                    Log.i(TAG,"config wifi succeed");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    return;
                 }
-            }
 
-            findDevice();
+                findDevice(result.getInetAddress());
+            }
+            else{
+                Log.i(TAG,"config wifi failed");
+                setResult(CMD_TIMEOUT);
+            }
         }
     }
 
@@ -87,7 +93,9 @@ public class ConfigDevice {
         //ssid是网络的ID,bssid是接入ap的mac
         return mWifiAdmin.getWifiConnectedSsid();
     }
-
+    public void setResult(int setValue){
+        result = setValue;
+    }
     public int getConfigResult(){
         return result;
     }
@@ -108,7 +116,7 @@ public class ConfigDevice {
     }
 
     //扫描本地设备
-    private void findDevice(){
+    private void findDevice(InetAddress destIP){
         findDev = false;
         Cfg.devScanClean();
         String ip = myip;
@@ -116,12 +124,13 @@ public class ConfigDevice {
             ip = "192.168.1.255";
         }
 
-        for (int i = 1; i < 255; i++) {
+        for (int i = 1; i < 100; i++) {
 
             if (findDev) {
                 return;
             }
-            new UDPThread(ip, i).start();
+
+            new UDPThread(ip, destIP).start();
             try {
                 Thread.sleep(Cfg.DEV_UDP_SEND_DELAY);
             } catch (InterruptedException e) {
@@ -129,29 +138,26 @@ public class ConfigDevice {
             }
         }
         try {
-            Thread.sleep(15000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if (findDev) {
             return;
         }
+        Log.i(TAG, "can't find device");
         result = CMD_TIMEOUT;
     }
 
     class UDPThread extends Thread {
         String Hostip = "";
-        String ip = "";
+        InetAddress destinationIP ;
         int port = Cfg.DEV_UDP_SEND_PORT;
 
-        public UDPThread(String ipStr, int i) {
+        public UDPThread(String ipStr, InetAddress ip) {
 
             this.Hostip = ipStr;
-            byte[] addr = IpTools.getIpV4Byte(ipStr);
-            if (addr.length == 4) {
-                addr[3] = (byte) (i);
-                ip = IpTools.getIpV4StringByByte(addr, 0);
-            }
+            destinationIP = ip;
         }
 
         public void run() {
@@ -161,14 +167,6 @@ public class ConfigDevice {
             byte[] buf = new byte[1024];
             DatagramPacket dp = new DatagramPacket(buf, 1024);
 
-            InetAddress local = null;
-            try {
-                local = InetAddress.getByName(ip); // 本机测试
-                // local = InetAddress.getLocalHost(); // 本机测试
-                System.out.println("local:" + local);
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
             try {
                 dSocket = new DatagramSocket(); // 注意此处要先在配置文件里设置权限,否则会抛权限不足的异常
             } catch (SocketException e) {
@@ -178,17 +176,14 @@ public class ConfigDevice {
 
             String localPort = dSocket.getLocalPort() + "";
 
-            System.out.println("Hostip:" + Hostip + "  ip:" + ip
-                    + "   localPort:" + localPort);
-
             msg = "RPL:\"" + Hostip + "\",\"" + localPort + "\"";
 
             int msg_len = msg == null ? 0 : msg.getBytes().length;
             DatagramPacket dPacket = new DatagramPacket(msg.getBytes(),
-                    msg_len, local, port);
+                    msg_len, destinationIP, port);
 
             try {
-
+                Log.i(TAG, "destination IP:" + destinationIP);
                 // 发送设置为广播
                 dSocket.setBroadcast(true);
                 dSocket.setSoTimeout(10000);

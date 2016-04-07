@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/DeviceDataViewActivity.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/MainActivity.java" charset="GBK" />
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="GBK">
+    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/DeviceHistoryDataActivitiy.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/DeviceRealtimeDataActivity.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/RegisterActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/WeatherActivity.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/WelcomeActivity.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/activity/historyDataActivity.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/staticString/StringRes.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/tools/BitmapTools.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/demo/smarthome/view/MyDialogView.java" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

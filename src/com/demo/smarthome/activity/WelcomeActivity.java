@@ -86,7 +86,7 @@ public class WelcomeActivity extends Activity {
 			Intent intent = new Intent();
 			switch (msg.what){
 				case LOGIN_SUCCEED:
-					intent.setClass(WelcomeActivity.this, DeviceDataViewActivity.class);
+					intent.setClass(WelcomeActivity.this, DeviceRealtimeDataActivity.class);
 					startActivity(intent);
 					finish();
 				break;
@@ -245,7 +245,7 @@ public class WelcomeActivity extends Activity {
 				Message msg = new Message();
 				msg.what = VERSION_HIGHEST;
 
-			try {
+				try {
 				//取得本地版本号
 				getVersionName();
 				//从资源文件获取服务器 地址

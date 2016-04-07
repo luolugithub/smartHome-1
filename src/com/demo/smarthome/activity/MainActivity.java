@@ -181,9 +181,9 @@ public class MainActivity extends Activity {
 				dialogView.closeMyDialog();
 				Toast.makeText(MainActivity.this, "添加设备成功", Toast.LENGTH_SHORT)
 						.show();
-				finish();
 				tempIntent = new Intent(MainActivity.this, MainActivity.class);
 				startActivity(tempIntent);
+				finish();
 				break;
 			default:
 				break;
@@ -359,6 +359,12 @@ public class MainActivity extends Activity {
 
 			deviceInfo = new ConfigDevice(wifiPassword,SSIDisHidden, IpTools
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),MainActivity.this);
+			//检查是否有网络
+			if(deviceInfo.getApSSid() == null){
+				message.what = FIND_DEV_TIMEOUT;
+				handler.sendMessage(message);
+				return;
+			}
 			//执行配置线程
 			deviceInfo.configDeviceThread();
 			while(true){
@@ -439,7 +445,7 @@ public class MainActivity extends Activity {
 			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
 
 			Intent tempIntent = new Intent();
-			tempIntent.setClass(MainActivity.this, DeviceDataViewActivity.class);
+			tempIntent.setClass(MainActivity.this, DeviceRealtimeDataActivity.class);
 			startActivity(tempIntent);
 
 		}

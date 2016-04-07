@@ -108,8 +108,9 @@ public class LoginActivity extends Activity {
 				if(!Cfg.currentDeviceID.isEmpty()){
 
 					Intent intent = new Intent();
-					intent.setClass(LoginActivity.this, DeviceDataViewActivity.class);
+					intent.setClass(LoginActivity.this, DeviceRealtimeDataActivity.class);
 					startActivity(intent);
+					finish();
 				}
 				else {
 					Bundle bundle = new Bundle();

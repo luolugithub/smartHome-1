@@ -62,7 +62,7 @@ import android.widget.Toast;
 import com.demo.smarthome.service.ConfigService;
 import android.view.KeyEvent;
 /**
- * ×¢²áÀà
+ * ×¢ï¿½ï¿½ï¿½ï¿½
  * 
  * @author Administrator
  * 
@@ -120,7 +120,7 @@ public class RegisterActivity extends Activity {
 
 				dialogView.closeMyDialog();
 
-				Toast.makeText(RegisterActivity.this, "×¢²áÐÂÓÃ»§³É¹¦!",
+				Toast.makeText(RegisterActivity.this, "×¢ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½É¹ï¿½!",
 						Toast.LENGTH_SHORT).show();
 				try {
 					Thread.sleep(1000);
@@ -130,34 +130,34 @@ public class RegisterActivity extends Activity {
 				Bundle bundle = new Bundle();
 				bundle.putString("activity", "register");
 				Intent mainIntent = new Intent();
-				mainIntent.setClass(RegisterActivity.this, DeviceDataViewActivity.class);
+				mainIntent.setClass(RegisterActivity.this, DeviceRealtimeDataActivity.class);
 				mainIntent.putExtras(bundle);
-				startActivity(mainIntent);// ´ò¿ªÐÂ½çÃæ
+				startActivity(mainIntent);// ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½
 				finish();
 				break;
 			case NO_WIFI:
 
-				failAlert.setTitle("ÎÞÏßÍøÂç´íÎó").setIcon(R.drawable.cloud_fail).setMessage("ÐèÒª±£³ÖºÍ±¾µØÉè±¸ÔÚÍ¬Ò»ÍøÂçÖÐ");
+				failAlert.setTitle("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½").setIcon(R.drawable.cloud_fail).setMessage("ï¿½ï¿½Òªï¿½ï¿½ï¿½ÖºÍ±ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½Í¬Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 				failAlert.create().show();
 				break;
 			case CMD_TIMEOUT:
 
-				failAlert.setTitle("ÎÞ·¨ÕÒµ½±¾µØÉè±¸").setIcon(R.drawable.cloud_fail).setMessage("×¢²áÊ±ÐèÒª°ó¶¨±¾µØÉè±¸");
+				failAlert.setTitle("ï¿½Þ·ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸").setIcon(R.drawable.cloud_fail).setMessage("×¢ï¿½ï¿½Ê±ï¿½ï¿½Òªï¿½ó¶¨±ï¿½ï¿½ï¿½ï¿½è±¸");
 				failAlert.create().show();
 				break;
 			case USER_EXISTED:
 
-				failAlert.setTitle(" ×¢²áÊ§°Ü").setIcon(R.drawable.cloud_fail).setMessage("   ÓÃ»§ÒÑ¾­´æÔÚ");
+				failAlert.setTitle(" ×¢ï¿½ï¿½Ê§ï¿½ï¿½").setIcon(R.drawable.cloud_fail).setMessage("   ï¿½Ã»ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½");
 				failAlert.create().show();
 				break;
 			case SERVER_EXCEPTION:
 
-				failAlert.setTitle(" ×¢²áÊ§°Ü").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer);
+				failAlert.setTitle(" ×¢ï¿½ï¿½Ê§ï¿½ï¿½").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer);
 				failAlert.create().show();
 				break;
 			default:
 
-				failAlert.setTitle(" ×¢²áÊ§°Ü").setIcon(R.drawable.cloud_fail).setMessage("   ×¢²áÐÂÓÃ»§Ê§°Ü");
+				failAlert.setTitle(" ×¢ï¿½ï¿½Ê§ï¿½ï¿½").setIcon(R.drawable.cloud_fail).setMessage("   ×¢ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ê§ï¿½ï¿½");
 				failAlert.create().show();
 				break;
 
@@ -169,7 +169,7 @@ public class RegisterActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // ×¢ÒâË³Ðò
+		requestWindowFeature(Window.FEATURE_NO_TITLE); // ×¢ï¿½ï¿½Ë³ï¿½ï¿½
 
 		setContentView(R.layout.activity_register);
 		TextView title = (TextView) findViewById(R.id.titleRegister);
@@ -187,7 +187,7 @@ public class RegisterActivity extends Activity {
 		txtrePassword = (EditText) findViewById(R.id.againPassword);
 		txtWifipassword = (EditText) findViewById(R.id.wifiPassword);
 		switchIsHidden = (Switch) findViewById(R.id.wifiIsHidden);
-		//ÏÔÊ¾SSID
+		//ï¿½ï¿½Ê¾SSID
 		apSSID = (TextView)findViewById(R.id.wifiSSID);
 		ConfigDevice forApSSID= new ConfigDevice(RegisterActivity.this);
 		if(forApSSID.getApSSid() == null){
@@ -212,7 +212,7 @@ public class RegisterActivity extends Activity {
 //	}
 
 	/**
-	 * ×¢²á °´Å¥¼àÌýÀà
+	 * ×¢ï¿½ï¿½ ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @author Administrator
 	 * 
@@ -222,8 +222,8 @@ public class RegisterActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			if(noWifi){
-				failAlert.setTitle("ÎÞ·¨ÎÞÏßÍøÂç").setIcon(R.drawable.cloud_fail)
-						.setMessage("ÐèÒª±£³ÖºÍ±¾µØÉè±¸ÔÚÍ¬Ò»ÍøÂçÖÐ");
+				failAlert.setTitle("ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½").setIcon(R.drawable.cloud_fail)
+						.setMessage("ï¿½ï¿½Òªï¿½ï¿½ï¿½ÖºÍ±ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½Í¬Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 				failAlert.create().show();
 				return;
 			}
@@ -233,36 +233,36 @@ public class RegisterActivity extends Activity {
 			wifiPwd = txtWifipassword.getText().toString();
 
 			if (userRegName.trim().isEmpty()||(!CheckEmailPhoneTools.isEmail(userRegName))) {
-				Toast.makeText(getApplicationContext(), "ÇëÊäÈëÕýÈ·µÄÓÊÏäµØÖ·×÷ÎªÓÃ»§Ãû", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½Îªï¿½Ã»ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 				txtName.setFocusable(true);
 				return;
 			}
 			if (userRegPassword.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "ÇëÊäÈëÃÜÂë", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
 			if (userRegPassword.length() < 6) {
-				Toast.makeText(getApplicationContext(), "ÃÜÂë³¤¶È¹ý¶Ì", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "ï¿½ï¿½ï¿½ë³¤ï¿½È¹ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
 			if(!rePassword.equals(userRegPassword)){
-				Toast.makeText(getApplicationContext(), "Á½´ÎÊäÈëÃÜÂë²»Ò»ÖÂ", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë²»Ò»ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
 
-			//µÈ´ý¿ò
+			//ï¿½È´ï¿½ï¿½ï¿½
 			dialogView = new MyDialogView(RegisterActivity.this);
-			dialogView.showMyDialog("ÕýÔÚ»ñÈ¡Éè±¸", "ÕýÔÚ´Ó·þÎñÆ÷»ñÈ¡Éè±¸,ÇëµÈ´ý");
+			dialogView.showMyDialog("ï¿½ï¿½ï¿½Ú»ï¿½È¡ï¿½è±¸", "ï¿½ï¿½ï¿½Ú´Ó·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½è±¸,ï¿½ï¿½È´ï¿½");
 
 			new ConnectDevThread().start();
 		}
 	}
 
 
-	//ÏÈÅäÖÃÉè±¸Á¬½ÓWI-FI,ÔÙÉ¨Ãè±¾µØÉè±¸»ñÈ¡±¾µØÉè±¸ID.
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½WI-FI,ï¿½ï¿½É¨ï¿½è±¾ï¿½ï¿½ï¿½è±¸ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ID.
 	class ConnectDevThread extends Thread {
 		@Override
 		public void run() {
@@ -270,13 +270,13 @@ public class RegisterActivity extends Activity {
 
 			deviceInfo = new ConfigDevice(wifiPwd,switchIsHidden.isChecked(),IpTools
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),RegisterActivity.this);
-			//¼ì²éÊÇ·ñÓÐÍøÂç
+			//ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(deviceInfo.getApSSid() == null){
 				message.what = NO_WIFI;
 				handler.sendMessage(message);
 				return;
 			}
-			//Ö´ÐÐÅäÖÃÏß³Ì
+			//Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½
 			deviceInfo.configDeviceThread();
 			while(true){
 
@@ -294,7 +294,7 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	//×¢²á½ø³Ì
+	//×¢ï¿½ï¿½ï¿½ï¿½ï¿½
 	class registerUserThread extends Thread {
 		@Override
 		public void run() {
@@ -305,7 +305,7 @@ public class RegisterActivity extends Activity {
 			String[] paramsName = {"userName", "userPassword","deviceId", "devicePassword"};
 			String[] paramsValue = {userRegName,userRegPassword,deviceInfo.getDeviceID(),deviceInfo.getDevicePwd()};
 
-			//ÐèÒªÅÐ¶Ï·þÎñÆ÷ÊÇ·ñ¿ªÆô
+			//ï¿½ï¿½Òªï¿½Ð¶Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½
 			if((jsonResult = new setServerURL().sendParamToServer("register", paramsName, paramsValue)).isEmpty()){
 				message.what = SERVER_EXCEPTION;
 				handler.sendMessage(message);
@@ -327,7 +327,7 @@ public class RegisterActivity extends Activity {
 				case Cfg.CODE_USER_EXISTED:
 					message.what = USER_EXISTED;
 					break;
-				//·þÎñÆ÷³ÌÐòÒì³£
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì³£
 				case Cfg.CODE_EXCEPTION:
 					message.what = SERVER_EXCEPTION;
 					break;

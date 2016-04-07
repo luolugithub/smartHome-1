@@ -64,7 +64,6 @@ public class DeviceDataSet {
     public String getTvoc() {
         return tvoc;
     }
-
     public void setTvoc(String tvoc) {
         this.tvoc = tvoc;
     }
