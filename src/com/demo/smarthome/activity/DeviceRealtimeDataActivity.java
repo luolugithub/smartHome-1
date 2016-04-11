@@ -3,8 +3,10 @@ package com.demo.smarthome.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +27,8 @@ import com.demo.smarthome.server.DeviceDataSet;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.service.ConfigService;
+import com.demo.smarthome.tools.ScreenShotTools;
+import com.demo.smarthome.tools.shareToWiexin;
 import com.demo.smarthome.view.CircleAndNumberView;
 import com.demo.smarthome.R;
 import com.demo.smarthome.view.MyDialogView;
@@ -32,7 +36,9 @@ import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.io.File;
 
 /**********************************************************
  * @文件作者：sl
@@ -47,6 +53,7 @@ public class DeviceRealtimeDataActivity extends Activity {
     Button pm2_5Btn;
     Button pm10Btn;
     Button historyDataBtn;
+    Button shareBtn;
     CircleAndNumberView realDataView;
     ProgressDialog dialogView;
     int crrentValue;
@@ -70,6 +77,14 @@ public class DeviceRealtimeDataActivity extends Activity {
     static final int SERVER_CANT_CONNECT   = 8;
     static final int SERVE_EXCEPTION       = 9;
     static final int UPDATE_DATA           = 10;
+
+    //朋友圈分享成功
+    static int shareSucceed     = 0;
+    //截图不存在
+    static int fileNotExist     = 1;
+    //截图失败
+    static int screenShotFail   = 2;
+
     enum currentdataTitle
     {
         outline,
@@ -206,7 +221,8 @@ public class DeviceRealtimeDataActivity extends Activity {
                 startActivity(intent);
             }
         });
-
+        shareBtn = (Button)findViewById(R.id.shareBtn);
+        shareBtn.setOnClickListener(new shareToTimeline());
         hchoBtn = (Button) findViewById(R.id.hchoBtn);
         hchoBtn.setOnClickListener(new hchoDataShow());
         tvocBtn = (Button) findViewById(R.id.tvocBtn);
@@ -298,6 +314,9 @@ public class DeviceRealtimeDataActivity extends Activity {
                     realDataView.setText((float) crrentValue / 100 + "");
                     realDataView.setUnit(getResources().getString(R.string.device_hcho_unit));
                     range = 300;
+                }else{
+                    realDataView.setText( crrentValue  + "");
+                    realDataView.setUnit("");
                 }
                 realDataView.setProgress(crrentValue,range);
                 handler.sendMessage(message);
@@ -326,6 +345,18 @@ public class DeviceRealtimeDataActivity extends Activity {
             }
         });
         failAlert.create().show();
+    }
+
+    //分享到朋友圈
+    class shareToTimeline implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if(shareToWiexin.shareToWeiXinTimeline(DeviceRealtimeDataActivity.this)
+                    != shareSucceed){
+                Toast.makeText(DeviceRealtimeDataActivity.this, "分享到朋友圈失败", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
     }
 
     class hchoDataShow implements View.OnClickListener {

@@ -167,8 +167,8 @@ public class WelcomeActivity extends Activity {
 		}
 		//欢迎界面最多3秒
 		startTimestamp = System.currentTimeMillis();
-		//初始化手机分辨率变量
-		initPhoneConfig(WelcomeActivity.this);
+		//初始化
+		accessViewInit();
 		new CheckVersionThread().start();
 	}
 
@@ -178,7 +178,10 @@ public class WelcomeActivity extends Activity {
 //		getMenuInflater().inflate(R.menu.welcome, menu);
 //		return true;
 //	}
-
+	void accessViewInit(){
+		//初始化手机分辨率变量
+		initPhoneConfig(WelcomeActivity.this);
+	}
 	//不需要更新和没有自动登录情况,在欢迎界面等三秒进入登录界面
 	Runnable r = new Runnable() {
 		@Override

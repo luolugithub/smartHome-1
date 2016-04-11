@@ -24,6 +24,7 @@ import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.tools.BitmapTools;
 import com.demo.smarthome.tools.NetworkStatusTools;
+import com.demo.smarthome.tools.shareToWiexin;
 import com.demo.smarthome.view.DeviceHistoryDataView;
 import com.demo.smarthome.view.HistoryDataLineView;
 import com.demo.smarthome.view.MyDialogView;
@@ -61,8 +62,15 @@ public class DeviceHistoryDataActivitiy extends Activity {
     Button dayBtn;
     Button weekBtn;
     Button monthBtn;
+    Button shareBtn;
 
     String currentDay;
+
+
+    static int shareSucceed     = 0;
+    static int fileNotExist     = 1;
+    static int screenShotFail   = 2;
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -81,13 +89,13 @@ public class DeviceHistoryDataActivitiy extends Activity {
                         }
                     }
                     dialogView.closeMyDialog();
-                    Toast.makeText(getApplicationContext(), "无趋势数据", Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), "无历史数据", Toast.LENGTH_SHORT)
                             .show();
                     finish();
                     break;
                 case GET_DATA_FAIL:
                     dialogView.closeMyDialog();
-                    Toast.makeText(getApplicationContext(), "服务器错误", Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), "连接服务器失败", Toast.LENGTH_SHORT)
                             .show();
                     finish();
                     break;
@@ -117,7 +125,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
 
         if(Cfg.currentDeviceID.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "设备数据错误,请重新选择", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "请重新选择设备", Toast.LENGTH_SHORT)
                     .show();
             Intent intent = new Intent();
             intent.setClass(DeviceHistoryDataActivitiy.this, MainActivity.class);
@@ -136,6 +144,9 @@ public class DeviceHistoryDataActivitiy extends Activity {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     BitmapTools.dp2px(DeviceHistoryDataActivitiy.this, 400)));
         }
+        shareBtn = (Button)findViewById(R.id.shareBtn);
+        shareBtn.setOnClickListener(new shareToTimeline());
+
         dayBtn = (Button)findViewById(R.id.todayBtn);
         dayBtn.setOnClickListener(new showViewByDay());
         weekBtn = (Button)findViewById(R.id.weekBtn);
@@ -150,15 +161,26 @@ public class DeviceHistoryDataActivitiy extends Activity {
         //network is available or not
         if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
             currentType = type_outline;
-            Toast.makeText(getApplicationContext(), "手机无网络", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "无网络", Toast.LENGTH_SHORT)
                     .show();
             drawHistoryData(currentType, dayDataList);
         }else {
-            dialogView.showMyDialog("读取数据", "正在读取数据请等待");
+            dialogView.showMyDialog("获取数据", "请等待.....");
             currentType = type_day;
             new getDataByDay().start();
         }
 
+    }
+
+    class shareToTimeline implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if(shareToWiexin.shareToWeiXinTimeline(DeviceHistoryDataActivitiy.this)
+                    != shareSucceed){
+                Toast.makeText(DeviceHistoryDataActivitiy.this, "分享到朋友圈失败", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
     }
 
     class showViewByDay implements View.OnClickListener {
@@ -171,11 +193,11 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
             if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
                 currentType = type_outline;
-                Toast.makeText(getApplicationContext(), "手机无网络", Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(), "无网络", Toast.LENGTH_SHORT)
                         .show();
                 drawHistoryData(currentType, dayDataList);
             }else {
-                dialogView.showMyDialog("读取数据", "正在读取数据请等待");
+                dialogView.showMyDialog("获取数据", "请等待.....");
                 currentType = type_day;
                 new getDataByDay().start();
             }
@@ -191,11 +213,11 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
             if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
                 currentType = type_outline;
-                Toast.makeText(getApplicationContext(), "手机无网络", Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(), "无网络", Toast.LENGTH_SHORT)
                         .show();
                 drawHistoryData(currentType, dayDataList);
             }else {
-                dialogView.showMyDialog("读取数据", "正在读取数据请等待");
+                dialogView.showMyDialog("获取数据", "请等待.....");
                 currentType = type_week;
                 new getDataByWeek().start();
             }
@@ -212,11 +234,11 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
             if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
                 currentType = type_outline;
-                Toast.makeText(getApplicationContext(), "手机无网络", Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(), "无网络", Toast.LENGTH_SHORT)
                         .show();
                 drawHistoryData(currentType, dayDataList);
             }else {
-                dialogView.showMyDialog("读取数据", "正在读取数据请等待");
+                dialogView.showMyDialog("获取数据", "请等待.....");
                 currentType = type_month;
                 new getDataByMonth().start();
             }

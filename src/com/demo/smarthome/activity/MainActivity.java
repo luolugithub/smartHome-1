@@ -19,6 +19,7 @@ import com.demo.smarthome.service.ConfigService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
 import com.demo.smarthome.tools.IpTools;
+import com.demo.smarthome.tools.NetworkStatusTools;
 import com.demo.smarthome.view.MyDialogView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -181,7 +182,7 @@ public class MainActivity extends Activity {
 				dialogView.closeMyDialog();
 				Toast.makeText(MainActivity.this, "添加设备成功", Toast.LENGTH_SHORT)
 						.show();
-				tempIntent = new Intent(MainActivity.this, MainActivity.class);
+				tempIntent = new Intent(MainActivity.this, DeviceRealtimeDataActivity.class);
 				startActivity(tempIntent);
 				finish();
 				break;
@@ -360,7 +361,7 @@ public class MainActivity extends Activity {
 			deviceInfo = new ConfigDevice(wifiPassword,SSIDisHidden, IpTools
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),MainActivity.this);
 			//检查是否有网络
-			if(deviceInfo.getApSSid() == null){
+			if(!NetworkStatusTools.isNetworkAvailable(MainActivity.this)){
 				message.what = FIND_DEV_TIMEOUT;
 				handler.sendMessage(message);
 				return;
@@ -412,6 +413,10 @@ public class MainActivity extends Activity {
 			switch (Integer.parseInt(getResult.getCode()))
 			{
 				case Cfg.CODE_SUCCESS:
+
+					Cfg.currentDeviceID = deviceInfo.getDeviceID();
+					dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
+
 					message.what = ADD_DEV_SUCCED;
 					break;
 				default:
@@ -444,10 +449,10 @@ public class MainActivity extends Activity {
 			//保存选择设备
 			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
 
-			Intent tempIntent = new Intent();
-			tempIntent.setClass(MainActivity.this, DeviceRealtimeDataActivity.class);
-			startActivity(tempIntent);
-
+			Intent listIntent = new Intent();
+			listIntent.setClass(MainActivity.this, DeviceRealtimeDataActivity.class);
+			startActivity(listIntent);
+			finish();
 		}
 	}
 

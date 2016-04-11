@@ -4,11 +4,13 @@ package com.demo.smarthome.staticString;
  * Created by leishi on 15/11/19.
  */
 public class StringRes {
-    public final static String serverIP = "172.16.120.19";
+    public final static String serverIP = "172.16.120.12";
     public final static String updateXmlUrl= serverIP + ":8080/essh/versionUpdata/update.xml";
     public final static String serverPort = "8080";
     public final static String nameSpace ="http://webservice.smarthome.begood.com";
 
+    //屏幕截图的文件名
+    public final static String screenShotFileName = "sdcard/Begood/begoodTemp.png";
     //天气查询支持的城市
     public final static String weatherSupportCity [] ={"七台河","三亚","三明","三门峡","上海"
             ,"上饶","东莞","东营","中卫","中山","临夏州","临安","临汾","临沂","临沧"
