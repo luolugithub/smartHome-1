@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -48,14 +49,13 @@ import com.google.gson.JsonSyntaxException;
 
 import com.demo.smarthome.tools.CheckEmailPhoneTools;
 /**
- * µÇÂ¼Àà
+ * ï¿½ï¿½Â¼ï¿½ï¿½
  * 
  * @author Administrator
  * 
  */
 public class LoginActivity extends Activity {
 
-	TextView title = null;
 	TextView forgetPassword = null;
 
 	EditText txtName = null;
@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
 						.getText().toString());
 				dbService.SaveSysCfgByKey(Cfg.KEY_AUTO_LOGIN
 						, String.valueOf(isAtuoLogin.isChecked()));
-				//Èç¹û¸ÃÕËºÅÖ»°ó¶¨ÁËÒ»Ì¨Éè±¸(»òÕßÒÑ¾­°ó¶¨ÁËÉè±¸),Ö±½Ó½øÈëÊµÊ±Éè±¸Êı¾İ½çÃæ,·ñÔòÒªÈ¥ÉèÖÃÉè±¸½çÃæ
+
 				if(Cfg.devInfo.length == 1){
 					dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID
 							, Cfg.devInfo[0]);
@@ -118,30 +118,30 @@ public class LoginActivity extends Activity {
 					Intent intent = new Intent();
 					intent.putExtras(bundle);
 					intent.setClass(LoginActivity.this, MainActivity.class);
-					startActivity(intent);// ´ò¿ªĞÂ½çÃæ
+					startActivity(intent);
 				}
 				break;
 			case PASSWORD_ERROR:
 
-				Toast.makeText(LoginActivity.this, "ÃÜÂë´íÎó£¡", Toast.LENGTH_SHORT)
+				Toast.makeText(LoginActivity.this, "å¯†ç é”™è¯¯", Toast.LENGTH_SHORT)
 						.show();
 
 				break;
 			case SEND_PWD2EMAIL_SUCCEED:
 
-				Toast.makeText(LoginActivity.this, "·¢ËÍÃÜÂëµ½ÓÊÏä³É¹¦!", Toast.LENGTH_SHORT)
+				Toast.makeText(LoginActivity.this, "å‘é€æˆåŠŸ,è¯·åˆ°é‚®ç®±ä¸­æŸ¥æ”¶", Toast.LENGTH_SHORT)
 						.show();
 
 				break;
 			case SEND_PWD2EMAIL_ERROR:
 
-				Toast.makeText(LoginActivity.this, "ÓÃ»§²»´æÔÚ!", Toast.LENGTH_SHORT)
+				Toast.makeText(LoginActivity.this, "å‘é€å¤±è´¥,è¯·éªŒè¯é‚®ç®±ååå†æ¬¡å‘é€", Toast.LENGTH_SHORT)
 						.show();
 
 				break;
 			case SEND_PWD2EMAIL_EXCEPTION:
 
-				Toast.makeText(LoginActivity.this, "ÓÊÏä·şÎñÒì³£!", Toast.LENGTH_SHORT)
+				Toast.makeText(LoginActivity.this, "å‘é€å¤±è´¥,è¯·éªŒè¯é‚®ç®±ååå†æ¬¡å‘é€", Toast.LENGTH_SHORT)
 						.show();
 
 				break;
@@ -171,21 +171,10 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE); // ×¢ÒâË³Ğò
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // ×¢ÒâË³Ğò
+		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
 		// getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,R.layout.title);
-		title = (TextView) findViewById(R.id.titlelogin);
-		title.setClickable(true);
-		title.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				finish();
-			}
-
-		});
 
 		txtName = (EditText) findViewById(R.id.loginTxtName);
 		txtPassword = (EditText) findViewById(R.id.loginTxtPassword);
@@ -193,17 +182,18 @@ public class LoginActivity extends Activity {
 		forgetPassword = (TextView) findViewById(R.id.forgetPassword);
 
 		Button btnOk = (Button) findViewById(R.id.loginBtnOk);
-		btnOk.setOnClickListener(new BtnOkOnClickListener());
+		btnOk.setOnTouchListener(loginTouch);
 		Button btnReg = (Button) findViewById(R.id.loginBtnReg);
-		btnReg.setOnClickListener(new BtnRegOnClickListener());
+		btnReg.setOnTouchListener(regsiterTouch);
 
-		//ÏÔÊ¾°æ±¾ºÅ
+
+
 		textVersion = (TextView) findViewById(R.id.versionNumber);
 		textVersion.setText("v" + Cfg.versionNumber);
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
 
-		//´ÓÊı¾İ¿âÖĞÈ¡³öÓÃ»§ÃûÃÜÂë ×Ô¶¯µÇÂ¼
+
 		String tempName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
 		String tempPwd = dbService.getCfgByKey(Cfg.KEY_PASS_WORD);
 		if(tempName == null || tempPwd == null) {
@@ -217,7 +207,7 @@ public class LoginActivity extends Activity {
 			isAtuoLogin.setChecked(true);
 		}
 
-		//ÕÒ»ØÃÜÂë¹¦ÄÜ
+
 		forgetPassword.setClickable(true);
 		forgetPassword.setOnClickListener(new clickTextForgetPwd());
 
@@ -238,8 +228,44 @@ public class LoginActivity extends Activity {
 //		getMenuInflater().inflate(R.menu.login, menu);
 //		return true;
 //	}
+	/**
+	 *
+	 *
+	 * @author Administrator
+	 *
+	 */
+	private View.OnTouchListener loginTouch = new View.OnTouchListener() {
 
-	//ÕÒ»ØÃÜÂë
+		public boolean onTouch(View view, MotionEvent event) {
+			int iAction = event.getAction();
+			if (iAction == MotionEvent.ACTION_DOWN) {
+				view.setBackgroundResource(R.drawable.login_light);
+			} else if (iAction == MotionEvent.ACTION_UP) {
+				view.setBackgroundResource(R.drawable.login);
+				name = txtName.getText().toString();
+				password = txtPassword.getText().toString();
+				if (name.trim().isEmpty()) {
+					Toast.makeText(getApplicationContext(), "è¯·è¾“å…¥ç”¨æˆ·å", Toast.LENGTH_SHORT).show();
+					txtName.setFocusable(true);
+					return false;
+				}
+				if (password.trim().isEmpty()) {
+					Toast.makeText(getApplicationContext(), "è¯·è¾“å…¥å¯†ç ", Toast.LENGTH_SHORT).show();
+					txtPassword.setFocusable(true);
+					return false;
+				}
+
+				dialogView = new MyDialogView(LoginActivity.this);
+				dialogView.showMyDialog("æ­£åœ¨ç™»å½•", "éªŒè¯æ˜ç”¨æˆ·åå¯†ç ,è¯·ç­‰å¾…");
+
+				Cfg.userName = name;
+				Cfg.userPassword =password;
+				new LoginThread().start();
+			}
+			return false;
+		}
+	};
+
 	class clickTextForgetPwd implements OnClickListener {
 		@Override
 		public void onClick(View arg0) {
@@ -247,27 +273,27 @@ public class LoginActivity extends Activity {
 			final View layout = inflater.inflate(R.layout.forget_password, null);
 
 			AlertDialog.Builder myDialog = new AlertDialog.Builder(LoginActivity.this)
-					.setTitle("ÇëÊäÈë×¢²áµÄÓÊÏäÃû");
+					.setTitle("è¯·è¾“å…¥ç”¨æˆ·å(ä»…æ”¯æŒé‚®ç®±)");
 			myDialog.setView(layout);
-			myDialog.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+			myDialog.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					EditText userSetName = (EditText) layout.findViewById(R.id.userMailName);
 					userMailName = userSetName.getText().toString();
 					if (userMailName.isEmpty() ||(!CheckEmailPhoneTools.isEmail(userMailName))) {
-						Toast.makeText(LoginActivity.this, "ÇëÊäÈëÕıÈ·µÄ×¢²áÓÊÏäÃû£¡", Toast.LENGTH_SHORT)
+						Toast.makeText(LoginActivity.this, "è¯·è¾“å…¥æ­£ç¡®çš„é‚®ç®±å", Toast.LENGTH_SHORT)
 								.show();
 						userSetName.setFocusable(true);
 						return;
 					}
 					dialog.dismiss();
-					//µÈ´ı¿ò
+
 					dialogView = new MyDialogView(LoginActivity.this);
-					dialogView.showMyDialog("ÕıÔÚÕÒ»ØÃÜÂë", "ÕıÔÚ·¢ËÍÕÒ»ØÃÜÂëÇëÇó,ÇëµÈ´ı");
+					dialogView.showMyDialog("æ‰¾å›å¯†ç ", "...æ­£åœ¨æ‰¾å›å¯†ç ");
 					new forgetPwd().start();
 				}
 			});
-			myDialog.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			myDialog.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog,
 									int which) {
@@ -278,61 +304,36 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	/**
-	 * µÇÂ¼°´Å¥¼àÌıÀà
-	 * 
-	 * @author Administrator
-	 * 
-	 */
-	class BtnOkOnClickListener implements OnClickListener {
-
-		@Override
-		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			name = txtName.getText().toString();
-			password = txtPassword.getText().toString();
-			if (name.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "ÇëÊäÈëÓÃ»§Ãû", Toast.LENGTH_SHORT).show();
-				txtName.setFocusable(true);
-				return;
-			}
-			if (password.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "ÇëÊäÈëÃÜÂë", Toast.LENGTH_SHORT).show();
-				txtPassword.setFocusable(true);
-				return;
-			}
-			//µÈ´ı¿ò
-			dialogView = new MyDialogView(LoginActivity.this);
-			dialogView.showMyDialog("µÇÂ¼ÖĞ", "ÕıÔÚÑéÖ¤ÓÃ»§ĞÅÏ¢,ÇëµÈ´ı");
-
-			Cfg.userName = name;
-			Cfg.userPassword =password;
-			new LoginThread().start();
-		}
-	}
 
 	/**
-	 * ×¢²á°´Å¥¼àÌıÀà
-	 * 
+	 * ×¢ï¿½á°´Å¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 *
 	 * @author Administrator
-	 * 
+	 *
 	 */
-	class BtnRegOnClickListener implements OnClickListener {
+	private View.OnTouchListener regsiterTouch = new View.OnTouchListener() {
 
-		@Override
-		public void onClick(View v) {
-
-			Intent intent = new Intent();
-			intent.setClass(LoginActivity.this, RegisterActivity.class);
+		public boolean onTouch(View view, MotionEvent event) {
+			int iAction = event.getAction();
+			if (iAction == MotionEvent.ACTION_DOWN) {
+				view.setBackgroundResource(R.drawable.register_light);
+			} else if (iAction == MotionEvent.ACTION_UP) {
+				view.setBackgroundResource(R.drawable.register);
+				Intent intent = new Intent();
+				intent.setClass(LoginActivity.this, RegisterActivity.class);
 //			Bundle bundle = new Bundle();
 //			bundle.putInt("type", 2);
 //			intent.putExtras(bundle);
-			startActivity(intent);
+				startActivity(intent);
+			}
+			return false;
 		}
-	}
+	};
+
+
 
 	/**
-	 * µÇÂ¼
+	 * ï¿½ï¿½Â¼
 	 * 
 	 * @author Administrator
 	 * 
@@ -360,7 +361,7 @@ public class LoginActivity extends Activity {
 					break;
 				case Cfg.CODE_USER_EXISTED:
 					break;
-				//·şÎñÆ÷³ÌĞòÒì³£
+
 				case Cfg.CODE_EXCEPTION:
 					break;
 				default:
@@ -373,7 +374,7 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * ÕÒ»ØÃÜÂë
+	 * ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½
 	 *
 	 * @author Administrator
 	 *

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="0dp"
+    android:layout_marginTop="0dp"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dp" >
+
+            <Button android:id="@+id/devicelist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="设备列表"/>
+            <Button android:id="@+id/shareBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:text="分享"/>
+        </FrameLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/dataType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor= "#038b4d"
+            android:textSize="25sp"
+            android:text="种类"/>
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="18sp"
+            android:text="温度"/>
+        <com.demo.smarthome.view.CircleAndNumberView
+            xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/CircleData"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            ProgressWheel:barColor="#339BB9"
+            android:layout_gravity="center"
+            ProgressWheel:barWidth="4dp"
+            ProgressWheel:rimColor="#44000000"
+            ProgressWheel:rimWidth="6dp"
+            ProgressWheel:spinSpeed="3dp"
+            ProgressWheel:text="0"
+            ProgressWheel:textColor="#5e8b7e"
+            ProgressWheel:textSize="14sp" />
+        <TextView
+            android:id="@+id/dampness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="18dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="18sp"
+            android:text="湿度"/>
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp">
+
+        <Button android:id="@+id/hchoBtn"
+            android:layout_width="90dp"
+            android:layout_height="60dp"
+            android:text="甲醛"/>
+        <Button android:id="@+id/tvocBtn"
+            android:layout_width="90dp"
+            android:layout_height="60dp"
+            android:text="TVOC"/>
+        <Button android:id="@+id/pm2_5Btn"
+            android:layout_width="90dp"
+            android:layout_height="60dp"
+            android:text="PM 2.5"/>
+        <Button android:id="@+id/pm10Btn"
+            android:layout_width="90dp"
+            android:layout_height="60dp"
+            android:text="PM 10"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp">
+        <Button android:id="@+id/historyDataBtn"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:text="趋势"/>
+        <Button android:id="@+id/weatherBtn"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:text="天气"/>
+        <Button android:id="@+id/resignBtn"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:text="注销"/>
+    </LinearLayout>
+</LinearLayout>

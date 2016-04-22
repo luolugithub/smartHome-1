@@ -62,7 +62,7 @@ import android.widget.Toast;
 import com.demo.smarthome.service.ConfigService;
 import android.view.KeyEvent;
 /**
- * ע����
+ * ?????
  * 
  * @author Administrator
  * 
@@ -120,7 +120,7 @@ public class RegisterActivity extends Activity {
 
 				dialogView.closeMyDialog();
 
-				Toast.makeText(RegisterActivity.this, "ע�����û��ɹ�!",
+				Toast.makeText(RegisterActivity.this, "???????????!",
 						Toast.LENGTH_SHORT).show();
 				try {
 					Thread.sleep(1000);
@@ -132,32 +132,32 @@ public class RegisterActivity extends Activity {
 				Intent mainIntent = new Intent();
 				mainIntent.setClass(RegisterActivity.this, DeviceRealtimeDataActivity.class);
 				mainIntent.putExtras(bundle);
-				startActivity(mainIntent);// ���½���
+				startActivity(mainIntent);// ???????
 				finish();
 				break;
 			case NO_WIFI:
 
-				failAlert.setTitle("�����������").setIcon(R.drawable.cloud_fail).setMessage("��Ҫ���ֺͱ����豸��ͬһ������");
+				failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail).setMessage("????????????��??????????");
 				failAlert.create().show();
 				break;
 			case CMD_TIMEOUT:
 
-				failAlert.setTitle("�޷��ҵ������豸").setIcon(R.drawable.cloud_fail).setMessage("ע��ʱ��Ҫ�󶨱����豸");
+				failAlert.setTitle("???????????��").setIcon(R.drawable.cloud_fail).setMessage("?????????????��");
 				failAlert.create().show();
 				break;
 			case USER_EXISTED:
 
-				failAlert.setTitle(" ע��ʧ��").setIcon(R.drawable.cloud_fail).setMessage("   �û��Ѿ�����");
+				failAlert.setTitle(" ??????").setIcon(R.drawable.cloud_fail).setMessage("   ??????????");
 				failAlert.create().show();
 				break;
 			case SERVER_EXCEPTION:
 
-				failAlert.setTitle(" ע��ʧ��").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer);
+				failAlert.setTitle(" ??????").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer);
 				failAlert.create().show();
 				break;
 			default:
 
-				failAlert.setTitle(" ע��ʧ��").setIcon(R.drawable.cloud_fail).setMessage("   ע�����û�ʧ��");
+				failAlert.setTitle(" ??????").setIcon(R.drawable.cloud_fail).setMessage("   ???????????");
 				failAlert.create().show();
 				break;
 
@@ -169,7 +169,7 @@ public class RegisterActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // ע��˳��
+		requestWindowFeature(Window.FEATURE_NO_TITLE); // ??????
 
 		setContentView(R.layout.activity_register);
 		TextView title = (TextView) findViewById(R.id.titleRegister);
@@ -187,7 +187,7 @@ public class RegisterActivity extends Activity {
 		txtrePassword = (EditText) findViewById(R.id.againPassword);
 		txtWifipassword = (EditText) findViewById(R.id.wifiPassword);
 		switchIsHidden = (Switch) findViewById(R.id.wifiIsHidden);
-		//��ʾSSID
+		//???SSID
 		apSSID = (TextView)findViewById(R.id.wifiSSID);
 		ConfigDevice forApSSID= new ConfigDevice(RegisterActivity.this);
 		if(forApSSID.getApSSid() == null){
@@ -212,7 +212,7 @@ public class RegisterActivity extends Activity {
 //	}
 
 	/**
-	 * ע�� ��ť������
+	 * ??? ?????????
 	 * 
 	 * @author Administrator
 	 * 
@@ -222,8 +222,8 @@ public class RegisterActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			if(noWifi){
-				failAlert.setTitle("�޷���������").setIcon(R.drawable.cloud_fail)
-						.setMessage("��Ҫ���ֺͱ����豸��ͬһ������");
+				failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail)
+						.setMessage("????????????��??????????");
 				failAlert.create().show();
 				return;
 			}
@@ -233,36 +233,36 @@ public class RegisterActivity extends Activity {
 			wifiPwd = txtWifipassword.getText().toString();
 
 			if (userRegName.trim().isEmpty()||(!CheckEmailPhoneTools.isEmail(userRegName))) {
-				Toast.makeText(getApplicationContext(), "��������ȷ�������ַ��Ϊ�û���", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "?????????????????????????", Toast.LENGTH_SHORT).show();
 				txtName.setFocusable(true);
 				return;
 			}
 			if (userRegPassword.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "����������", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "??????????", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
 			if (userRegPassword.length() < 6) {
-				Toast.makeText(getApplicationContext(), "���볤�ȹ���", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "?????????", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
 			if(!rePassword.equals(userRegPassword)){
-				Toast.makeText(getApplicationContext(), "�����������벻һ��", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "???????????????", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
 
-			//�ȴ���
+			//?????
 			dialogView = new MyDialogView(RegisterActivity.this);
-			dialogView.showMyDialog("���ڻ�ȡ�豸", "���ڴӷ�������ȡ�豸,��ȴ�");
+			dialogView.showMyDialog("???????��", "??????????????��,????");
 
 			new ConnectDevThread().start();
 		}
 	}
 
 
-	//�������豸����WI-FI,��ɨ�豾���豸��ȡ�����豸ID.
+	//???????��????WI-FI,????�w???��????????��ID.
 	class ConnectDevThread extends Thread {
 		@Override
 		public void run() {
@@ -270,13 +270,13 @@ public class RegisterActivity extends Activity {
 
 			deviceInfo = new ConfigDevice(wifiPwd,switchIsHidden.isChecked(),IpTools
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),RegisterActivity.this);
-			//����Ƿ�������
+			//????????????
 			if(deviceInfo.getApSSid() == null){
 				message.what = NO_WIFI;
 				handler.sendMessage(message);
 				return;
 			}
-			//ִ�������߳�
+			//??????????
 			deviceInfo.configDeviceThread();
 			while(true){
 
@@ -294,7 +294,7 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	//ע�����
+	//??????
 	class registerUserThread extends Thread {
 		@Override
 		public void run() {
@@ -305,7 +305,7 @@ public class RegisterActivity extends Activity {
 			String[] paramsName = {"userName", "userPassword","deviceId", "devicePassword"};
 			String[] paramsValue = {userRegName,userRegPassword,deviceInfo.getDeviceID(),deviceInfo.getDevicePwd()};
 
-			//��Ҫ�жϷ������Ƿ���
+			//????��???????????
 			if((jsonResult = new setServerURL().sendParamToServer("register", paramsName, paramsValue)).isEmpty()){
 				message.what = SERVER_EXCEPTION;
 				handler.sendMessage(message);
@@ -327,7 +327,7 @@ public class RegisterActivity extends Activity {
 				case Cfg.CODE_USER_EXISTED:
 					message.what = USER_EXISTED;
 					break;
-				//�����������쳣
+				//????????????
 				case Cfg.CODE_EXCEPTION:
 					message.what = SERVER_EXCEPTION;
 					break;

@@ -79,7 +79,6 @@ public class WelcomeActivity extends Activity {
 	ServerReturnResult loginResult = new ServerReturnResult();
 	long startTimestamp;
 
-	ProgressDialog installPD = null;
 
 	Handler handler = new Handler(){
 		public void handleMessage(Message msg){
@@ -100,7 +99,7 @@ public class WelcomeActivity extends Activity {
 					if (isAutoLogin) {
 						new AutoLoginThread().start();
 					} else {
-						//ĞèÒª×îÉÙµÈ´ı3Ãë
+
 						long wait_time = System.currentTimeMillis() - startTimestamp;
 						wait_time = (wait_time > LONGIN_WAIT_TIME)?0:LONGIN_WAIT_TIME - wait_time;
 						handler.postDelayed(r, wait_time);
@@ -110,7 +109,7 @@ public class WelcomeActivity extends Activity {
 					updataVersionMothod();
 					break;
 				case UPDATA_ERROR:
-					Toast.makeText(getApplicationContext(), "¸üĞÂÎÄ¼şÊ§°Ü", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "å‡çº§é”™è¯¯", Toast.LENGTH_SHORT).show();
 					handler.postDelayed(r, 1000);
 					break;
 				case AUTO_LOGIN_NO_DEVID:
@@ -123,12 +122,12 @@ public class WelcomeActivity extends Activity {
 					break;
 				case DIALOG_SHOW:
 					ProgressDialog.show(WelcomeActivity.this
-							,"°²×°³ÌĞòÖĞ","ÕıÔÚ°²×°³ÌĞò,ÇëµÈ´ı...",false,true);
+							,"æ­£åœ¨æ›´æ–°ç‰ˆæœ¬","...è¯·ç¨ç­‰",false,true);
 					break;
 				case CONNECT_SERVER_FAIL:
 					failAlert = new AlertDialog.Builder(WelcomeActivity.this);
-					failAlert.setTitle("ÎŞ·¨Á¬½Óµ½·şÎñÆ÷").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer)
-							.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+					failAlert.setTitle("è¿æ¥æœåŠ¡å™¨é”™è¯¯").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer)
+							.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									WelcomeActivity.this.finish();
@@ -152,11 +151,11 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_welcome);
-		//²»¿ªÆôÍøÂç¾ÍÖÕÖ¹³ÌĞò
+
 		if(!NetworkStatusTools.isNetworkAvailable(WelcomeActivity.this)){
 			failAlert = new AlertDialog.Builder(WelcomeActivity.this);
-			failAlert.setTitle("ÎŞ·¨Á¬½Óµ½·şÎñÆ÷").setIcon(R.drawable.cloud_fail).setMessage("ÇëÈ·¶¨ÊÇ·ñÁ¬½ÓÁËÍøÂç")
-					.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+			failAlert.setTitle("æ— ç½‘ç»œ").setIcon(R.drawable.cloud_fail).setMessage("è¯·è¿æ¥ç½‘ç»œ")
+					.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							android.os.Process.killProcess(android.os.Process.myPid());
@@ -165,9 +164,8 @@ public class WelcomeActivity extends Activity {
 			failAlert.create().show();
 			return;
 		}
-		//»¶Ó­½çÃæ×î¶à3Ãë
+
 		startTimestamp = System.currentTimeMillis();
-		//³õÊ¼»¯
 		accessViewInit();
 		new CheckVersionThread().start();
 	}
@@ -179,10 +177,10 @@ public class WelcomeActivity extends Activity {
 //		return true;
 //	}
 	void accessViewInit(){
-		//³õÊ¼»¯ÊÖ»ú·Ö±æÂÊ±äÁ¿
+
 		initPhoneConfig(WelcomeActivity.this);
 	}
-	//²»ĞèÒª¸üĞÂºÍÃ»ÓĞ×Ô¶¯µÇÂ¼Çé¿ö,ÔÚ»¶Ó­½çÃæµÈÈıÃë½øÈëµÇÂ¼½çÃæ
+
 	Runnable r = new Runnable() {
 		@Override
 		public void run() {
@@ -195,7 +193,7 @@ public class WelcomeActivity extends Activity {
 		}
 	};
 
-	//Èç¹ûÖ®Ç°Ñ¡ÔñÁË×Ô¶¯µÇÂ¼
+
 	class AutoLoginThread extends Thread {
 
 		@Override
@@ -233,7 +231,7 @@ public class WelcomeActivity extends Activity {
 					message.what = LOGIN_ERROR;
 					break;
 			}
-			//ĞèÒªµÈ´ı»¶Ó­½çÃæ¼¸Ãë
+			//è‡³å°‘ç­‰å¾…3ç§’
 			while(System.currentTimeMillis() - startTimestamp < LONGIN_WAIT_TIME){
 
 			}
@@ -241,7 +239,7 @@ public class WelcomeActivity extends Activity {
 		}
 	}
 
-	//¼ì²é°æ±¾ÊÇ·ñ×îĞÂ,²»ÊÇ×îĞÂÌáĞÑ¸üĞÂ
+
 	class CheckVersionThread extends Thread {
 		@Override
 		public void run() {
@@ -249,12 +247,12 @@ public class WelcomeActivity extends Activity {
 				msg.what = VERSION_HIGHEST;
 
 				try {
-				//È¡µÃ±¾µØ°æ±¾ºÅ
+
 				getVersionName();
-				//´Ó×ÊÔ´ÎÄ¼ş»ñÈ¡·şÎñÆ÷ µØÖ·
+
 				String path = "http://" + StringRes.updateXmlUrl;
 
-				//°ü×°³ÉurlµÄ¶ÔÏó
+
 				URL url = new URL(path);
 				HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
 				conn.setConnectTimeout(5000);
@@ -272,34 +270,32 @@ public class WelcomeActivity extends Activity {
 		}
 	}
 	/*
-     * »ñÈ¡µ±Ç°³ÌĞòµÄ°æ±¾ºÅ
+     *
      */
 	private String getVersionName()  throws Exception{
-		//»ñÈ¡packagemanagerµÄÊµÀı
+
 		PackageManager packageManager = getPackageManager();
-		//getPackageName()ÊÇÄãµ±Ç°ÀàµÄ°üÃû£¬0´ú±íÊÇ»ñÈ¡°æ±¾ĞÅÏ¢
+
 		PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(), 0);
 		Cfg.versionNumber = packInfo.versionName;
 		return packInfo.versionName;
 	}
 
-	/*
-	 * ÓÃpull½âÎöÆ÷½âÎö·şÎñÆ÷·µ»ØµÄxmlÎÄ¼ş (xml·â×°ÁË°æ±¾ºÅ)
-	*/
+
 	public static UpdataInfo getUpdataInfo(InputStream is) throws Exception{
 		XmlPullParser  parser = Xml.newPullParser();
-		parser.setInput(is, "utf-8");//ÉèÖÃ½âÎöµÄÊı¾İÔ´
+		parser.setInput(is, "utf-8");
 		int type = parser.getEventType();
-		UpdataInfo info = new UpdataInfo();//ÊµÌå
+		UpdataInfo info = new UpdataInfo();
 		while(type != XmlPullParser.END_DOCUMENT ){
 			switch (type) {
 				case XmlPullParser.START_TAG:
 					if("version".equals(parser.getName())){
-						info.setVersion(parser.nextText()); //»ñÈ¡°æ±¾ºÅ
+						info.setVersion(parser.nextText());
 					}else if ("url".equals(parser.getName())){
-						info.setUrl(parser.nextText()); //»ñÈ¡ÒªÉı¼¶µÄAPKÎÄ¼ş
+						info.setUrl(parser.nextText());
 					}else if ("description".equals(parser.getName())){
-						info.setDescription(parser.nextText()); //»ñÈ¡¸ÃÎÄ¼şµÄĞÅÏ¢
+						info.setDescription(parser.nextText());
 					}
 					break;
 			}
@@ -309,17 +305,17 @@ public class WelcomeActivity extends Activity {
 	}
 	protected void updataVersionMothod(){
 		AlertDialog.Builder builer = new AlertDialog.Builder(this) ;
-		builer.setTitle("°æ±¾Éı¼¶");
+		builer.setTitle("å‘ç°æ–°ç‰ˆæœ¬");
 		builer.setMessage(info.getDescription());
-		//µ±µãÈ·¶¨°´Å¥Ê±´Ó·şÎñÆ÷ÉÏÏÂÔØ ĞÂµÄapk È»ºó°²×°
-		builer.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+
+		builer.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i(TAG, "ÏÂÔØapk,¸üĞÂ");
+				Log.i(TAG, "update");
 				downLoadApk();
 			}
 		});
-		//µ±µãÈ¡Ïû°´Å¥Ê±½øĞĞµÇÂ¼
-		builer.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+
+		builer.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				Message msg = new Message();
 				msg.what = FINISH;
@@ -330,15 +326,13 @@ public class WelcomeActivity extends Activity {
 		dialog.setCancelable(false);
 		dialog.show();
 	}
-	/*
-     * ´Ó·şÎñÆ÷ÖĞÏÂÔØAPK
-     */
+
 	protected void downLoadApk() {
 
-		final ProgressDialog pd;    //½ø¶ÈÌõ¶Ô»°¿ò
+		final ProgressDialog pd;
 		pd = new  ProgressDialog(this);
 		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		pd.setMessage("ÕıÔÚÏÂÔØ¸üĞÂ");
+		pd.setMessage("æ­£åœ¨ä¸‹è½½");
 		pd.show();
 		new Thread(){
 			@Override
@@ -350,7 +344,7 @@ public class WelcomeActivity extends Activity {
 							+info.getUrl();
 					File file = getFileFromServer(ApkUrl, pd);
 					pd.dismiss();
-					//²»ÄÜÔÚ·ÇUIÏß³ÌÀïÏÔÊ¾dialog
+
 					Message message = new Message();
 					message.what = DIALOG_SHOW;
 					handler.sendMessage(message);
@@ -366,24 +360,24 @@ public class WelcomeActivity extends Activity {
 			}}.start();
 	}
 
-	//°²×°apk
+
 	protected void installApk(File file) {
 
 		Intent intent = new Intent();
-		//Ö´ĞĞ¶¯×÷
+
 		intent.setAction(Intent.ACTION_VIEW);
-		//Ö´ĞĞµÄÊı¾İÀàĞÍ
+
 		intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
 		startActivity(intent);
 	}
 
 	public static File getFileFromServer(String path, ProgressDialog pd) throws Exception{
-		//Èç¹ûÏàµÈµÄ»°±íÊ¾µ±Ç°µÄsdcard¹ÒÔØÔÚÊÖ»úÉÏ²¢ÇÒÊÇ¿ÉÓÃµÄ
+
 		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			URL url = new URL(path);
 			HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
 			conn.setConnectTimeout(5000);
-			//»ñÈ¡µ½ÎÄ¼şµÄ´óĞ¡
+
 			pd.setMax(conn.getContentLength());
 			InputStream is = conn.getInputStream();
 			File file = new File(Environment.getExternalStorageDirectory(), "Begood.apk");
@@ -395,7 +389,7 @@ public class WelcomeActivity extends Activity {
 			while((len =bis.read(buffer))!=-1){
 				fos.write(buffer, 0, len);
 				total+= len;
-				//»ñÈ¡µ±Ç°ÏÂÔØÁ¿
+
 				pd.setProgress(total);
 			}
 			fos.close();
@@ -407,13 +401,13 @@ public class WelcomeActivity extends Activity {
 			return null;
 		}
 	}
-	//±£´æÊÖ»ú·Ö±æÂÊµ½Cfg.phoneWidth
+	//è®¾ç½®åˆ†è¾¨ç‡å±æ€§,ä¼°è®¡ä»¥åç”¨ä¸åˆ°äº†
 	private DisplayMetrics dm = new DisplayMetrics();
 	private void initPhoneConfig(Context context) {
 
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		wm.getDefaultDisplay().getMetrics(dm);
-		//µ±·Ö±æÂÊ½ÏµÍµÄÊ±ºò,ĞèÒª½«ÏÔÊ¾»­²¼¸Ä±äÏÂ³ß´ç
+
 		if(dm.widthPixels <= 480 && dm.heightPixels <= 800){
 			Cfg.phoneWidth = 480;
 		}else if(dm.widthPixels <= 768 && dm.heightPixels <= 1280){

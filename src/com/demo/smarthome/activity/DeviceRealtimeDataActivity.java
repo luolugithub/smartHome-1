@@ -54,6 +54,7 @@ public class DeviceRealtimeDataActivity extends Activity {
     Button pm10Btn;
     Button historyDataBtn;
     Button shareBtn;
+    Button resignBtn;
     CircleAndNumberView realDataView;
     ProgressDialog dialogView;
     int crrentValue;
@@ -201,6 +202,7 @@ public class DeviceRealtimeDataActivity extends Activity {
         setContentView(R.layout.activity_device_realtime_data);
         //initialize current data
         crrentValue = 0;
+        //device list
         deviceListBtn = (Button) findViewById(R.id.devicelist);
         deviceListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +221,14 @@ public class DeviceRealtimeDataActivity extends Activity {
                 Intent intent = new Intent();
                 intent.setClass(DeviceRealtimeDataActivity.this,DeviceHistoryDataActivitiy.class);
                 startActivity(intent);
+            }
+        });
+        resignBtn = (Button)findViewById(R.id.resignBtn);
+        resignBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View arg0)
+            {
+                onBackPressed();
             }
         });
         shareBtn = (Button)findViewById(R.id.shareBtn);

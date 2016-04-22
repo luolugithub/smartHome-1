@@ -80,7 +80,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                     if(refresh_flag){
                         refresh_layout.setRefreshing(false);
                         refresh_flag = false;
-                        pullRefreshText.setText("ÏÂÀ­Ë¢ÐÂ");
+                        pullRefreshText.setText("ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½");
                     }
                     else{
                         dialogView.dismiss();
@@ -89,7 +89,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                     break;
                 case GET_CURRENT_FAIL:
                     dialogView.dismiss();
-                    Toast.makeText(DeviceDataViewActivity.this, "Á¬½Ó·þÎñÆ÷Ê§°Ü", Toast.LENGTH_SHORT)
+                    Toast.makeText(DeviceDataViewActivity.this, "ï¿½ï¿½ï¿½Ó·ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½", Toast.LENGTH_SHORT)
                             .show();
 
                     intent.setClass(DeviceDataViewActivity.this, MainActivity.class);
@@ -102,7 +102,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                     Cfg.currentDeviceID = "";
                     dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
 
-                    Toast.makeText(DeviceDataViewActivity.this, "ËùÑ¡Éè±¸Ã»ÓÐÊý¾Ý", Toast.LENGTH_SHORT)
+                    Toast.makeText(DeviceDataViewActivity.this, "ï¿½ï¿½Ñ¡ï¿½è±¸Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT)
                             .show();
                     intent.setClass(DeviceDataViewActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -119,7 +119,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE); // ×¢ÒâË³Ðò
+        requestWindowFeature(Window.FEATURE_NO_TITLE); // ×¢ï¿½ï¿½Ë³ï¿½ï¿½
         setContentView(R.layout.activity_device_data);
 
         title = (TextView) findViewById(R.id.titleHCHOView);
@@ -149,7 +149,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             }
         });
 
-        //µã»÷Ìø×ªµ½ÌìÆø½çÃæ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         TextView getWeatherText = (TextView) findViewById(R.id.getWeather);
         getWeatherText.setClickable(true);
         getWeatherText.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +162,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             }
         });
 
-        //µã»÷ÉèÖÃ
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         TextView titleConfig = (TextView) findViewById(R.id.titleConfig);
         titleConfig.setClickable(true);
         titleConfig.setOnClickListener(new View.OnClickListener() {
@@ -178,18 +178,18 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
 
         listView = (ListView) this.findViewById(R.id.dataListView);
 
-        //¹Ù·½ÏÂÀ­Ë¢ÐÂµÄ¿Ø¼þ
+        //ï¿½Ù·ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ÂµÄ¿Ø¼ï¿½
         refresh_layout = (SwipeRefreshLayout) this.findViewById(R.id.refresh_layout);
         refresh_layout.setColorSchemeResources(R.color.green, R.color.blue_50, R.color.viewfinder_laser);
-        //ÏÂÀ­Ë¢ÐÂ¼àÌýÆ÷
+        //ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
         refresh_layout.setOnRefreshListener(this);
-        //ÏÂÀ­Ë¢ÐÂ
+        //ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½
         pullRefreshText = (TextView) this.findViewById(R.id.pullRefreshText);
-        //µÈ´ý¿ò
+        //ï¿½È´ï¿½ï¿½ï¿½
         dialogView = new ProgressDialog(DeviceDataViewActivity.this);
-        dialogView.setTitle("¶ÁÈ¡Êý¾ÝÖÐ");
-        dialogView.setMessage("ÕýÔÚ´Ó·þÎñÆ÷ÖÐ¶ÁÈ¡Êý¾Ý,ÇëµÈ´ý");
-        //µã»÷µÈ´ý¿òÒÔÍâµÈ´ý¿ò²»ÏûÊ§
+        dialogView.setTitle("ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+        dialogView.setMessage("ï¿½ï¿½ï¿½Ú´Ó·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½È´ï¿½");
+        //ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½Ê§
         dialogView.setCanceledOnTouchOutside(false);
         dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -197,7 +197,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             }
         });
         dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-                "ÇëµÈ´ý...", new DialogInterface.OnClickListener() {
+                "ï¿½ï¿½È´ï¿½...", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -207,7 +207,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                 .setEnabled(false);
 
         dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            //ÆÁ±Î·µ»Ø¼ü
+            //ï¿½ï¿½ï¿½Î·ï¿½ï¿½Ø¼ï¿½
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -220,7 +220,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
         new getCurrentDataThread().start();
 
     }
-//    //ºóÍË°´¼ü
+//    //ï¿½ï¿½ï¿½Ë°ï¿½ï¿½ï¿½
 //    @Override
 //    public void onBackPressed(){
 //        Intent intent = new Intent();
@@ -230,12 +230,12 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
 //        finish();
 //    }
 
-    //ÏÂÀ­´¥·¢µÄº¯Êý
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½ï¿½
     @Override
     public void onRefresh() {
 
         refresh_flag = true;
-        pullRefreshText.setText("ÕýÔÚË¢ÐÂ");
+        pullRefreshText.setText("ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -246,7 +246,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
         }).start();
     }
 
-    //²Ëµ¥¼ü
+    //ï¿½Ëµï¿½ï¿½ï¿½
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Intent intent = new Intent();
@@ -258,17 +258,17 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
 
     private void showDataList() {
 
-        // ´´½¨SimpleAdapterÊÊÅäÆ÷½«Êý¾Ý°ó¶¨µ½itemÏÔÊ¾¿Ø¼þÉÏ
+        // ï¿½ï¿½ï¿½ï¿½SimpleAdapterï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ó¶¨µï¿½itemï¿½ï¿½Ê¾ï¿½Ø¼ï¿½ï¿½ï¿½
         MyBaseAdapter adapter = new MyBaseAdapter();
 
-        // ÊµÏÖÁÐ±íµÄÏÔÊ¾
+        // Êµï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½Ê¾
         listView.setAdapter(adapter);
-        //É¾³ý·Ö¸îÏß
+        //É¾ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½
         listView.setDivider(null);
         listView.setOnItemClickListener(new ItemClickListener());
 
     }
-    //ÏÔÊ¾ÔÚlistÖÐµÄÀàÐÍ
+    //ï¿½ï¿½Ê¾ï¿½ï¿½listï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½
     static final int LIST_HCHO = 0;
     static final int LIST_TVOC = 1;
     static final int LIST_PM2_5 = 2;
@@ -309,7 +309,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
         int count ;
         int TemperaturePosition ;
         MyBaseAdapter (){
-            //¸ù¾ÝÀàÐÍÏÔÊ¾listViewµÄÀàÐÍ
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾listViewï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if(currentData.getType().equals(currentData.getType())){
                 viewTypeCount = DECVICE_TEMPERATURE;
                 count = HCHO_DETECTOR;
@@ -317,7 +317,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             }
         }
 
-        //¸ù¾Ýposition»ñÈ¡¶ÔÓ¦itemÊ¹ÓÃµÄViewÀàÐÍ¡£
+        //ï¿½ï¿½ï¿½ï¿½positionï¿½ï¿½È¡ï¿½ï¿½Ó¦itemÊ¹ï¿½Ãµï¿½Viewï¿½ï¿½ï¿½Í¡ï¿½
         @Override
         public int getItemViewType(int position) {
             if(setListTypeByDeviceType(position) == TemperaturePosition){
@@ -328,27 +328,27 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             }
 
         }
-        //·µ»ØitemÊ¹ÓÃµÄViewÀàÐÍµÄÊýÁ¿£¬Ä¬ÈÏÎª1¡£
+        //ï¿½ï¿½ï¿½ï¿½itemÊ¹ï¿½Ãµï¿½Viewï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½Îª1ï¿½ï¿½
         @Override
         public int getViewTypeCount() {
             return viewTypeCount;
         }
-        //·µ»ØÊý¾ÝÔ´ÖÐÊý¾ÝÏîµÄ×ÜÊýÁ¿
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         @Override
         public int getCount() {
             return count;
         }
-        //¸ù¾Ýposition´ÓÊý¾ÝÔ´ÖÐ»ñÈ¡Êý¾ÝÏî
+        //ï¿½ï¿½ï¿½ï¿½positionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ð»ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         @Override
         public Object getItem(int position) {
             return null;
         }
-        //¸ù¾Ýposition´ÓÊý¾ÝÔ´ÖÐ»ñÈ¡Êý¾ÝÏîID
+        //ï¿½ï¿½ï¿½ï¿½positionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ð»ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
         @Override
         public long getItemId(int position) {
             return position;
         }
-        //ÎÂÊª¶ÈÖµ²»¿Éµã»÷
+        //ï¿½ï¿½Êªï¿½ï¿½Öµï¿½ï¿½ï¿½Éµï¿½ï¿½
         @Override
         public boolean isEnabled(int position) {
             if(setListTypeByDeviceType(position) == TemperaturePosition){
@@ -356,7 +356,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             }
             return true;
         }
-        //¸Ãº¯ÊýÒÔºóÒª¼ÇµÃ¸Ä¶¯,Ì«³¤ÁË
+        //ï¿½Ãºï¿½ï¿½ï¿½ï¿½Ôºï¿½Òªï¿½ÇµÃ¸Ä¶ï¿½,Ì«ï¿½ï¿½ï¿½ï¿½
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -370,7 +370,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                 int tempInt;
                 float tempFloat;
 
-                //Èç¹ûÊÇ³ýÁËÎÂÊª¶ÈÒÔÍâµÄadapter
+                //ï¿½ï¿½ï¿½ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½Êªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½adapter
                 if(getItemViewType(position) == TYPE_NOT_TEMPERATURE) {
 
                         String tempValue = "";
@@ -385,10 +385,10 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                         typeName = (TextView) convertView.findViewById(R.id.adapterTypeName);
                         adapterValue = (TextView) convertView.findViewById(R.id.adapterValue);
                         adapterUnit = (TextView) convertView.findViewById(R.id.adapterUnit);
-                        //¼×È©ºÍTVOCµÈÊýÖµÒª³ý1000
+                        //ï¿½ï¿½È©ï¿½ï¿½TVOCï¿½ï¿½ï¿½ï¿½ÖµÒªï¿½ï¿½1000
                         if (setListTypeByDeviceType(position) == LIST_HCHO) {
                             tempInt = Integer.parseInt(currentData.getHcho());
-                            //·ÀÖ¹³öÏÖ0.0µÄÇé¿ö
+                            //ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½0.0ï¿½ï¿½ï¿½ï¿½ï¿½
                             if (tempInt == 0) {
                                 tempValue = "0";
                             } else {
@@ -445,7 +445,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                         temperature = String.valueOf(tempFloat);
                         hygrometer = currentData.getTemperature().substring(currentData.getTemperature().length() - 3);
 
-                        //½«Ç°ÃæµÄ0»»³É¿Õ¸ñ
+                        //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½0ï¿½ï¿½ï¿½É¿Õ¸ï¿½
                         byte[] byteHygrometer = hygrometer.getBytes();
                         for (int i = 0; i < hygrometer.length(); i++) {
                             if (byteHygrometer[i] == '0') {
@@ -473,7 +473,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
             return convertView;
         }
     }
-    // »ñÈ¡µã»÷listViewÊÂ¼þ
+    // ï¿½ï¿½È¡ï¿½ï¿½ï¿½listViewï¿½Â¼ï¿½
     private final class ItemClickListener implements AdapterView.OnItemClickListener {
 
         public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -493,7 +493,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                 bundleData.putString("dataName", "tvoc");
             }
             else{
-                Toast.makeText(getApplicationContext(), "ÀàÐÍ´íÎó", Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(), "ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT)
                         .show();
                 return;
             }
@@ -527,7 +527,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
 //        return super.onOptionsItemSelected(item);
 //    }
 
-    //»ñÈ¡µ±Ç°Êý¾Ý
+    //ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
     class getCurrentDataThread extends Thread {
 
         @Override
@@ -549,7 +549,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
         String[] paramsValue = {Cfg.currentDeviceID};
 
         setServerURL regiterUser= new setServerURL();
-        //ÐèÒªÅÐ¶Ï·þÎñÆ÷ÊÇ·ñ¿ªÆô
+        //ï¿½ï¿½Òªï¿½Ð¶Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½
         if((jsonResult = regiterUser.sendParamToServer("getCurrentDeviceData", paramsName
                 , paramsValue)).isEmpty()){
             return SERVER_CANT_CONNECT;
@@ -570,7 +570,7 @@ public class DeviceDataViewActivity extends Activity implements OnRefreshListene
                     return  GET_CURRENT_FAIL;
                 }
                 currentData = deviceData.getRows().get(0);
-                //Èç¹ûÊ±¼ä²î¾à³¬¹ý10·ÖÖÓ,ÈÏÎªÉè±¸ÒÑÀëÏß
+
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {
                     Date deviceTime = dfs.parse(currentData.getCreateTime());

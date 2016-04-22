@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:2.0.0'
     }
 }
 apply plugin: 'com.android.application'
@@ -19,7 +19,7 @@ android {
     buildToolsVersion "23.0.0"
 
     compileOptions{
-        encoding "GBK"}
+        encoding "UTF-8"}
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
