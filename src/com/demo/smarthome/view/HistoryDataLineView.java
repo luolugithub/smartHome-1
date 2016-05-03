@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,16 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 /**********************************************************
- * @文件作者：sl
- * @文件描述：画出曲线图
- * @创建日期:2015-11-07
- * 注意 :由于需求总是更改,导致里面代码逻辑较为复杂,非必要请不要修改
+ *搴熷純
+ *:2015-11-07
  **********************************************************/
 public class HistoryDataLineView extends View {
 
 	private static String TAG = "historyDataLineView";
 	private static final int CIRCLE_SIZE = 10;
-	//连接线是曲线还是直线
 	private static enum Linestyle {
 		Line, Curve
 	}
@@ -49,53 +48,48 @@ public class HistoryDataLineView extends View {
 	private int canvasHeight;
 	private int canvasWidth;
 	private int bheight = 0;
-	//左右宽度留的边
+	//
 	private int blwidh;
 	private boolean isMeasure = true;
-	//如果是PM2.5或者PM10,置真
+	//
 	boolean pm2_5Flag;
 	/**
-	 * Y轴最大值
 	 */
 	private float maxValue;
 	/**
-	 * Y轴间距值
 	 */
 	private float averageValue;
 
 
-	//X轴标示微调
+	//
 	private static final int xTextChange =5;
-	//Y轴标示微调
+	//
 	private static final int yTextChange =5;
-	//Y轴单位位置调整,向下的程度
+	//
 	private static final int yTextUnit = 10;
-
-	//X轴坐标数从零点到24点,每两小时一个点
 	private static final int xSpaceCount = 13;
 
-	//顶部底部留白
 	private int marginTop = 50;
 	private int marginBottom = 100;
 
 	private static int noData = -1;
-	//Y轴单位
+	//
 	private String yUnit;
 
-	//笔的粗细程度
+	//
 	private static final float mPaintWidth = 2.0f;
-	//是否显示坐标的小点
+	//
 	private static final boolean enablePaintPoint = false;
 	/**
-	 * 曲线上总点数
+	 *
 	 */
 	private Point[] mPoints;
 	/**
-	 * 纵坐标值
+	 *
 	 */
 	private ArrayList<Double> yRawData;
 	/**
-	 * 横坐标值
+	 *
 	 */
 
 	private int spacingHeight;
@@ -113,9 +107,9 @@ public class HistoryDataLineView extends View {
 
 	private void initView() {
 		this.res = mContext.getResources();
-		//抗锯齿效果
+		//
 		this.mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		//获取分辨率的类
+		//
 		dm = new DisplayMetrics();
 		WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 		wm.getDefaultDisplay().getMetrics(dm);
@@ -129,7 +123,7 @@ public class HistoryDataLineView extends View {
 			this.canvasWidth = getWidth();
 			if (bheight == 0)
 				bheight = (int) (canvasHeight - marginBottom);
-			//左右两边留白
+			//
 			blwidh = dip2px(30);
 			isMeasure = false;
 		}
@@ -138,21 +132,20 @@ public class HistoryDataLineView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 
-		//初始化未完成不画曲线
 		if(!isInitDatafinish){
 			return;
 		}
 
-		// 画直线（横向和纵向）,坐标标示随着类型不同会改变
+
 		drawAllXLine(canvas);
 		drawAllYLine(canvas);
-		// 点的操作设置
+
 		mPoints = getPoints();
-		//为了适应低版本的手机
-		mPaint.setColor(res.getColor(R.color.viewfinder_laser));
+		//
+		mPaint.setColor(ContextCompat.getColor(mContext,R.color.result_points));
 		mPaint.setStrokeWidth(dip2px(mPaintWidth));
 		mPaint.setStyle(Style.STROKE);
-		//曲线还是直线
+
 		if (mStyle == Linestyle.Curve) {
 
 			drawScrollLine(canvas);
@@ -161,7 +154,7 @@ public class HistoryDataLineView extends View {
 			drawLine(canvas);
 		}
 
-		//把点画出来
+		//
 		if(enablePaintPoint){
 			mPaint.setStyle(Style.FILL);
 			for (int i = 0; i < mPoints.length; i++) {
@@ -172,25 +165,24 @@ public class HistoryDataLineView extends View {
 	}
 
 	/**
-	 *  画所有横向表格，包括X轴
 	 */
 	private void drawAllXLine(Canvas canvas) {
 
 		Paint XlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		for (int i = 0; i < spacingHeight + 1; i++) {
-			//轴坐标线颜色不一样
+			//
 			if( i == 0){
-				XlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				XlinePaint.setColor(ContextCompat.getColor(mContext,R.color.encode_view));
 				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
 						bheight - (bheight / spacingHeight) * i + marginTop, XlinePaint);
 			}else{
-				linePaint.setColor(res.getColor(R.color.help_button_view));
+				linePaint.setColor(ContextCompat.getColor(mContext,R.color.encode_view));
 				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
 						bheight - (bheight / spacingHeight) * i + marginTop, linePaint);
 			}
 
-			//如果是PM2.5或者PM10,显示的坐标标示不带小数
+			//
 			if( i!= 0) {
 				if (pm2_5Flag) {
 					int intAverage = (int) averageValue;
@@ -202,16 +194,15 @@ public class HistoryDataLineView extends View {
 				}
 			}
 		}
-		//显示单位
+		//
 		drawText(String.valueOf("(" + yUnit + ")"), blwidh / 2 - dip2px(yTextChange) - dip2px(5)
 				,  dip2px(yTextUnit), canvas);
 	}
 
 	/**
-	 * 画所有纵向表格，包括Y轴
 	 */
 	private void drawAllYLine(Canvas canvas) {
-		//当分辨率是480时时间标志会和X轴重叠,所以要向下偏移时间
+		//
 		int offset = 0;
 		if(Cfg.phoneWidth == 480){
 			offset = dip2px(10);
@@ -220,22 +211,22 @@ public class HistoryDataLineView extends View {
 		Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		for (int i = 0; i < xSpaceCount; i++) {
 
-			//轴坐标线颜色不一样
+			//
 			if( i == 0){
-				YlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				YlinePaint.setColor(ContextCompat.getColor(mContext,R.color.sbc_snippet_text));
 				canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
 						+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, YlinePaint);
 			}else{
-				linePaint.setColor(res.getColor(R.color.help_button_view));
+				linePaint.setColor(ContextCompat.getColor(mContext,R.color.encode_view));
 				canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
 						+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, linePaint);
 			}
 
 
-			//当坐标标示是两位数的画多向左移动一点,为了美观.X轴和Y轴公用0点,0点也要左移
-			//最后一个坐标要加(时)
+			//
+			//
 			if(i == xSpaceCount - 1){
-				drawText(String.valueOf(i*2) + "(时)", blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
+				drawText(String.valueOf(i*2) + "(h)", blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
 						- dip2px(xTextChange), bheight + dip2px(35) + offset, canvas);
 			}else if(i == 0 || i > 9){
 				drawText(String.valueOf(i*2), blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount-1) * i
@@ -254,7 +245,7 @@ public class HistoryDataLineView extends View {
 		Point endp = new Point();
 		for (int i = 0; i < mPoints.length - 1; i++) {
 
-			//说明该时刻设备没有开机,不显示该时刻曲线
+			//
 			if(mPoints[i].y == noData ){
 				if(mPoints[i + 1].y == noData) {
 					continue;
@@ -265,7 +256,7 @@ public class HistoryDataLineView extends View {
 			}
 			startp.x = mPoints[i].x;
 			startp.y = mPoints[i].y;
-			//下一个点如果是没有数值的
+			//
 			if(mPoints[i + 1].y == noData){
 				endp.x = mPoints[i + 1].x;
 				endp.y = bheight + marginTop;
@@ -295,7 +286,7 @@ public class HistoryDataLineView extends View {
 		Point endp = new Point();
 		for (int i = 0; i < mPoints.length - 1; i++) {
 
-			//说明该时刻设备没有开机,不显示该时刻曲线
+			//
 			if(mPoints[i].y == noData ){
 				if(mPoints[i + 1].y == noData) {
 					continue;
@@ -306,7 +297,7 @@ public class HistoryDataLineView extends View {
 			}
 			startp.x = mPoints[i].x;
 			startp.y = mPoints[i].y;
-			//下一个点如果是没有数值的
+			//
 			if(mPoints[i + 1].y == noData){
 				endp.x = mPoints[i + 1].x;
 				endp.y = bheight + marginTop;
@@ -324,7 +315,7 @@ public class HistoryDataLineView extends View {
 
 		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
 		p.setTextSize(dip2px(12));
-		p.setColor(res.getColor(R.color.sbc_header_text));
+		p.setColor(ContextCompat.getColor(mContext,R.color.encode_view));
 		p.setTextAlign(Paint.Align.LEFT);
 		canvas.drawText(text, x, y, p);
 	}
@@ -338,10 +329,10 @@ public class HistoryDataLineView extends View {
 
 
 				int ph = bheight - (int) (bheight * (yRawData.get(i) / (int) maxValue));
-				//1080P手机分辨率除288如果结果时整型会极为不准确故显示double
+				//
 				xPointSpace = (double) (canvasWidth - 2 * blwidh) / (yRawData.size() - 1);
 				Xvalue = (int) (blwidh + xPointSpace * i);
-			//如果设备没有给服务器发数据就认为没有开机,不显示那一时刻的数据
+			//
 			if(yRawData.get(i) >= 0) {
 				points[i] = new Point(Xvalue, ph + marginTop);
 			}else {
@@ -360,7 +351,7 @@ public class HistoryDataLineView extends View {
 		this.spacingHeight = (int)(maxValue / averageValue);
 		isInitDatafinish = true;
 		this.pm2_5Flag = pmFlag;
-		//重新调用onDraw
+		//
 		postInvalidate();
 	}
 
@@ -398,7 +389,7 @@ public class HistoryDataLineView extends View {
 		this.yUnit = yUnit;
 	}
 	/**
-	 * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+	 *
 	 */
 	private int dip2px(float dpValue)
 	{

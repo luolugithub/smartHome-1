@@ -120,7 +120,7 @@ public class RegisterActivity extends Activity {
 
 				dialogView.closeMyDialog();
 
-				Toast.makeText(RegisterActivity.this, "???????????!",
+				Toast.makeText(RegisterActivity.this, "注册成功!",
 						Toast.LENGTH_SHORT).show();
 				try {
 					Thread.sleep(1000);
@@ -132,32 +132,31 @@ public class RegisterActivity extends Activity {
 				Intent mainIntent = new Intent();
 				mainIntent.setClass(RegisterActivity.this, DeviceRealtimeDataActivity.class);
 				mainIntent.putExtras(bundle);
-				startActivity(mainIntent);// ???????
+				startActivity(mainIntent);//
 				finish();
 				break;
 			case NO_WIFI:
 
-				failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail).setMessage("????????????��??????????");
+				failAlert.setTitle("错误").setIcon(R.drawable.cloud_fail).setMessage("无本地网络");
 				failAlert.create().show();
 				break;
 			case CMD_TIMEOUT:
-
-				failAlert.setTitle("???????????��").setIcon(R.drawable.cloud_fail).setMessage("?????????????��");
+				failAlert.setTitle("无法找到本地设备").setIcon(R.drawable.cloud_fail).setMessage("请确定本地设备已设置成搜寻WI-FI模式");
 				failAlert.create().show();
 				break;
 			case USER_EXISTED:
 
-				failAlert.setTitle(" ??????").setIcon(R.drawable.cloud_fail).setMessage("   ??????????");
+				failAlert.setTitle("用户已经存在").setIcon(R.drawable.cloud_fail).setMessage("请重新注册");
 				failAlert.create().show();
 				break;
 			case SERVER_EXCEPTION:
 
-				failAlert.setTitle(" ??????").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer);
+				failAlert.setTitle("连接服务器").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer);
 				failAlert.create().show();
 				break;
 			default:
 
-				failAlert.setTitle(" ??????").setIcon(R.drawable.cloud_fail).setMessage("   ???????????");
+				failAlert.setTitle("错误").setIcon(R.drawable.cloud_fail).setMessage("请重新注册");
 				failAlert.create().show();
 				break;
 
@@ -187,7 +186,7 @@ public class RegisterActivity extends Activity {
 		txtrePassword = (EditText) findViewById(R.id.againPassword);
 		txtWifipassword = (EditText) findViewById(R.id.wifiPassword);
 		switchIsHidden = (Switch) findViewById(R.id.wifiIsHidden);
-		//???SSID
+
 		apSSID = (TextView)findViewById(R.id.wifiSSID);
 		ConfigDevice forApSSID= new ConfigDevice(RegisterActivity.this);
 		if(forApSSID.getApSSid() == null){
@@ -222,8 +221,8 @@ public class RegisterActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			if(noWifi){
-				failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail)
-						.setMessage("????????????��??????????");
+				failAlert.setTitle("错误").setIcon(R.drawable.cloud_fail)
+						.setMessage("没有WI-FI网络");
 				failAlert.create().show();
 				return;
 			}
@@ -233,36 +232,40 @@ public class RegisterActivity extends Activity {
 			wifiPwd = txtWifipassword.getText().toString();
 
 			if (userRegName.trim().isEmpty()||(!CheckEmailPhoneTools.isEmail(userRegName))) {
-				Toast.makeText(getApplicationContext(), "?????????????????????????", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "注册用户名应为邮箱名", Toast.LENGTH_SHORT).show();
 				txtName.setFocusable(true);
 				return;
 			}
-			if (userRegPassword.trim().isEmpty()) {
-				Toast.makeText(getApplicationContext(), "??????????", Toast.LENGTH_SHORT).show();
+			if (userRegPassword.trim().isEmpty() || (userRegPassword.length() < 6)) {
+				Toast.makeText(getApplicationContext(), "密码至少为六位", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
-			if (userRegPassword.length() < 6) {
-				Toast.makeText(getApplicationContext(), "?????????", Toast.LENGTH_SHORT).show();
-				txtPassword.setFocusable(true);
-				return;
-			}
+
 			if(!rePassword.equals(userRegPassword)){
-				Toast.makeText(getApplicationContext(), "???????????????", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "两次填写的密码不一致", Toast.LENGTH_SHORT).show();
 				txtPassword.setFocusable(true);
 				return;
 			}
+			AlertDialog.Builder alertDialog = new AlertDialog.Builder(RegisterActivity.this);
+			alertDialog.setTitle("注意").setMessage("请确定已经将设备设置成搜索网络模式")
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
 
-			//?????
-			dialogView = new MyDialogView(RegisterActivity.this);
-			dialogView.showMyDialog("???????��", "??????????????��,????");
+							dialogView = new MyDialogView(RegisterActivity.this);
+							dialogView.showMyDialog("注册", "正在扫描设备,请稍等");
 
-			new ConnectDevThread().start();
+							new ConnectDevThread().start();
+						}
+					});
+			alertDialog.create().show();
 		}
 	}
 
 
-	//???????��????WI-FI,????�w???��????????��ID.
+
 	class ConnectDevThread extends Thread {
 		@Override
 		public void run() {
@@ -270,13 +273,13 @@ public class RegisterActivity extends Activity {
 
 			deviceInfo = new ConfigDevice(wifiPwd,switchIsHidden.isChecked(),IpTools
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),RegisterActivity.this);
-			//????????????
+
 			if(deviceInfo.getApSSid() == null){
 				message.what = NO_WIFI;
 				handler.sendMessage(message);
 				return;
 			}
-			//??????????
+
 			deviceInfo.configDeviceThread();
 			while(true){
 
@@ -294,7 +297,6 @@ public class RegisterActivity extends Activity {
 		}
 	}
 
-	//??????
 	class registerUserThread extends Thread {
 		@Override
 		public void run() {
@@ -305,7 +307,7 @@ public class RegisterActivity extends Activity {
 			String[] paramsName = {"userName", "userPassword","deviceId", "devicePassword"};
 			String[] paramsValue = {userRegName,userRegPassword,deviceInfo.getDeviceID(),deviceInfo.getDevicePwd()};
 
-			//????��???????????
+
 			if((jsonResult = new setServerURL().sendParamToServer("register", paramsName, paramsValue)).isEmpty()){
 				message.what = SERVER_EXCEPTION;
 				handler.sendMessage(message);
@@ -327,7 +329,6 @@ public class RegisterActivity extends Activity {
 				case Cfg.CODE_USER_EXISTED:
 					message.what = USER_EXISTED;
 					break;
-				//????????????
 				case Cfg.CODE_EXCEPTION:
 					message.what = SERVER_EXCEPTION;
 					break;

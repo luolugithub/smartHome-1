@@ -19,13 +19,13 @@
         <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="60dp" >
-           <TextView
-            android:id="@+id/titleRegister"
-            android:layout_width="20dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/control2_03" />
+            <TextView
+                android:id="@+id/titleRegister"
+                android:layout_width="20dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/control2_03" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -43,7 +43,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
@@ -52,7 +51,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -74,8 +73,7 @@
                 android:layout_marginLeft="110dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
-                android:hint="请输入邮箱名"
-                android:ems="8" />
+                android:hint="请输入邮箱名" />
         </FrameLayout>
     </LinearLayout>
 
@@ -85,7 +83,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
@@ -94,7 +91,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -116,8 +113,7 @@
                 android:layout_marginLeft="110dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
-                android:ems="10"
-                android:hint="请输入至少6位数字或字母"
+                android:hint="至少6位数字或字母"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -128,7 +124,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
@@ -137,7 +132,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -159,7 +154,6 @@
                 android:layout_marginLeft="110dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
-                android:ems="10"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -169,7 +163,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
@@ -178,7 +171,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -203,7 +196,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
+
         android:layout_marginTop="20dp"
         android:orientation="horizontal" >
 
@@ -212,7 +205,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -234,7 +227,6 @@
                 android:layout_marginLeft="150dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
-                android:ems="8"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -272,9 +264,9 @@
 
         <Button
             android:id="@+id/registerBtnReg"
-            android:layout_width="wrap_content"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/regist_13" />
+            android:background="@drawable/register_long" />
     </LinearLayout>
 
     <LinearLayout

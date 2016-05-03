@@ -10,7 +10,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * 字符串 工具类
+ *
  * 
  * @author Administrator
  * 
@@ -120,7 +120,6 @@ public class StrTools {
 
 	/*
 	 * Convert byte[] to hex
-	 * string.这里我们可以将byte转换成int，然后利用Integer.toHexString(int)来转换成16进制字符串。
 	 * 
 	 * @param src byte[] data
 	 * 
@@ -179,7 +178,7 @@ public class StrTools {
 		return (byte) "0123456789ABCDEF".indexOf(c);
 	}
 
-	// 将指定byte数组以16进制的形式打印到控制台
+	//
 	public static void printHexString(byte[] b) {
 		System.out.print("len:" + b.length + "  ");
 		for (int i = 0; i < b.length; i++) {
@@ -204,57 +203,6 @@ public class StrTools {
 		return ret;
 	}
 
-	/*
-	 * 上面是将byte[]转化十六进制的字符串,注意这里b[ i ] & 0xFF将一个byte和
-	 * 0xFF进行了与运算,然后使用Integer.toHexString取得了十六进制字符串,可以看出 b[ i ] &
-	 * 0xFF运算后得出的仍然是个int,那么为何要和 0xFF进行与运算呢?直接 Integer.toHexString(b[ i
-	 * ]);,将byte强转为int不行吗?答案是不行的.
-	 * 
-	 * 其原因在于: 1.byte的大小为8bits而int的大小为32bits 2.java的二进制采用的是补码形式
-	 * 
-	 * 在这里先温习下计算机基础理论
-	 * 
-	 * byte是一个字节保存的，有8个位，即8个0、1。 8位的第一个位是符号位， 也就是说0000 0001代表的是数字1 1000
-	 * 0000代表的就是-1 所以正数最大位0111 1111，也就是数字127 负数最大为1111 1111，也就是数字-128
-	 * 
-	 * 上面说的是二进制原码，但是在java中采用的是补码的形式，下面介绍下什么是补码
-	 * 
-	 * 1、反码： 一个数如果是正，则它的反码与原码相同； 一个数如果是负，则符号位为1，其余各位是对原码取反；
-	 * 
-	 * 2、补码：利用溢出，我们可以将减法变成加法 对于十进制数，从9得到5可用减法： 9－4＝5 因为4+6＝10，我们可以将6作为4的补数
-	 * 改写为加法： 9+6＝15（去掉高位1，也就是减10）得到5.
-	 * 
-	 * 对于十六进制数，从c到5可用减法： c－7＝5 因为7+9＝16 将9作为7的补数 改写为加法： c+9＝15（去掉高位1，也就是减16）得到5.
-	 * 
-	 * 在计算机中，如果我们用1个字节表示一个数，一个字节有8位，超过8位就进1，在内存中情况为（100000000），进位1被丢弃。
-	 * 
-	 * ⑴一个数为正，则它的原码、反码、补码相同 ⑵一个数为负，刚符号位为1，其余各位是对原码取反，然后整个数加1
-	 * 
-	 * - 1的原码为 10000001 - 1的反码为 11111110 + 1 - 1的补码为 11111111
-	 * 
-	 * 0的原码为 00000000 0的反码为 11111111（正零和负零的反码相同） +1 0的补码为
-	 * 100000000（舍掉打头的1，正零和负零的补码相同）
-	 * 
-	 * Integer.toHexString的参数是int，如果不进行&0xff，那么当一个byte会转换成int时，由于int是32位，
-	 * 而byte只有8位这时会进行补位，
-	 * 例如补码11111111的十进制数为-1转换为int时变为11111111111111111111111111111111好多1啊
-	 * ，呵呵！即0xffffffff但是这个数是不对的，这种补位就会造成误差。 和0xff相与后，高24比特就会被清0了，结果就对了。
-	 * 
-	 * ---- Java中的一个byte，其范围是-128~127的，而Integer.toHexString的参数本来是int，如果不进行&0xff，
-	 * 那么当一个byte会转换成int时
-	 * ，对于负数，会做位扩展，举例来说，一个byte的-1（即0xff），会被转换成int的-1（即0xffffffff
-	 * ），那么转化出的结果就不是我们想要的了。
-	 * 
-	 * 而0xff默认是整形，所以，一个byte跟0xff相与会先将那个byte转化成整形运算，这样，结果中的高的24个比特就总会被清0，于是结果总是我们想要的
-	 * 。
-	 */
-	/*
-	 * 把16进制字符串转换成字节数组
-	 * 
-	 * @param hex
-	 * 
-	 * @return
-	 */
 	public static byte[] hexStringToByte(String hex) {
 		int len = (hex.length() / 2);
 		byte[] result = new byte[len];
@@ -273,7 +221,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * 把字节数组转换成16进制字符串
 	 * 
 	 * @param bArray
 	 * @return
@@ -293,7 +240,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * 把字节数组转换为对象
 	 * 
 	 * @param bytes
 	 * @return
@@ -311,7 +257,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * 把可序列化对象转换成字节数组
 	 * 
 	 * @param s
 	 * @return
@@ -338,9 +283,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * @函数功能: BCD码转为10进制串(阿拉伯数据)
-	 * @输入参数: BCD码
-	 * @输出结果: 10进制串
 	 */
 	public static String bcd2Str(byte[] bytes) {
 		StringBuffer temp = new StringBuffer(bytes.length * 2);
@@ -355,10 +297,7 @@ public class StrTools {
 
 	/**
 	 * *
-	 * 
-	 * @函数功能: 10进制串转为BCD码
-	 * @输入参数: 10进制串
-	 * @输出结果: BCD码
+	 *
 	 */
 	public static byte[] str2Bcd(String asc) {
 		int len = asc.length();
@@ -404,9 +343,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * @函数功能: BCD码转ASC码
-	 * @输入参数: BCD串
-	 * @输出结果: ASC码
 	 */
 	// public static String BCD2ASC(byte[] bytes) {
 	// StringBuffer temp = new StringBuffer(bytes.length * 2);
@@ -421,7 +357,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * MD5加密字符串，返回加密后的16进制字符串
 	 * 
 	 * @param origin
 	 * @return
@@ -432,7 +367,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * MD5加密字符串，返回加密后的字节数组
 	 * 
 	 * @param origin
 	 * @return
@@ -443,7 +377,6 @@ public class StrTools {
 
 	/** */
 	/**
-	 * MD5加密字节数组，返回加密后的字节数组
 	 * 
 	 * @param bytes
 	 * @return
@@ -461,7 +394,6 @@ public class StrTools {
 	}
 
 	/**
-	 * id：578437695752307204 16进制是0x807060504030204 转换成：402030405060708
 	 * 
 	 * @param strNum
 	 * @return
@@ -525,7 +457,7 @@ public class StrTools {
 	/**
 	 * 0x01 0x02 0x03 ==> "66051"
 	 * 
-	 * @param strNum
+	 * @param
 	 * @return
 	 */
 	public static String byteHexNumToStr(byte[] b) {
@@ -546,7 +478,6 @@ public class StrTools {
 	}
 
 	/**
-	 * id 16进制低位在前 0xa1b234671 ==> 10进制 1731506849
 	 * 0x123456789 -->0x0123456789 --> 4886718345
 	 * @return
 	 */
@@ -585,7 +516,6 @@ public class StrTools {
 	}
 
 	/**
-	 * passwd 16进制高位在前 0xaf3212341 ==> 10进制 2939294260
 	 * 0x987654321 -->0x0132547698 --> 5139363480
 	 * @return
 	 */
@@ -637,7 +567,6 @@ public class StrTools {
 	 * 
 	 * @param strNum
 	 * @param isBig
-	 *            大端模式
 	 * @return
 	 */
 	// public static long strNumToHex(String strNum){

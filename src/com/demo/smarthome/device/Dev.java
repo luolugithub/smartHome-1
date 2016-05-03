@@ -1,7 +1,6 @@
 package com.demo.smarthome.device;
 
 /**
- * 设备类
  * 
  * @author Administrator
  * 
@@ -160,7 +159,7 @@ public class Dev {
 
 	@Override
 	public String toString() {
-		return "id:" + id + " " + (onLine ? "在线" : "不在线") + "  nickName:"
+		return "id:" + id + " " + (onLine ? "" : "") + "  nickName:"
 				+ nickName + "  lastUpdate:" + lastUpdate + "  torken:"
 				+ torken + "  ipPort:" + ipPort;
 	}

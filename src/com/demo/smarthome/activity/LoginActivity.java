@@ -49,7 +49,7 @@ import com.google.gson.JsonSyntaxException;
 
 import com.demo.smarthome.tools.CheckEmailPhoneTools;
 /**
- * ��¼��
+ *
  * 
  * @author Administrator
  * 
@@ -306,7 +306,6 @@ public class LoginActivity extends Activity {
 
 
 	/**
-	 * ע�ᰴť������
 	 *
 	 * @author Administrator
 	 *
@@ -333,7 +332,6 @@ public class LoginActivity extends Activity {
 
 
 	/**
-	 * ��¼
 	 * 
 	 * @author Administrator
 	 * 

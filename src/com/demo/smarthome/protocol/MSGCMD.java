@@ -13,10 +13,9 @@ public enum MSGCMD {
 			(byte) 0xFF), CMD00((byte) 0x0);
 	private byte val;
 
-	// 构造方法
 	private MSGCMD(byte val) {
 		this.val = val;
-	} // get set 方法
+	} // get set 锟斤拷锟斤拷
 
 	public static MSGCMD valueOf(int val) {
 		switch (val % 0xFF) {
@@ -85,7 +84,7 @@ public enum MSGCMD {
 	public byte val() {
 		return (byte) val;
 	}
-	// // get set 方法
+	// // get set 锟斤拷锟斤拷
 	// public int getVal() {
 	// return val;
 	// }

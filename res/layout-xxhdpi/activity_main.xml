@@ -44,20 +44,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/setupBtnRefresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="120dp"
+            android:layout_height="45dp"
             android:background="@drawable/logined_03" />
 
         <Button
             android:id="@+id/mainBtnAddDev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_width="120dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/logined_06" />
     </LinearLayout>
     <!-- 按键 -->

@@ -3,7 +3,7 @@ package com.demo.smarthome.protocol;
 import java.util.zip.Checksum;
 
 /**
- * User: punksa Date: 13-10-11 Time: обнГ10:33
+ * User: punksa Date: 13-10-11 Time: 10:33
  */
 
 public class CRC16 implements Checksum {

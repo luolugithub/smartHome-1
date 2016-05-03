@@ -80,11 +80,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.DeviceDataViewActivity"
-            android:label="@string/title_activity_device_view"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".activity.historyDataActivity"
             android:label="@string/title_activity_history_data"
             android:screenOrientation="portrait" >

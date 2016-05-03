@@ -3,14 +3,14 @@ package com.demo.smarthome.tools;
 import java.security.MessageDigest;
 
 /**
- * MD5工具类
+ * MD5
  * 
  * @author Administrator
  * 
  */
 public class MD5Tools {
 	/***
-	 * MD5加码 生成32位md5码
+	 * MD5
 	 */
 	public static String string2MD5(String inStr) {
 		MessageDigest md5 = null;
@@ -38,7 +38,7 @@ public class MD5Tools {
 	}
 
 	// /**
-	// * 加密解密算法 执行一次加密，两次解密
+	// *
 	// */
 	// public static String convertMD5(String inStr) {
 	//

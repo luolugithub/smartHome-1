@@ -14,7 +14,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -41,9 +43,7 @@ import java.util.Date;
 import java.io.File;
 
 /**********************************************************
- * @Œƒº˛◊˜’ﬂ£∫sl
- * @Œƒº˛√Ë ˆ£∫œ‘ æ µ ± ˝æ›
- * @¥¥Ω®»’∆⁄:2016-03-24
+ *:2016-03-24
  **********************************************************/
 public class DeviceRealtimeDataActivity extends Activity {
 
@@ -55,6 +55,7 @@ public class DeviceRealtimeDataActivity extends Activity {
     Button historyDataBtn;
     Button shareBtn;
     Button resignBtn;
+
     CircleAndNumberView realDataView;
     ProgressDialog dialogView;
     int crrentValue;
@@ -66,6 +67,7 @@ public class DeviceRealtimeDataActivity extends Activity {
     TextView dataTitle;
     TextView temperatureTextView;
     TextView dampnessTextView;
+    TextView presentation;
     DeviceDataResult deviceData = new DeviceDataResult();
     DeviceDataSet currentData = new DeviceDataSet();
 
@@ -79,11 +81,11 @@ public class DeviceRealtimeDataActivity extends Activity {
     static final int SERVE_EXCEPTION       = 9;
     static final int UPDATE_DATA           = 10;
 
-    //≈Û”—»¶∑÷œÌ≥…π¶
+    //
     static int shareSucceed     = 0;
-    //ΩÿÕº≤ª¥Ê‘⁄
+    //
     static int fileNotExist     = 1;
-    //ΩÿÕº ß∞‹
+    //
     static int screenShotFail   = 2;
 
     enum currentdataTitle
@@ -109,33 +111,65 @@ public class DeviceRealtimeDataActivity extends Activity {
                     dialogView.dismiss();
                     if(is_get_data_success&&is_device_online)
                     {
+                        int pm2_5 = Integer.parseInt(currentData.getPm2_5());
+                        if(pm2_5<= 35)
+                        {
+                            presentation.setText("Á©∫Ê∞îË¥®Èáè:‰ºò");
+                        }else if(pm2_5<= 75){
+                            presentation.setText("Á©∫Ê∞îË¥®Èáè:ËâØ");
+                        }else if(pm2_5<= 115){
+                            presentation.setText("Á©∫Ê∞îË¥®Èáè:ËΩªÂ∫¶Ê±°Êüì");
+                        }else if(pm2_5<= 150){
+                            presentation.setText("Á©∫Ê∞îË¥®Èáè:‰∏≠Â∫¶Ê±°Êüì");
+                        }else if(pm2_5<= 250){
+                            presentation.setText("Á©∫Ê∞îË¥®Èáè:ÈáçÂ∫¶Ê±°Êüì");
+                        }else if(pm2_5 > 250){
+                            presentation.setText("Á©∫Ê∞îË¥®Èáè:‰∏•ÈáçÊ±°Êüì");
+                        }
                         if(currentType == currentdataTitle.hcho) {
+                            hchoBtn.setBackgroundResource(R.drawable.hcho_light);
+                            tvocBtn.setBackgroundResource(R.drawable.tvoc);
+                            pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
+                            pm10Btn.setBackgroundResource(R.drawable.pm10);
                             crrentValue = Integer.parseInt(currentData.getHcho());
-                            dataTitle.setText("º◊»©");
+                            dataTitle.setText("Áî≤ÈÜõ");
                         }else if(currentType == currentdataTitle.tvoc) {
+                            hchoBtn.setBackgroundResource(R.drawable.hcho);
+                            tvocBtn.setBackgroundResource(R.drawable.tvoc_light);
+                            pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
+                            pm10Btn.setBackgroundResource(R.drawable.pm10);
                             crrentValue = Integer.parseInt(currentData.getTvoc());
                             dataTitle.setText("TVOC");
                         }else if(currentType == currentdataTitle.pm2_5) {
-                            crrentValue = Integer.parseInt(currentData.getTvoc());
+                            hchoBtn.setBackgroundResource(R.drawable.hcho);
+                            tvocBtn.setBackgroundResource(R.drawable.tvoc);
+                            pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
+                            pm10Btn.setBackgroundResource(R.drawable.pm10);
+                            crrentValue = pm2_5;
                             dataTitle.setText("PM 2.5");
                         }else if(currentType == currentdataTitle.pm10) {
-                            crrentValue = Integer.parseInt(currentData.getTvoc());
+                            hchoBtn.setBackgroundResource(R.drawable.hcho);
+                            tvocBtn.setBackgroundResource(R.drawable.tvoc);
+                            pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
+                            pm10Btn.setBackgroundResource(R.drawable.pm10_light);
+                            crrentValue = Integer.parseInt(currentData.getPm10());
                             dataTitle.setText("PM 10");
                         }
                     }
                     else
                     {
                         crrentValue = 0;
-                        dataTitle.setText("¿Îœﬂ");
+                        dataTitle.setText("Á¶ªÁ∫ø");
                         dataTitle.setTextColor(ContextCompat.getColor
                                 (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                        presentation.setText("ËÆæÂ§á‰∏çÂú®Á∫ø");
                         currentType = currentdataTitle.outline;
                     }
                     new Thread(updateDataThread).start();
                     break;
                 case GET_CURRENT_FAIL:
                     dialogView.dismiss();
-                    Toast.makeText(DeviceRealtimeDataActivity.this, "¡¨Ω”∑˛ŒÒ∆˜ ß∞‹", Toast.LENGTH_SHORT)
+                    Toast.makeText(DeviceRealtimeDataActivity.this, "ËÆæÂ§áÈîôËØØ", Toast.LENGTH_SHORT)
                             .show();
 
                     intent.setClass(DeviceRealtimeDataActivity.this, MainActivity.class);
@@ -148,7 +182,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                     Cfg.currentDeviceID = "";
                     dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
 
-                    Toast.makeText(DeviceRealtimeDataActivity.this, "À˘—°…Ë±∏√ª”– ˝æ›", Toast.LENGTH_SHORT)
+                    Toast.makeText(DeviceRealtimeDataActivity.this, "ËÆæÂ§áÈîôËØØ,ËØ∑ÈáçÊñ∞ÈÄâÊã©", Toast.LENGTH_SHORT)
                             .show();
                     intent.setClass(DeviceRealtimeDataActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -184,9 +218,9 @@ public class DeviceRealtimeDataActivity extends Activity {
                         temperature = "0";
                         dampness = "0";
                     }
-                    temperatureTextView.setText("Œ¬∂»:" + temperature
+                    temperatureTextView.setText("Ê∏©Â∫¶:" + temperature
                             + getResources().getString(R.string.device_temperature_unit));
-                    dampnessTextView.setText(" ™∂»:" +dampness
+                    dampnessTextView.setText("ÊπøÂ∫¶:" +dampness
                             + getResources().getString(R.string.device_hygrometer_unit));
                     break;
                 default:
@@ -199,7 +233,9 @@ public class DeviceRealtimeDataActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_device_realtime_data);
+
         //initialize current data
         crrentValue = 0;
         //device list
@@ -234,15 +270,16 @@ public class DeviceRealtimeDataActivity extends Activity {
         shareBtn = (Button)findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener(new shareToTimeline());
         hchoBtn = (Button) findViewById(R.id.hchoBtn);
-        hchoBtn.setOnClickListener(new hchoDataShow());
+        hchoBtn.setOnTouchListener(hchoDataShow);
         tvocBtn = (Button) findViewById(R.id.tvocBtn);
-        tvocBtn.setOnClickListener(new tvocDataShow());
+        tvocBtn.setOnTouchListener(tvocDataShow);
         pm2_5Btn = (Button) findViewById(R.id.pm2_5Btn);
-        pm2_5Btn.setOnClickListener(new pm2_5DataShow());
+        pm2_5Btn.setOnTouchListener(pm2_5DataShow);
         pm10Btn = (Button) findViewById(R.id.pm10Btn);
-        pm10Btn.setOnClickListener(new pm10DataShow());
+        pm10Btn.setOnTouchListener(pm10DataShow);
         temperatureTextView = (TextView)findViewById(R.id.temperature);
         dampnessTextView = (TextView)findViewById(R.id.dampness);
+        presentation = (TextView)findViewById(R.id.presentation);
 
         //to touch view fresh data.
         realDataView = (CircleAndNumberView)findViewById(R.id.CircleData);
@@ -250,14 +287,13 @@ public class DeviceRealtimeDataActivity extends Activity {
         dataTitle = (TextView)findViewById(R.id.dataType);
         dataTitle.setOnClickListener(new freshData());
 
-        //initial type
+
         currentType = currentdataTitle.hcho;
 
-        //µ»¥˝øÚ
         dialogView = new ProgressDialog(DeviceRealtimeDataActivity.this);
-        dialogView.setTitle("∂¡»° ˝æ›÷–");
-        dialogView.setMessage("’˝‘⁄¥”∑˛ŒÒ∆˜÷–∂¡»° ˝æ›,«Îµ»¥˝");
-        //µ„ª˜µ»¥˝øÚ“‘Õ‚µ»¥˝øÚ≤ªœ˚ ß
+        dialogView.setTitle("ËØªÂèñÊï∞ÊçÆ");
+        dialogView.setMessage("Ê≠£Âú®ËØªÂèñÊï∞ÊçÆ,ËØ∑Á≠âÂæÖ");
+
         dialogView.setCanceledOnTouchOutside(false);
         dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -265,7 +301,7 @@ public class DeviceRealtimeDataActivity extends Activity {
             }
         });
         dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-                "«Îµ»¥˝...", new DialogInterface.OnClickListener() {
+                "ËØ∑Á≠âÂæÖ...", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -275,7 +311,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                 .setEnabled(false);
 
         dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            //∆¡±Œ∑µªÿº¸
+
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -334,12 +370,12 @@ public class DeviceRealtimeDataActivity extends Activity {
         }
     };
 
-    // ÷ª˙µƒback.
+    //
     @Override
     public void onBackPressed(){
         AlertDialog.Builder failAlert = new AlertDialog.Builder(DeviceRealtimeDataActivity.this);
-        failAlert.setTitle("◊¢œ˙µ«¬Ω").setMessage("    «∑Ò◊¢œ˙µ«¬Ω")
-                .setPositiveButton("»∑∂®", new DialogInterface.OnClickListener() {
+        failAlert.setTitle("Ê≥®ÈîÄ").setMessage("ÊòØÂê¶Ê≥®ÈîÄÁôªÂΩï")
+                .setPositiveButton("Á°ÆËÆ§", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -348,7 +384,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                         startActivity(intent);
                         finish();
                     }
-                }).setNegativeButton("»°œ˚", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("ÂèñÊ∂à", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -357,111 +393,149 @@ public class DeviceRealtimeDataActivity extends Activity {
         failAlert.create().show();
     }
 
-    //∑÷œÌµΩ≈Û”—»¶
+    //ÂàÜ‰∫´Âà∞ÊúãÂèãÂúà
     class shareToTimeline implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            Toast.makeText(DeviceRealtimeDataActivity.this, "ÂàÜ‰∫´ÊúãÂèãÂúà‰∏≠,ËØ∑Á≠âÂæÖ", Toast.LENGTH_SHORT)
+                    .show();
             if(shareToWiexin.shareToWeiXinTimeline(DeviceRealtimeDataActivity.this)
                     != shareSucceed){
-                Toast.makeText(DeviceRealtimeDataActivity.this, "∑÷œÌµΩ≈Û”—»¶ ß∞‹", Toast.LENGTH_SHORT)
-                        .show();
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(DeviceRealtimeDataActivity.this);
+                alertDialog.setTitle("ÈîôËØØ").setIcon(R.drawable.error_01).setMessage("ËØ∑Á°ÆÂÆöÂæÆ‰ø°ÂèØ‰ª•ÂêØÂä®")
+                        .setPositiveButton("Á°ÆÂÆö", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                return;
+                            }
+                        });
+                alertDialog.create().show();
             }
         }
     }
 
-    class hchoDataShow implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(is_get_data_success&&is_device_online)
-            {
-                crrentValue = Integer.parseInt(currentData.getHcho());
-                dataTitle.setText("º◊»©");
-                currentType = currentdataTitle.hcho;
+    private View.OnTouchListener hchoDataShow = new View.OnTouchListener(){
+
+        public boolean onTouch(View view, MotionEvent event) {
+            int iAction = event.getAction();
+            if (iAction == MotionEvent.ACTION_DOWN) {
+                hchoBtn.setBackgroundResource(R.drawable.hcho_light);
+                tvocBtn.setBackgroundResource(R.drawable.tvoc);
+                pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
+                pm10Btn.setBackgroundResource(R.drawable.pm10);
+            } else if (iAction == MotionEvent.ACTION_UP) {
+                if (is_get_data_success && is_device_online) {
+                    crrentValue = Integer.parseInt(currentData.getHcho());
+                    dataTitle.setText("Áî≤ÈÜõ");
+                    currentType = currentdataTitle.hcho;
+                } else {
+                    crrentValue = 0;
+                    dataTitle.setText("Á¶ªÁ∫ø");
+                    dataTitle.setTextColor(ContextCompat.getColor
+                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                    currentType = currentdataTitle.outline;
+                }
+                new Thread(updateDataThread).start();
             }
-            else
-            {
-                crrentValue = 0;
-                dataTitle.setText("¿Îœﬂ");
-                dataTitle.setTextColor(ContextCompat.getColor
-                        (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
-                currentType = currentdataTitle.outline;
-            }
-            new Thread(updateDataThread).start();
+            return false;
         }
-    }
-    class tvocDataShow implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(is_get_data_success&&is_device_online)
-            {
-                crrentValue = Integer.parseInt(currentData.getTvoc());
-                dataTitle.setText("TVOC");
-                currentType = currentdataTitle.tvoc;
+    };
+    private View.OnTouchListener tvocDataShow = new View.OnTouchListener(){
+        public boolean onTouch(View view, MotionEvent event) {
+            int iAction = event.getAction();
+            if (iAction == MotionEvent.ACTION_DOWN) {
+                tvocBtn.setBackgroundResource(R.drawable.tvoc_light);
+                hchoBtn.setBackgroundResource(R.drawable.hcho);
+                pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
+                pm10Btn.setBackgroundResource(R.drawable.pm10);
+            } else if (iAction == MotionEvent.ACTION_UP) {
+                if(is_get_data_success&&is_device_online)
+                {
+                    crrentValue = Integer.parseInt(currentData.getTvoc());
+                    dataTitle.setText("TVOC");
+                    currentType = currentdataTitle.tvoc;
+                }
+                else
+                {
+                    crrentValue = 0;
+                    dataTitle.setText("Á¶ªÁ∫ø");
+                    dataTitle.setTextColor(ContextCompat.getColor
+                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                    currentType = currentdataTitle.outline;
+                }
+                new Thread(updateDataThread).start();
             }
-            else
-            {
-                crrentValue = 0;
-                dataTitle.setText("¿Îœﬂ");
-                dataTitle.setTextColor(ContextCompat.getColor
-                        (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
-                currentType = currentdataTitle.outline;
-            }
-            new Thread(updateDataThread).start();
+            return false;
         }
-    }
-    class pm2_5DataShow implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(is_get_data_success&&is_device_online)
-            {
-                crrentValue = Integer.parseInt(currentData.getPm2_5());
-                dataTitle.setText("PM 2.5");
-                currentType = currentdataTitle.pm2_5;
+    };
+    private View.OnTouchListener pm2_5DataShow = new View.OnTouchListener(){
+        public boolean onTouch(View view, MotionEvent event) {
+            int iAction = event.getAction();
+            if (iAction == MotionEvent.ACTION_DOWN) {
+                hchoBtn.setBackgroundResource(R.drawable.hcho);
+                tvocBtn.setBackgroundResource(R.drawable.tvoc);
+                pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
+                pm10Btn.setBackgroundResource(R.drawable.pm10);
+            } else if (iAction == MotionEvent.ACTION_UP) {
+                if(is_get_data_success&&is_device_online)
+                {
+                    crrentValue = Integer.parseInt(currentData.getPm2_5());
+                    dataTitle.setText("PM 2.5");
+                    currentType = currentdataTitle.pm2_5;
+                }
+                else
+                {
+                    crrentValue = 0;
+                    dataTitle.setText("Á¶ªÁ∫ø");
+                    dataTitle.setTextColor(ContextCompat.getColor
+                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                    currentType = currentdataTitle.outline;
+                }
+                new Thread(updateDataThread).start();
             }
-            else
-            {
-                crrentValue = 0;
-                dataTitle.setText("¿Îœﬂ");
-                dataTitle.setTextColor(ContextCompat.getColor
-                        (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
-                currentType = currentdataTitle.outline;
-            }
-            new Thread(updateDataThread).start();
+            return false;
         }
-    }
-    class pm10DataShow implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(is_get_data_success&&is_device_online)
-            {
-                crrentValue = Integer.parseInt(currentData.getPm10());
-                dataTitle.setText("PM 10");
-                currentType = currentdataTitle.pm10;
+    };
+    private View.OnTouchListener pm10DataShow = new View.OnTouchListener(){
+        public boolean onTouch(View view, MotionEvent event) {
+            int iAction = event.getAction();
+            if (iAction == MotionEvent.ACTION_DOWN) {
+                hchoBtn.setBackgroundResource(R.drawable.hcho);
+                tvocBtn.setBackgroundResource(R.drawable.tvoc);
+                pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
+                pm10Btn.setBackgroundResource(R.drawable.pm10_light);
+            } else if (iAction == MotionEvent.ACTION_UP) {
+                if(is_get_data_success&&is_device_online)
+                {
+                    crrentValue = Integer.parseInt(currentData.getPm10());
+                    dataTitle.setText("PM 10");
+                    currentType = currentdataTitle.pm10;
+                }
+                else
+                {
+                    crrentValue = 0;
+                    dataTitle.setText("Á¶ªÁ∫ø");
+                    dataTitle.setTextColor(ContextCompat.getColor
+                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                    currentType = currentdataTitle.outline;
+                }
+                new Thread(updateDataThread).start();
             }
-            else
-            {
-                crrentValue = 0;
-                dataTitle.setText("¿Îœﬂ");
-                dataTitle.setTextColor(ContextCompat.getColor
-                        (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
-                currentType = currentdataTitle.outline;
-            }
-            new Thread(updateDataThread).start();
+            return false;
         }
-    }
+    };
 
     class freshData implements View.OnClickListener{
         @Override
         public void onClick(View v) {
-            //µ»¥˝øÚ
-            dialogView.setTitle("À¢–¬");
-            dialogView.setMessage("À¢–¬ ˝æ›,«Îµ»¥˝");
+            dialogView.setTitle("Âà∑Êñ∞");
+            dialogView.setMessage("Âà∑Êñ∞‰∏≠,ËØ∑Á≠âÂæÖ");
             dialogView.show();
             new getCurrentDataThread().start();
         }
     }
 
-    //ªÒ»°µ±«∞ ˝æ›
     class getCurrentDataThread extends Thread {
 
         @Override
@@ -482,7 +556,7 @@ public class DeviceRealtimeDataActivity extends Activity {
         String[] paramsValue = {Cfg.currentDeviceID};
 
         setServerURL regiterUser= new setServerURL();
-        //–Ë“™≈–∂œ∑˛ŒÒ∆˜ «∑Òø™∆Ù
+
         if((jsonResult = regiterUser.sendParamToServer("getCurrentDeviceData", paramsName
                 , paramsValue)).isEmpty()){
             return SERVER_CANT_CONNECT;
@@ -503,7 +577,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                     return  GET_CURRENT_FAIL;
                 }
                 currentData = deviceData.getRows().get(0);
-                //»Áπ˚ ±º‰≤Óæ‡≥¨π˝10∑÷÷”,»œŒ™…Ë±∏“—¿Îœﬂ
+
                 //Device is outline if the last time of data is beynod ten minutes from now.
                 SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 try {

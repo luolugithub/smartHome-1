@@ -11,7 +11,6 @@ import com.demo.smarthome.service.Cfg;
 import android.graphics.Bitmap;
 
 /**
- * 文件工具类
  * 
  * @author Administrator
  * 
@@ -34,7 +33,7 @@ public class FileTools {
 		fileName = fileName.replaceAll(":", ".");
 
 		File file = new File(path);
-		file.mkdirs();// 创建文件夹
+		file.mkdirs();//
 
 		// fileName ="m a-y.jpg";
 		System.out.println("path:" + path + "  fileName:" + fileName);
@@ -43,11 +42,10 @@ public class FileTools {
 			out = new FileOutputStream(path + "/" + fileName);
 			out.write(picBase64Data.getBytes());
 			ok = true;
-			// bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
+			// bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);//
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -61,37 +59,6 @@ public class FileTools {
 		return ok;
 	}
 
-	public static boolean saveFile(String path, String fileName, Bitmap bitmap) {
-		boolean ok = false;
-		FileOutputStream out = null;
-
-		// path = path.replaceAll(" ", "");
-		fileName = fileName.replaceAll(":", ".");
-		File file = new File(path);
-		file.mkdirs();// 创建文件夹
-
-		try {
-			out = new FileOutputStream(path + "/" + fileName);
-			// out.write( picBase64Data.getBytes() );
-			// ok = true;
-			bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);// 把数据写入文件
-			// out.flush();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				out.flush();
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-		return ok;
-	}
 
 	/**
 	 * 
@@ -120,7 +87,6 @@ public class FileTools {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -152,7 +118,6 @@ public class FileTools {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {

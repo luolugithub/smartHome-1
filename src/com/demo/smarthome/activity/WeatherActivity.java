@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import com.demo.smarthome.R;
 
@@ -34,7 +35,7 @@ import com.demo.smarthome.weather.WeatherInfoDataResult;
 import com.google.gson.Gson;
 
 /**
-*   ?????????ß÷????????????API???????????shileifavorite@163.com ??????130890??
+*   ?????????ÔøΩÔøΩ????????????API???????????shileifavorite@163.com ??????130890??
 *
  * */
 public class WeatherActivity extends Activity {
@@ -49,11 +50,11 @@ public class WeatherActivity extends Activity {
 
     //????AMapLocationClient?????
     protected AMapLocationClient mLocationClient;
-    //??????¶À?????????
+    //??????ÔøΩÔøΩ?????????
     protected AMapLocationListener mLocationListener;
     //????mLocationOption????
     protected AMapLocationClientOption mLocationOption = null;
-    //??¶À???????
+    //??ÔøΩÔøΩ???????
     private String ErrorInfo = " ?????????????";
 
     //?????????????
@@ -62,7 +63,7 @@ public class WeatherActivity extends Activity {
 //    WeatherInfoDataResult weatherData;
 //    String jsonResult;
 
-    //¶√??
+    //ÔøΩÔøΩ??
 //    protected String mLongitude ="";
     //????
 //    protected String mLatitude = "";
@@ -85,21 +86,21 @@ public class WeatherActivity extends Activity {
             switch (msg.what) {
                 case GET_WEATHER_SUCCEED:
                     StringBuffer cityTitle = new StringBuffer();
-                    cityTitle.append(mCity + "??\n");
-                    cityTitle.append(weatherInfoText.getWeatherInfo() + "(¶ƒ????)");
+                    cityTitle.append(mCity + "Â∏Ç\n");
+                    cityTitle.append(weatherInfoText.getWeatherInfo());
                     ((TextView)findViewById(R.id.TempText)).setText(cityTitle.toString());
                     StringBuffer weatherText = new StringBuffer();
-                    weatherText.append("???:" +weatherInfoText.getTemperature() +"(???)\n");
-                    weatherText.append("???:" +weatherInfoText.getHumidity() +"(???)\n");
-                    weatherText.append("????????:(¶ƒ????)" +weatherInfoText.getAirQuality() +"\n");
+                    weatherText.append("Ê∏©Â∫¶:" +weatherInfoText.getTemperature() +"(Â∫¶)\n");
+                    weatherText.append("ÊπøÂ∫¶:" +weatherInfoText.getHumidity() +"(%)\n");
+                    weatherText.append("Á©∫Ê∞îË¥®Èáè " +weatherInfoText.getAirQuality() +"\n");
                     weatherText.append("PM2.5:" +weatherInfoText.getPm2_5() +"\n");
                     weatherText.append("PM10:" +weatherInfoText.getPm10() +"\n");
                     ((TextView)findViewById(R.id.TempText2)).setText(weatherText.toString());
                     break;
                 case GET_CITY_ERROR:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("??????????????").setIcon(R.drawable.cloud_fail).setMessage(ErrorInfo)
-                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("Ëé∑ÂèñÂùêÊ†áÈîôËØØ").setIcon(R.drawable.cloud_fail).setMessage(ErrorInfo)
+                            .setPositiveButton("ËøîÂõû", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -109,8 +110,8 @@ public class WeatherActivity extends Activity {
                 break;
                 case CITY_NOT_SUPPORT:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("??????????????").setIcon(R.drawable.cloud_fail).setMessage(mCity + " ?®Æ??ß”???????????")
-                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("Ëé∑ÂèñÂ§©Ê∞î‰ø°ÊÅØÂ§±Ë¥•").setIcon(R.drawable.cloud_fail).setMessage(mCity + "ÂΩìÂâçÂüéÂ∏Ç‰∏çÊîØÊåÅ")
+                            .setPositiveButton("Á°ÆÂÆö", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -120,8 +121,8 @@ public class WeatherActivity extends Activity {
                 break;
                 case SERVER_JSON_ERROR:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail).setMessage(mCity + " ???????????")
-                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("Â§©Ê∞îÊúçÂä°Âô®Êï∞ÊçÆÈîôËØØ").setIcon(R.drawable.cloud_fail).setMessage(mCity + "Â§©Ê∞îËé∑ÂèñÂ§±Ë¥•")
+                            .setPositiveButton("Á°ÆÂÆö", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -131,8 +132,8 @@ public class WeatherActivity extends Activity {
                 break;
                 case SERVER_CANT_CONNECT:
                     failAlert = new AlertDialog.Builder(WeatherActivity.this);
-                    failAlert.setTitle("???????????").setIcon(R.drawable.cloud_fail).setMessage("?????????????????!")
-                            .setPositiveButton("???", new DialogInterface.OnClickListener() {
+                    failAlert.setTitle("ÊúçÂä°Âô®ËøûÊé•ÈîôËØØ").setIcon(R.drawable.cloud_fail).setMessage(StringRes.canNotConnetServer)
+                            .setPositiveButton("Á°ÆÂÆö", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -147,6 +148,7 @@ public class WeatherActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_weather);
 
         TextView titleText = (TextView) findViewById(R.id.titleWeatherView);
@@ -158,11 +160,11 @@ public class WeatherActivity extends Activity {
             }
         });
 
-        //??????????????????
+        //
         if(!NetworkStatusTools.isNetworkAvailable(WeatherActivity.this)){
             failAlert = new AlertDialog.Builder(WeatherActivity.this);
-            failAlert.setTitle("????????????").setIcon(R.drawable.cloud_fail).setMessage("??????????????????")
-                    .setPositiveButton("???", new DialogInterface.OnClickListener() {
+            failAlert.setTitle("Êó†ÁΩëÁªú").setIcon(R.drawable.cloud_fail).setMessage("ËØ∑ËøûÊé•ÁΩëÁªú")
+                    .setPositiveButton("Á°ÆÂÆö", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
@@ -176,99 +178,73 @@ public class WeatherActivity extends Activity {
 
 
     }
-    //???????¶À
+
     protected void initLoaction(){
         mLocationClient = null;
         mLocationListener = new AMapLocationListener() {
-            //??¶À?????????????¶À???????????
+            //??ÔøΩÔøΩ?????????????ÔøΩÔøΩ???????????
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 getLocationResult(aMapLocation);
             }
         };
-        //???????¶À
+
         mLocationClient = new AMapLocationClient(getApplicationContext());
-        //?????¶À???????
         mLocationClient.setLocationListener(mLocationListener);
-
-        //???????¶À????
         mLocationOption = new AMapLocationClientOption();
-        //?????¶À????????????Battery_Saving??????????Device_Sensors????ıÙ??
-        //??????¶À??????????????æN¶À??GPS??¶À?????????????????¶À?????
-        //??????¶À???????????GPS???????????æN¶À??Wi-Fi??????¶À????
-        //?????ıÙ??¶À????????????????Ì‡????GPS???ßÿ?¶À????????????????????????¶À??
-
         mLocationOption.setLocationMode(AMapLocationMode.Hight_Accuracy);
-        //????????????????????????????
         mLocationOption.setNeedAddress(true);
-        //?????????¶À???
         mLocationOption.setOnceLocation(true);
 
-
-        //??????????????GPS??¶À????????30????GPS??ßŸ????¶À???????????æN¶À
-//        mLocationOption.setGpsFirst(true);
-
-        //????¶À?????????????¶À????
         mLocationClient.setLocationOption(mLocationOption);
-        //??????¶À
         mLocationClient.startLocation();
 
-        //?????
         dialogView = new MyDialogView(WeatherActivity.this);
-        dialogView.showMyDialog("?????¶À", "?????¶À");
+        dialogView.showMyDialog("ÂÆö‰Ωç‰∏≠", "Ê≠£Âú®ÂÆö‰Ωç,ËØ∑Á≠âÂæÖ");
     }
 
-    //?????¶À???
+    //?????ÔøΩÔøΩ???
     public void getLocationResult(AMapLocation amapLocation) {
 
         Message msg = new Message();
 
         if (amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
-                //??¶À?????????????????????
+
 
                 mProvince = amapLocation.getProvince();//????
-                //??????? (?????"??"????? "??")
-                if(amapLocation.getCity().contains("??")) {
-                    mCity = (amapLocation.getCity().split("??"))[0];//??????? (??? "??")
+
+                if(amapLocation.getCity().contains("Â∏Ç")) {
+                    mCity = (amapLocation.getCity().split("Â∏Ç"))[0];//??????? (??? "??")
                 }else{
                     mCity = amapLocation.getCity();
                 }
                 mDistrict = amapLocation.getDistrict();//???????
-//                mLatitude = String.valueOf(amapLocation.getLatitude());//???¶√??
+//                mLatitude = String.valueOf(amapLocation.getLatitude());//???ÔøΩÔøΩ??
 //                mLongitude = String.valueOf(amapLocation.getLongitude());//???????
-//                amapLocation.getLocationType();//????????¶À??????
+//                amapLocation.getLocationType();//????????ÔøΩÔøΩ??????
 //                amapLocation.getAccuracy();//??????????
 //                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //                Date date = new Date(amapLocation.getTime());
-//                df.format(date);//??¶À???
-//                amapLocation.getAddress();//????????option??????isNeedAddress?false??????ß’????????æN¶À????ß›??ß÷???????GPS??¶À?????????????
+//                df.format(date);//??ÔøΩÔøΩ???
+//                amapLocation.getAddress();//????????option??????isNeedAddress?false??????ÔøΩÔøΩ????????ÔøΩNÔøΩÔøΩ????ÔøΩÔøΩ??ÔøΩÔøΩ???????GPS??ÔøΩÔøΩ?????????????
 //                amapLocation.getCountry();//???????
 
 //                amapLocation.getStreet();//??????
 //                amapLocation.getStreetNum();//???????????
-//                amapLocation.getCityCode();//???ß“???
+//                amapLocation.getCityCode();//???ÔøΩÔøΩ???
 //                amapLocation.getAdCode();//????????
-                //??¶À??????????
-                String result = getLocationStr(amapLocation);
-                Log.i(TAG, result);
-                //?????¶À??????ß”???????????
+                //??ÔøΩÔøΩ??????????
+
+                //?????ÔøΩÔøΩ??????ÔøΩÔøΩ???????????
                 if(WeatherInformationTools.isCitySupportGetWeather(mCity) == false){
                     msg.what = CITY_NOT_SUPPORT;
                     handler.sendMessage(msg);
                     return;
                 }
-                //??¶À???ß‘?????????????????
+                //??ÔøΩÔøΩ???ÔøΩÔøΩ?????????????????
                 new getWeatherFromServerThread().start();
             } else {
-                StringBuffer sb = new StringBuffer();
-                //??¶À???
-                sb.append("??¶À???" + "\n");
-                sb.append("??????:" + amapLocation.getErrorCode() + "\n");
-                sb.append("???????:" + amapLocation.getErrorInfo() + "\n");
-                sb.append("????????:" + amapLocation.getLocationDetail() + "\n");
-                ErrorInfo = sb.toString();
-                Log.e(TAG,ErrorInfo);
                 msg.what = GET_CITY_ERROR;
                 handler.sendMessage(msg);
             }
@@ -291,7 +267,7 @@ public class WeatherActivity extends Activity {
 
             setServerURL regiterUser = new setServerURL();
 
-            //????ßÿ???????????
+            //????ÔøΩÔøΩ???????????
             if((jsonResult = regiterUser.sendParamToServer("getWeatherInfoByCityName", paramsName
                     , paramsValue)).isEmpty()){
                 message.what = SERVER_CANT_CONNECT;
@@ -338,53 +314,5 @@ public class WeatherActivity extends Activity {
             mLocationClient = null;
             mLocationClient = null;
         }
-    }
-
-    /**
-     * ?????¶À????????¶À??????????
-     * @param
-     * @return
-     */
-    private synchronized static String getLocationStr(AMapLocation location){
-        if(null == location){
-            return null;
-        }
-        StringBuffer sb = new StringBuffer();
-        //errCode????0????¶À??????????????¶À????????????????????¶À?????????
-        if(location.getErrorCode() == 0){
-            sb.append("??¶À???" + "\n");
-            sb.append("??¶À????: " + location.getLocationType() + "\n");
-            sb.append("??    ??    : " + location.getLongitude() + "\n");
-            sb.append("¶√    ??    : " + location.getLatitude() + "\n");
-            sb.append("??    ??    : " + location.getAccuracy() + "??" + "\n");
-            sb.append("????    : " + location.getProvider() + "\n");
-
-            if (location.getProvider().equalsIgnoreCase(
-                    android.location.LocationManager.GPS_PROVIDER)) {
-                // ????????????????GPS??????
-                sb.append("??    ??    : " + location.getSpeed() + "??/??" + "\n");
-                sb.append("??    ??    : " + location.getBearing() + "\n");
-                // ??????????¶À????????????
-                sb.append("??    ??    : "
-                        + location.getSatellites() + "\n");
-            } else {
-                // ??????GPS???????????????
-                sb.append("??    ??    : " + location.getCountry() + "\n");
-                sb.append("?            : " + location.getProvince() + "\n");
-                sb.append("??            : " + location.getCity() + "\n");
-                sb.append("???ß“??? : " + location.getCityCode() + "\n");
-                sb.append("??            : " + location.getDistrict() + "\n");
-                sb.append("???? ??   : " + location.getAdCode() + "\n");
-                sb.append("??    ?    : " + location.getAddress() + "\n");
-                sb.append("?????    : " + location.getPoiName() + "\n");
-            }
-        } else {
-            //??¶À???
-            sb.append("??¶À???" + "\n");
-            sb.append("??????:" + location.getErrorCode() + "\n");
-            sb.append("???????:" + location.getErrorInfo() + "\n");
-            sb.append("????????:" + location.getLocationDetail() + "\n");
-        }
-        return sb.toString();
     }
 }

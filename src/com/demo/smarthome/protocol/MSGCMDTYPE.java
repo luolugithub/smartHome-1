@@ -6,7 +6,6 @@ public enum MSGCMDTYPE {
 			(byte) 0xF0), CMDTYPE_EF((byte) 0xEF);
 	private byte val;
 
-	// 构造方法
 	private MSGCMDTYPE(byte val) {
 		this.val = val;
 	}
@@ -44,7 +43,6 @@ public enum MSGCMDTYPE {
 		return type;
 	}
 
-	// get set 方法
 	public byte val() {
 		return (byte) val;
 	}

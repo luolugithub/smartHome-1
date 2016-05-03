@@ -3,59 +3,72 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginTop="0dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/history_background">
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal">
         <Button android:id="@+id/backBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返回"/>
+            android:layout_width="28dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="13dp"
+            android:background="@drawable/white_back_button"/>
         <TextView
             android:id="@+id/viewType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
             android:text="甲醛趋势"
-            android:textSize="25sp" />
+            android:textColor="@color/status_text"
+            android:textSize="30sp" />
         <Button android:id="@+id/shareBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="right"
-            android:layout_marginRight="10dp"
-            android:text="分享"/>
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/share"/>
     </FrameLayout>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/grep_line" />
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
         android:paddingLeft="15dp">
         <Button android:id="@+id/todayBtn"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:text="本日"/>
+            android:layout_width="110dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/day"/>
         <Button android:id="@+id/weekBtn"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:text="七日"/>
+            android:layout_width="110dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/week"/>
         <Button android:id="@+id/monthBtn"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:text="三十日"/>
+            android:layout_width="110dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/month"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center_vertical">
-    <com.demo.smarthome.view.DeviceHistoryDataView
-        android:id="@+id/historyDataView"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_marginTop="5dp">
-    </com.demo.smarthome.view.DeviceHistoryDataView>
+        <com.demo.smarthome.view.DeviceHistoryDataView
+            android:id="@+id/historyDataView"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="5dp">
+        </com.demo.smarthome.view.DeviceHistoryDataView>
     </LinearLayout>
 </LinearLayout>
 

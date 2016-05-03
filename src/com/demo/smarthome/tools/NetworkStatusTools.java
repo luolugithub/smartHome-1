@@ -10,28 +10,34 @@ import java.util.List;
 
 /**
  * Created by leishi on 16/1/28.
- * ÓÃÓÚÅĞ¶ÏÍøÂçµÄ×´Ì¬
+ *
  */
 public class NetworkStatusTools {
-    //ÍøÂçÁ¬½ÓÊÇ·ñ¿ÉÓÃ
+
+    /**
+     * æ£€æµ‹å½“çš„ç½‘ç»œçŠ¶æ€
+     * @param context Context
+     * @return true è¡¨ç¤ºç½‘ç»œå¯ç”¨
+     */
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            if(cm.getActiveNetworkInfo() != null) {
-                return cm.getActiveNetworkInfo().isConnected();
-            }
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager == null) {
+            return false;
         }
-        return false;
+        if( connectivityManager.getActiveNetworkInfo()==null){
+            return false;
+        }
+        return     connectivityManager.getActiveNetworkInfo().isAvailable();
     }
-    //GPSÊÇ·ñ¿ÉÓÃ
+
+    //GPS
     public static boolean isGpsEnabled(Context context) {
         LocationManager lm = ((LocationManager) context
                 .getSystemService(Context.LOCATION_SERVICE));
         List<String> accessibleProviders = lm.getProviders(true);
         return accessibleProviders != null && accessibleProviders.size() > 0;
     }
-    //ÅĞ¶ÏWIFIÊÇ·ñ´ò¿ª
+    //
     public static boolean isWifiEnabled(Context context) {
         ConnectivityManager mgrConn = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -41,7 +47,7 @@ public class NetworkStatusTools {
                 .getActiveNetworkInfo().getState() == NetworkInfo.State.CONNECTED) || mgrTel
                 .getNetworkType() == TelephonyManager.NETWORK_TYPE_UMTS);
     }
-    //ÊÇ·ñÊÇWI-FIÍøÂç
+    //
     public static boolean isWifi(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -52,7 +58,7 @@ public class NetworkStatusTools {
         }
         return false;
     }
-    //ÊÇ·ñÊÇ3GÍøÂç
+    //
     public static boolean is3G(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

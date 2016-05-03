@@ -44,7 +44,7 @@ public class shareToWiexin {
         return shareSucceed;
     }
     /**
-     * ·ÖÏíÍ¼Æ¬¸øºÃÓÑ
+     *
      *
      */
     private static int shareToFriend(Activity context) {

@@ -20,25 +20,24 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 /**
- * ??????????
- * 
+ *
  * @author Administrator
  * 
  */
 public class BitmapTools {
-	// ??????л??Bitmap
+	//Bitmap
 	//
 	// 1 Resources res = getResources();
 	// 2 Bitmap bmp = BitmapFactory.decodeResource(res, R.drawable.icon);
 
-	// 2??Bitmap ?? byte[]
+	// 2Bitmap byte[]
 	public static byte[] Bitmap2Bytes(Bitmap bm) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
 		return baos.toByteArray();
 	}
 
-	// 3??byte[] ?? Bitmap
+	// byte[] Bitmap
 	public static Bitmap Bytes2Bimap(byte[] b) {
 		if (b.length != 0) {
 			return BitmapFactory.decodeByteArray(b, 0, b.length);
@@ -47,7 +46,6 @@ public class BitmapTools {
 		}
 	}
 
-	// 4??Bitmap????
 	public static Bitmap zoomBitmap(Bitmap bitmap, int width, int height) {
 		int w = bitmap.getWidth();
 		int h = bitmap.getHeight();
@@ -59,26 +57,23 @@ public class BitmapTools {
 		return newbmp;
 	}
 
-	// 5????Drawable????Bitmap
 	public static Bitmap drawableToBitmap(Drawable drawable) {
-		// ? drawable ?????
+
 		int w = drawable.getIntrinsicWidth();
 		int h = drawable.getIntrinsicHeight();
 
-		// ? drawable ????????
 		Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
 				: Bitmap.Config.RGB_565;
-		// ??????? bitmap
+
 		Bitmap bitmap = Bitmap.createBitmap(w, h, config);
-		// ??????? bitmap ?????
+
 		Canvas canvas = new Canvas(bitmap);
 		drawable.setBounds(0, 0, w, h);
-		// ?? drawable ?????????????
+
 		drawable.draw(canvas);
 		return bitmap;
 	}
 
-	// 6??????????
 	public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
 		int w = bitmap.getWidth();
 		int h = bitmap.getHeight();
@@ -98,7 +93,6 @@ public class BitmapTools {
 		return output;
 	}
 
-	// 7?????????????
 	public static Bitmap createReflectionImageWithOrigin(Bitmap bitmap) {
 		final int reflectionGap = 4;
 		int w = bitmap.getWidth();
@@ -134,40 +128,37 @@ public class BitmapTools {
 		return bitmapWithReflection;
 	}
 
-	// ????Drawable
+	// Drawable
 	//
-	// 1??Bitmap?????Drawable
 	//
-	// 1 Bitmap bm=xxx; //xxx?????????????2 BitmapDrawable bd= new
+	// 1 Bitmap bm=xxx; //2 BitmapDrawable bd= new
 	// BitmapDrawable(getResource(), bm); 3
-	// ???BtimapDrawable??Drawable????????????????bd????ɡ?
-	// 2??Drawable????
+	// BtimapDrawable
+	// 2Drawable
 	public static Drawable zoomDrawable(Drawable drawable, int w, int h) {
 		int width = drawable.getIntrinsicWidth();
 		int height = drawable.getIntrinsicHeight();
-		// drawable?????bitmap
+
 		Bitmap oldbmp = drawableToBitmap(drawable);
-		// ?????????????Matrix????
+
 		Matrix matrix = new Matrix();
-		// ???????????
+
 		float sx = ((float) w / width);
 		float sy = ((float) h / height);
-		// ???????????
+
 		matrix.postScale(sx, sy);
-		// ???????bitmap????????????bitmap?????????
+
 		Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height,
 				matrix, true);
 		return new BitmapDrawable(newbmp);
 	}
 	/**
-	 * ?????????????? dp ???λ ???? px(????)
 	 */
 	public static int dp2px(Context context,float dipValue){
 		final float scale=context.getResources().getDisplayMetrics().density;
 		return (int)(dipValue*scale+0.5f);
 	}
 	/**
-	 * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
 	 */
 	public static int px2dip(Context context, float pxValue) {
 		final float scale = context.getResources().getDisplayMetrics().density;

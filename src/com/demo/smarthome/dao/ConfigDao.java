@@ -9,8 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Êı¾İ¿âÅäÖÃĞÅÏ¢ÊµÏÖÀà
- * 
+ * é…ç½®
  * @author Administrator
  * 
  */
@@ -24,7 +23,7 @@ public class ConfigDao implements ConfigService {
 	}
 
 	/**
-	 * Í¨¹ı¼üµÃµ½¶ÔÓ¦µÄÖµ
+	 *
 	 */
 	@Override
 	public String getCfgByKey(String key) {
@@ -60,7 +59,7 @@ public class ConfigDao implements ConfigService {
 	}
 
 	/**
-	 * ±£´æ¼üÖµ¶Ô
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
 	 */
 	@Override
 	public boolean SaveSysCfgByKey(String key, String value) {
@@ -81,10 +80,10 @@ public class ConfigDao implements ConfigService {
 
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		try {
-			if (findConfigByKey(db, key)) { // ÓĞ¼ÇÂ¼
+			if (findConfigByKey(db, key)) { // ï¿½Ğ¼ï¿½Â¼
 				// update
 				flag = updateConfig(db, key, value);
-			} else { // ÎŞ¼ÇÂ¼ insert
+			} else { // ï¿½Ş¼ï¿½Â¼ insert
 				flag = insertConfig(db, key, value);
 			}
 			flag = true;
@@ -101,9 +100,9 @@ public class ConfigDao implements ConfigService {
 
 	// =====
 	/**
-	 * ¸ù¾İID,²éÕÒÒ»Ìõ¼ÇÂ¼µÄid,Ã»ÓĞµÄ»°£¬·µ»Øfalse
+	 *
 	 * 
-	 * @param true
+	 * @param
 	 * @return
 	 * */
 	private boolean findConfigByKey(SQLiteDatabase db, String key) {
@@ -126,12 +125,11 @@ public class ConfigDao implements ConfigService {
 	}
 
 	/**
-	 * ¸üĞÂÊı¾İ¿âÖĞµÄ¼üÖµ¶Ô
 	 * 
 	 * @param db
-	 *            Êı¾İ¿â
+	 *
 	 * @param key
-	 *            ¼ü
+	 *
 	 * @param value
 	 *            Öµ
 	 * @return
@@ -156,7 +154,6 @@ public class ConfigDao implements ConfigService {
 	}
 
 	/**
-	 * ²åÈëÊı¾İ¿âÖĞµÄ¼üÖµ¶Ô
 	 * 
 	 * @param db
 	 * @param key

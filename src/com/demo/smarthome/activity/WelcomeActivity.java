@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.*;
 import android.app.Activity;
@@ -130,10 +132,11 @@ public class WelcomeActivity extends Activity {
 							.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									WelcomeActivity.this.finish();
+									finish();
 								}
 							});
 					failAlert.create().show();
+
 					break;
 				case FINISH:
 					finish();
@@ -170,6 +173,10 @@ public class WelcomeActivity extends Activity {
 		new CheckVersionThread().start();
 	}
 
+ 	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+	}
 //	@Override
 //	public boolean onCreateOptionsMenu(Menu menu) {
 //		// Inflate the menu; this adds items to the action bar if it is present.
@@ -269,6 +276,7 @@ public class WelcomeActivity extends Activity {
 			handler.sendMessage(msg);
 		}
 	}
+
 	/*
      *
      */

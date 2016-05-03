@@ -41,26 +41,26 @@ public class Msg implements IMsg {
 		// MSGCMD m = MSGCMD.CMD0A;
 	}
 
-	private byte[] id = new byte[0];// 16进制MAC地址(8Byte),设备号,不足前面补 0
+	private byte[] id = new byte[0];
 	private int packLen;
 	private int dataLen;
-	private MSGCMDTYPE cmdType = MSGCMDTYPE.CMDTYPE_A0; // 命令类别
-	private MSGCMD cmd = MSGCMD.CMD00; // 命令
-	private boolean checkOk; // 正确的报文
-	private boolean isACK; // 确认回答
-	private boolean isNoACK; // 否认回答
-	private boolean isSponse; // 是否需要回复
+	private MSGCMDTYPE cmdType = MSGCMDTYPE.CMDTYPE_A0;
+	private MSGCMD cmd = MSGCMD.CMD00;
+	private boolean checkOk;
+	private boolean isACK;
+	private boolean isNoACK;
+	private boolean isSponse;
 	private MSGSTATE state;
 	private short crc;
 	private byte[] data;
-	private byte[] deCode; // 接收后去掉译码的编码
-	private byte[] enCode; // 发送前没有转译的编码
-	private byte[] recvData; // 接收到的数据
-	private byte[] sendData; // 要发送的数据
-	private String[] result; // 开始可以存储传递的参数 ，根据cmdTYpe 和cmd 解析的字符串结果。
+	private byte[] deCode; //
+	private byte[] enCode; //
+	private byte[] recvData; //
+	private byte[] sendData; //
+	private String[] result; //
 
-	private byte[] torken = new byte[0];// 通信令牌，登录成功后才有此字段,第一字节表示长度
-	private int info = 0; // 2个字节 扩展信息 包括序号，加密等其它扩展
+	private byte[] torken = new byte[0];//
+	private int info = 0; //
 
 	public byte[] getId() {
 		return id;
@@ -227,7 +227,6 @@ public class Msg implements IMsg {
 	}
 
 	// / <summary>
-	// / 消息是不是登录成功标示
 	// / </summary>
 	// / <returns></returns>
 	public boolean msgTypeIsLoginOk() {
@@ -241,7 +240,6 @@ public class Msg implements IMsg {
 	}
 
 	// / <summary>
-	// / 是不是指定命令的确认回复
 	// / </summary>
 	// / <param name="cmdType"></param>
 	// / <param name="cmd"></param>
@@ -280,7 +278,6 @@ public class Msg implements IMsg {
 	// }
 
 	// / <summary>
-	// / 指定命令的确认回复和主动提交
 	// / </summary>
 	// / <param name="cmdType"></param>
 	// / <param name="cmd"></param>

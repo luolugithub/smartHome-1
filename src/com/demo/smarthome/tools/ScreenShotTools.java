@@ -18,7 +18,7 @@ import com.demo.smarthome.staticString.StringRes;
  */
 public class ScreenShotTools {
     /**
-     * 进行截取屏幕
+     *
      * @param pActivity
      * @return bitmap
      */
@@ -26,30 +26,29 @@ public class ScreenShotTools {
     {
         Bitmap bitmap=null;
         View view=pActivity.getWindow().getDecorView();
-        // 设置是否可以进行绘图缓存
+        //
         view.setDrawingCacheEnabled(true);
-        // 如果绘图缓存无法，强制构建绘图缓存
+        //
         view.buildDrawingCache();
-        // 返回这个缓存视图
+        //
         bitmap=view.getDrawingCache();
 
-        // 获取状态栏高度
+        //
         Rect frame=new Rect();
-        // 测量屏幕宽和高
+        //
         view.getWindowVisibleDisplayFrame(frame);
         int stautsHeight=frame.top;
-        Log.d("jiangqq", "状态栏的高度为:"+stautsHeight);
 
         int width=pActivity.getWindowManager().getDefaultDisplay().getWidth();
         int height=pActivity.getWindowManager().getDefaultDisplay().getHeight();
-        // 根据坐标点和需要的宽和高创建bitmap
+        //
         bitmap=Bitmap.createBitmap(bitmap, 0, stautsHeight, width, height-stautsHeight);
         return bitmap;
     }
 
 
     /**
-     * 保存图片到sdcard中
+     *
      * @param pBitmap
      */
     private static boolean savePic(Bitmap pBitmap,String strName) {
@@ -71,20 +70,20 @@ public class ScreenShotTools {
         return false;
     }
     /**
-     * 截图
+     *
      * @param pActivity
-     * @return 截图并且保存sdcard成功返回true，否则返回false
+     * @return
      */
     public static boolean shotBitmap(Activity pActivity)
     {
         File file=new File(shotFileName());
-        /*判断file2文件夹路径存在与否,不存在则创建*/
+
         if(!file.exists()){
             new File(file.getParent()).mkdirs();
         }
         return  savePic(takeScreenShot(pActivity), shotFileName());
     }
-    //截图的文件名
+    //
     public static String shotFileName(){
         return StringRes.screenShotFileName;
     }

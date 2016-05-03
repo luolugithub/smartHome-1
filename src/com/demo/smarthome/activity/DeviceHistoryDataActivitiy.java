@@ -1,6 +1,8 @@
 package com.demo.smarthome.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,7 +10,9 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -65,7 +69,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
     Button shareBtn;
 
     String currentDay;
-
+    String tomorrow;
 
     static int shareSucceed     = 0;
     static int fileNotExist     = 1;
@@ -89,13 +93,13 @@ public class DeviceHistoryDataActivitiy extends Activity {
                         }
                     }
                     dialogView.closeMyDialog();
-                    Toast.makeText(getApplicationContext(), "Œﬁ¿˙ ∑ ˝æ›", Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), "Êó†ÂéÜÂè≤Êï∞ÊçÆ", Toast.LENGTH_SHORT)
                             .show();
                     finish();
                     break;
                 case GET_DATA_FAIL:
                     dialogView.closeMyDialog();
-                    Toast.makeText(getApplicationContext(), "¡¨Ω”∑˛ŒÒ∆˜ ß∞‹", Toast.LENGTH_SHORT)
+                    Toast.makeText(getApplicationContext(), "Ëé∑ÂèñÊï∞ÊçÆÂ§±Ë¥•", Toast.LENGTH_SHORT)
                             .show();
                     finish();
                     break;
@@ -111,6 +115,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_device_history_data);
 
         Button backBtn = (Button) findViewById(R.id.backBtn);
@@ -125,7 +130,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
 
         if(Cfg.currentDeviceID.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "«Î÷ÿ–¬—°‘Ò…Ë±∏", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "ËÆæÂ§áÈîôËØØ,ËØ∑ÈáçÊñ∞ÈÄâÊã©", Toast.LENGTH_SHORT)
                     .show();
             Intent intent = new Intent();
             intent.setClass(DeviceHistoryDataActivitiy.this, MainActivity.class);
@@ -135,38 +140,47 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
         historyDataViewItem = (DeviceHistoryDataView)findViewById(R.id.historyDataView);
         //for various screen
-        if(Cfg.phoneWidth == 480){
-            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    BitmapTools.dp2px(DeviceHistoryDataActivitiy.this, 280)));
-        }else if(Cfg.phoneWidth == 1440){
-            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    BitmapTools.dp2px(DeviceHistoryDataActivitiy.this, 400)));
-        }
+//        if(Cfg.phoneWidth == 480){
+//            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    BitmapTools.dp2px(DeviceHistoryDataActivitiy.this, 280)));
+//        }else if(Cfg.phoneWidth == 1440){
+//            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    BitmapTools.dp2px(DeviceHistoryDataActivitiy.this, 400)));
+//        }
         shareBtn = (Button)findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener(new shareToTimeline());
 
         dayBtn = (Button)findViewById(R.id.todayBtn);
-        dayBtn.setOnClickListener(new showViewByDay());
+        dayBtn.setOnTouchListener(showViewByDay);
         weekBtn = (Button)findViewById(R.id.weekBtn);
-        weekBtn.setOnClickListener(new showViewByWeek());
+        weekBtn.setOnTouchListener(showViewByWeek);
         monthBtn = (Button)findViewById(R.id.monthBtn);
-        monthBtn.setOnClickListener(new showViewByMonth());
+        monthBtn.setOnTouchListener(showViewByMonth);
 
         SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
         currentDay = dfs.format(new java.util.Date());
+
+        Calendar cal = Calendar.getInstance();
+        //30th day before today
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        tomorrow = dfs.format(cal.getTime());
+
         //wait dialog
         dialogView = new MyDialogView(DeviceHistoryDataActivitiy.this);
         //network is available or not
         if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
             currentType = type_outline;
-            Toast.makeText(getApplicationContext(), "ŒﬁÕ¯¬Á", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "Êó†ÁΩëÁªú", Toast.LENGTH_SHORT)
                     .show();
             drawHistoryData(currentType, dayDataList);
         }else {
-            dialogView.showMyDialog("ªÒ»° ˝æ›", "«Îµ»¥˝.....");
+            dialogView.showMyDialog("ËØªÂèñÊï∞ÊçÆ", "Ê≠£Âú®ËØªÂèñÊï∞ÊçÆ");
             currentType = type_day;
+            dayBtn.setBackgroundResource(R.drawable.day_check);
+            weekBtn.setBackgroundResource(R.drawable.week);
+            monthBtn.setBackgroundResource(R.drawable.month);
             new getDataByDay().start();
         }
 
@@ -177,73 +191,101 @@ public class DeviceHistoryDataActivitiy extends Activity {
         public void onClick(View v) {
             if(shareToWiexin.shareToWeiXinTimeline(DeviceHistoryDataActivitiy.this)
                     != shareSucceed){
-                Toast.makeText(DeviceHistoryDataActivitiy.this, "∑÷œÌµΩ≈Û”—»¶ ß∞‹", Toast.LENGTH_SHORT)
-                        .show();
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(DeviceHistoryDataActivitiy.this);
+                alertDialog.setTitle("ÈîôËØØ").setIcon(R.drawable.error_01).setMessage("ËØ∑Á°ÆÂÆöÂæÆ‰ø°ÂèØ‰ª•ÂêØÂä®")
+                        .setPositiveButton("Á°ÆÂÆö", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                return;
+                            }
+                        });
+                alertDialog.create().show();
             }
         }
     }
 
-    class showViewByDay implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(dialogView.isDialogRunning())
-            {
-                return;
-            }
+    private View.OnTouchListener showViewByDay = new View.OnTouchListener(){
 
-            if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
-                currentType = type_outline;
-                Toast.makeText(getApplicationContext(), "ŒﬁÕ¯¬Á", Toast.LENGTH_SHORT)
-                        .show();
-                drawHistoryData(currentType, dayDataList);
-            }else {
-                dialogView.showMyDialog("ªÒ»° ˝æ›", "«Îµ»¥˝.....");
-                currentType = type_day;
-                new getDataByDay().start();
+        public boolean onTouch(View view, MotionEvent event) {
+            int iAction = event.getAction();
+            if (iAction == MotionEvent.ACTION_DOWN) {
+                dayBtn.setBackgroundResource(R.drawable.day_check);
+                weekBtn.setBackgroundResource(R.drawable.week);
+                monthBtn.setBackgroundResource(R.drawable.month);
+            } else if (iAction == MotionEvent.ACTION_UP) {
+                if (dialogView.isDialogRunning() || currentType == type_day) {
+                    return false;
+                }
+
+                if (!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)) {
+                    currentType = type_outline;
+                    Toast.makeText(getApplicationContext(), "Êó†ÁΩëÁªú", Toast.LENGTH_SHORT)
+                            .show();
+                    drawHistoryData(currentType, dayDataList);
+                } else {
+                    dialogView.showMyDialog("ËØªÂèñÊï∞ÊçÆ", "Ê≠£Âú®ËØªÂèñÊï∞ÊçÆ");
+                    currentType = type_day;
+                    new getDataByDay().start();
+                }
             }
+            return false;
         }
-    }
-    class showViewByWeek implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(dialogView.isDialogRunning())
-            {
-                return;
-            }
+    };
 
-            if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
-                currentType = type_outline;
-                Toast.makeText(getApplicationContext(), "ŒﬁÕ¯¬Á", Toast.LENGTH_SHORT)
-                        .show();
-                drawHistoryData(currentType, dayDataList);
-            }else {
-                dialogView.showMyDialog("ªÒ»° ˝æ›", "«Îµ»¥˝.....");
-                currentType = type_week;
-                new getDataByWeek().start();
-            }
+    private View.OnTouchListener showViewByWeek = new View.OnTouchListener(){
+        public boolean onTouch(View view, MotionEvent event) {
+            int iAction = event.getAction();
+            if (iAction == MotionEvent.ACTION_DOWN) {
+                dayBtn.setBackgroundResource(R.drawable.day);
+                weekBtn.setBackgroundResource(R.drawable.week_check);
+                monthBtn.setBackgroundResource(R.drawable.month);
+            } else if (iAction == MotionEvent.ACTION_UP) {
+                if (dialogView.isDialogRunning() || currentType == type_week) {
+                    return false;
+                }
 
+                if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
+                    currentType = type_outline;
+                    Toast.makeText(getApplicationContext(), "Êó†ÁΩëÁªú", Toast.LENGTH_SHORT)
+                            .show();
+                    drawHistoryData(currentType, dayDataList);
+                }else {
+                    dialogView.showMyDialog("ËØªÂèñÊï∞ÊçÆ", "Ê≠£Âú®ËØªÂèñÊï∞ÊçÆ");
+                    currentType = type_week;
+                    new getDataByWeek().start();
+                }
+
+            }
+            return false;
         }
-    }
-    class showViewByMonth implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(dialogView.isDialogRunning())
-            {
-                return;
-            }
+    };
 
-            if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
-                currentType = type_outline;
-                Toast.makeText(getApplicationContext(), "ŒﬁÕ¯¬Á", Toast.LENGTH_SHORT)
-                        .show();
-                drawHistoryData(currentType, dayDataList);
-            }else {
-                dialogView.showMyDialog("ªÒ»° ˝æ›", "«Îµ»¥˝.....");
-                currentType = type_month;
-                new getDataByMonth().start();
+    private View.OnTouchListener showViewByMonth = new View.OnTouchListener(){
+        public boolean onTouch(View view, MotionEvent event) {
+            int iAction = event.getAction();
+            if (iAction == MotionEvent.ACTION_DOWN) {
+                dayBtn.setBackgroundResource(R.drawable.day);
+                weekBtn.setBackgroundResource(R.drawable.week);
+                monthBtn.setBackgroundResource(R.drawable.month_check);
+            } else if (iAction == MotionEvent.ACTION_UP) {
+                if (dialogView.isDialogRunning() || currentType == type_month) {
+                    return false;
+                }
+                if(!NetworkStatusTools.isNetworkAvailable(DeviceHistoryDataActivitiy.this)){
+                    currentType = type_outline;
+                    Toast.makeText(getApplicationContext(), "Êó†ÁΩëÁªú", Toast.LENGTH_SHORT)
+                            .show();
+                    drawHistoryData(currentType, dayDataList);
+                }else {
+                    dialogView.showMyDialog("ËØªÂèñÊï∞ÊçÆ", "Ê≠£Âú®ËØªÂèñÊï∞ÊçÆ");
+                    currentType = type_month;
+                    new getDataByMonth().start();
+                }
             }
+            return false;
         }
-    }
+    };
     class getDataByDay extends Thread {
 
         @Override
@@ -293,14 +335,13 @@ public class DeviceHistoryDataActivitiy extends Activity {
             //get date today
             SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
 
-
             Calendar cal = Calendar.getInstance();
-            //7th day before today
+            //30th day before today
             cal.add(Calendar.DAY_OF_MONTH, -6);
             String beforeAWeek = dfs.format(cal.getTime());
 
-            String[] paramsName = {"deviceID", "today","beforeWeek"};
-            String[] paramsValue = {Cfg.currentDeviceID, currentDay,beforeAWeek};
+            String[] paramsName = {"deviceID","beforeWeek"};
+            String[] paramsValue = {Cfg.currentDeviceID,beforeAWeek};
 
 
             setServerURL regiterUser = new setServerURL();
@@ -338,14 +379,13 @@ public class DeviceHistoryDataActivitiy extends Activity {
             //get date today
             SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
 
-
             Calendar cal = Calendar.getInstance();
             //30th day before today
             cal.add(Calendar.DAY_OF_MONTH, -29);
             String beforeAMonth = dfs.format(cal.getTime());
 
-            String[] paramsName = {"deviceID", "today","beforeMonth"};
-            String[] paramsValue = {Cfg.currentDeviceID, currentDay,beforeAMonth};
+            String[] paramsName = {"deviceID","beforeMonth"};
+            String[] paramsValue = {Cfg.currentDeviceID,beforeAMonth};
 
 
             setServerURL regiterUser = new setServerURL();
@@ -387,7 +427,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
     private void SetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //???????
+        //
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getHcho())) {
                 maxValue = Integer.parseInt(data.get(i).getHcho());

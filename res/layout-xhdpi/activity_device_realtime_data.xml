@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="0dp"
     android:layout_marginTop="0dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/realtime_data_backgroud" >
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="60dp"
@@ -13,19 +14,22 @@
 
         <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="60dp" >
+            android:layout_height="wrap_content" >
 
             <Button android:id="@+id/devicelist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="设备列表"/>
+                android:layout_width="30dp"
+                android:layout_height="27dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/device_list"/>
+
             <Button android:id="@+id/shareBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="right"
-                android:layout_marginRight="10dp"
-                android:text="分享"/>
+                android:layout_marginRight="20dp"
+                android:background="@drawable/share"/>
         </FrameLayout>
     </LinearLayout>
     <LinearLayout
@@ -39,14 +43,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor= "#038b4d"
+            android:textColor= "@color/sbc_layout_view"
             android:textSize="25sp"
             android:text="种类"/>
     </LinearLayout>
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal" >
         <TextView
             android:id="@+id/temperature"
@@ -54,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginLeft="10dp"
+            android:textColor= "@color/sbc_layout_view"
             android:layout_marginBottom="10dp"
             android:textSize="18sp"
             android:text="温度"/>
@@ -62,14 +67,14 @@
             android:id="@+id/CircleData"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            ProgressWheel:barColor="#339BB9"
+            ProgressWheel:barColor="@color/palegreen"
             android:layout_gravity="center"
             ProgressWheel:barWidth="4dp"
-            ProgressWheel:rimColor="#44000000"
+            ProgressWheel:rimColor="@color/sbc_header_view"
             ProgressWheel:rimWidth="6dp"
             ProgressWheel:spinSpeed="3dp"
             ProgressWheel:text="0"
-            ProgressWheel:textColor="#5e8b7e"
+            ProgressWheel:textColor="@color/sbc_header_view"
             ProgressWheel:textSize="14sp" />
         <TextView
             android:id="@+id/dampness"
@@ -79,49 +84,83 @@
             android:layout_marginRight="18dp"
             android:layout_marginBottom="10dp"
             android:textSize="18sp"
+            android:textColor= "@color/sbc_layout_view"
             android:text="湿度"/>
     </FrameLayout>
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:paddingLeft="15dp">
+        android:layout_height="52dp"
+        android:layout_marginTop="52dp"
+        android:orientation="vertical">
 
-        <Button android:id="@+id/hchoBtn"
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:text="甲醛"/>
-        <Button android:id="@+id/tvocBtn"
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:text="TVOC"/>
-        <Button android:id="@+id/pm2_5Btn"
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:text="PM 2.5"/>
-        <Button android:id="@+id/pm10Btn"
-            android:layout_width="90dp"
-            android:layout_height="60dp"
-            android:text="PM 10"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/bule_line"/>
+        <TextView android:id="@+id/presentation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:textColor= "@color/sbc_layout_view"
+            android:textSize="18sp"
+            android:text="提示"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="15dp">
-        <Button android:id="@+id/historyDataBtn"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:text="趋势"/>
-        <Button android:id="@+id/weatherBtn"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:text="天气"/>
-        <Button android:id="@+id/resignBtn"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:text="注销"/>
+        android:layout_marginTop="25dp">
+
+        <Button android:id="@+id/hchoBtn"
+            android:layout_width="72dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="14dp"
+            android:background="@drawable/hcho"/>
+
+        <Button android:id="@+id/tvocBtn"
+            android:layout_width="72dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/tvoc"/>
+
+        <Button android:id="@+id/pm2_5Btn"
+            android:layout_width="72dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/pm2_5"/>
+
+        <Button android:id="@+id/pm10Btn"
+            android:layout_width="72dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/pm10"/>
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="32dp">
+
+        <Button android:id="@+id/historyDataBtn"
+            android:layout_width="40dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="70dp"
+            android:background="@drawable/history"/>
+        <TextView
+            android:id = "@+id/center_vertical_line"
+            android:layout_width="2dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/historyDataBtn"
+            android:background="@drawable/vertical_line"/>
+        <Button android:id="@+id/resignBtn"
+            android:layout_width="40dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="70dp"
+            android:layout_toRightOf="@id/center_vertical_line"
+            android:background="@drawable/resign"/>
+    </RelativeLayout>
 </LinearLayout>

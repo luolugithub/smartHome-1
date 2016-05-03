@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -149,8 +150,7 @@ public class DeviceHistoryDataView extends View {
 		drawAllYLine(canvas);
 		// 点的操作设置
 		mPoints = getPoints();
-		//为了适应低版本的手机
-		mPaint.setColor(res.getColor(R.color.viewfinder_laser));
+		mPaint.setColor(ContextCompat.getColor(mContext,R.color.result_points));
 		mPaint.setStrokeWidth(dip2px(mPaintWidth));
 		mPaint.setStyle(Style.STROKE);
 		//曲线还是直线
@@ -182,11 +182,11 @@ public class DeviceHistoryDataView extends View {
 		for (int i = 0; i < spacingHeight + 1; i++) {
 			//轴坐标线颜色不一样
 			if( i == 0){
-				XlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				XlinePaint.setColor(ContextCompat.getColor(mContext,R.color.sbc_header_text));
 				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
 						bheight - (bheight / spacingHeight) * i + marginTop, XlinePaint);
 			}else{
-				linePaint.setColor(res.getColor(R.color.help_button_view));
+				linePaint.setColor(ContextCompat.getColor(mContext,R.color.sbc_header_view));
 				canvas.drawLine(blwidh, bheight - (bheight / spacingHeight) * i + marginTop, canvasWidth - blwidh,
 						bheight - (bheight / spacingHeight) * i + marginTop, linePaint);
 			}
@@ -243,11 +243,11 @@ public class DeviceHistoryDataView extends View {
 
 			//轴坐标线颜色不一样
 			if( i == 0){
-				YlinePaint.setColor(res.getColor(R.color.sbc_snippet_text));
+				YlinePaint.setColor(ContextCompat.getColor(mContext,R.color.sbc_header_text));
 				canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
 						+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, YlinePaint);
 			}else{
-				linePaint.setColor(res.getColor(R.color.help_button_view));
+				linePaint.setColor(ContextCompat.getColor(mContext,R.color.sbc_header_view));
 				canvas.drawLine(blwidh + (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, marginTop, blwidh
 						+ (canvasWidth - 2 * blwidh) / (xSpaceCount - 1) * i, bheight + marginTop, linePaint);
 			}
@@ -354,7 +354,7 @@ public class DeviceHistoryDataView extends View {
 
 		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
 		p.setTextSize(dip2px(12));
-		p.setColor(res.getColor(R.color.sbc_header_text));
+		p.setColor(ContextCompat.getColor(mContext,R.color.sbc_header_view));
 		p.setTextAlign(Paint.Align.LEFT);
 		canvas.drawText(text, x, y, p);
 	}

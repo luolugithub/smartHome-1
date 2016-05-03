@@ -32,7 +32,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 /**
- * Socket服务类
+ * Socket
  * 
  * @author Administrator
  * 
@@ -70,26 +70,26 @@ public class SocketService extends Service {
 	IProtocol protocol = new PlProtocol();
 
 	void putSocketData() {
-		synchronized (this) {/* 区块 */
+		synchronized (this) {/**/
 
 		}
 	}
 
 	void gutSocketData() {
-		synchronized (this) {/* 区块 */
+		synchronized (this) {/**/
 
 		}
 	}
 
 	int heartbeatCount = 0;
-	int HeartbeatMax = 30;// 30秒发送心跳
+	int HeartbeatMax = 30;//
 	int noDataCount = 0;
 	Thread socketHeartbeatThread = new Thread() {
 
 		@Override
 		public void run() {
 			int heartbeatCount = 0;
-			int HeartbeatMax = 30;// 0秒发送心跳
+			int HeartbeatMax = 30;//
 			while (socketThreadIsRun) {
 				try {
 					Thread.sleep(1000);
@@ -107,7 +107,7 @@ public class SocketService extends Service {
 							Log.i(TAG, DateTools.getNowTimeString()
 									+ "==>heartbeatCoun  time out! socketOut:"
 									+ socketOut);
-							heartbeatCount = 0; // 心跳
+							heartbeatCount = 0; //
 
 							msg.setCmdType(MSGCMDTYPE.valueOf(0xA0));
 							msg.setCmd(MSGCMD.valueOf(0x01));
@@ -116,17 +116,15 @@ public class SocketService extends Service {
 							msg.setDataLen(0);
 							protocol.MessageEnCode(msg);
 							if (!(socketOut == null)) {
-								// Log.i(TAG, "==发送 心跳指令！");
 								sendStr = msg.getSendData();
 								try {
 									Log.i(TAG,
 											DateTools.getNowTimeString()
-													+ "==>发送 心跳指令！"
+													+ ""
 													+ StrTools
 															.bytesToHexString(sendStr));
 									socketOut.write(sendStr);
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 							}
@@ -138,7 +136,7 @@ public class SocketService extends Service {
 						// Log.i(TAG, DateTools.getNowTimeString()
 						// + "==>noDataCount:" + noDataCount
 						// + "    HeartbeatMax * 3:" + (HeartbeatMax * 3));
-						if (noDataCount >= HeartbeatMax * 3) { // socket无有效数据
+						if (noDataCount >= HeartbeatMax * 3) { // socket
 							noDataCount = 0; //
 							socketClose();
 						}
@@ -158,20 +156,18 @@ public class SocketService extends Service {
 			// TODO Auto-generated method stub
 			int len;
 			// int heartbeatCount = 0;
-			// int HeartbeatMax = 300;// 0秒发送心跳
+			// int HeartbeatMax = 300;//
 			// int noDataCount = 0;
 			while (socketThreadIsRun) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				if (socket == null) {
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if ("".equals(ipAddr)) {
@@ -188,16 +184,13 @@ public class SocketService extends Service {
 						socketIn = socket.getInputStream();
 
 					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						socketClose();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						socketClose();
 						continue;
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						socketClose();
 						continue;
@@ -209,7 +202,7 @@ public class SocketService extends Service {
 
 				} else {// socket connect...
 
-					if (!isLogin) {// 发送登录指令
+					if (!isLogin) {//
 						msg.setCmdType(MSGCMDTYPE.valueOf(0xA0));
 						msg.setCmd(MSGCMD.valueOf(0x00));
 						msg.setId(Cfg.userId);
@@ -219,7 +212,6 @@ public class SocketService extends Service {
 						protocol.MessageEnCode(msg);
 						if (!(socketOut == null)) {
 							sendStr = msg.getSendData();
-							// Log.i(TAG, "==发送 登录指令！");
 							// Log.i(TAG, "==msg.setTorken:" +
 							// msg.getTorken()+"");
 							// Log.i(TAG, "==msg.setTorken:"
@@ -233,7 +225,7 @@ public class SocketService extends Service {
 							try {
 								Log.i(TAG,
 										DateTools.getNowTimeString()
-												+ "==>发送 登录指令！"
+												+ ""
 												+ StrTools.bytesToHexString(sendStr));
 								socketOut.write(sendStr);
 							} catch (IOException e) {
@@ -248,14 +240,14 @@ public class SocketService extends Service {
 							e.printStackTrace();
 						}
 
-						// } else {// 登录成功
+						// } else {//
 						// heartbeatCount++;
 						// Log.i(TAG,DateTools.getNowTimeString()+
 						// "==>heartbeatCount:"+heartbeatCount+"    HeartbeatMax:"+HeartbeatMax);
 						// if (heartbeatCount >= HeartbeatMax) {
 						// Log.i(TAG,DateTools.getNowTimeString()+
 						// "==>heartbeatCoun  time out! socketOut:"+socketOut);
-						// heartbeatCount = 0; // 心跳
+						// heartbeatCount = 0; //
 						//
 						// msg.setCmdType(MSGCMDTYPE.valueOf(0xA0));
 						// msg.setCmd(MSGCMD.valueOf(0x01));
@@ -264,11 +256,10 @@ public class SocketService extends Service {
 						// msg.setDataLen(0);
 						// protocol.MessageEnCode(msg);
 						// if (!(socketOut == null)) {
-						// // Log.i(TAG, "==发送 心跳指令！");
 						// sendStr = msg.getSendData();
 						// try {
 						// Log.i(TAG,DateTools.getNowTimeString()+
-						// "==>发送 心跳指令！"+StrTools.bytesToHexString( sendStr ));
+						// ""+StrTools.bytesToHexString( sendStr ));
 						// socketOut.write(sendStr);
 						// } catch (IOException e) {
 						// // TODO Auto-generated catch block
@@ -282,26 +273,20 @@ public class SocketService extends Service {
 						// noDataCount++; //
 						// Log.i(TAG,DateTools.getNowTimeString()+
 						// "==>noDataCount:"+noDataCount+"    HeartbeatMax * 3:"+(HeartbeatMax*3));
-						// if (noDataCount >= HeartbeatMax * 3) { // socket无有效数据
+						// if (noDataCount >= HeartbeatMax * 3) { //
 						// noDataCount = 0; //
 						// socketClose();
 						// }
 
 					}
 					try {
-						Log.i(TAG, DateTools.getNowTimeString()
-								+ "==read Data start！");
 						len = socketIn.read(buffer);
-						Log.i(TAG, DateTools.getNowTimeString()
-								+ "==read Data end！");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						len = 0;
 
 						socketClose();
 						e.printStackTrace();
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						len = 0;
 
 						socketClose();
@@ -309,10 +294,8 @@ public class SocketService extends Service {
 					}
 					if (len > 0) {
 						Log.i(TAG, DateTools.getNowTimeString()
-								+ "==code Data start！");
+								+ "==code Data start");
 						noDataCount = 0;
-						System.out.println("接收数据 长度:" + len);
-						System.out.println("buffer:" + buffer);
 						// o.write(buffer,0,len);
 						System.arraycopy(buffer, 0, data, dataLength, len);
 						dataLength += len;
@@ -340,8 +323,6 @@ public class SocketService extends Service {
 										&& (msg.getCmd() == MSGCMD.CMD00)) {
 									isLogin = true;
 
-									Log.i(TAG, DateTools.getNowTimeString()
-											+ "==socket登录成功！");
 								}
 								if (msg.isSponse()) {
 									socketSendMessage(msg);
@@ -350,8 +331,6 @@ public class SocketService extends Service {
 							}
 
 						}
-						Log.i(TAG, DateTools.getNowTimeString()
-								+ "==code Data end！");
 
 					}
 
@@ -364,19 +343,16 @@ public class SocketService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		Log.i(TAG, "=======onBind");
 		return socketBinder;
 	}
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		// WifiManager manager = (WifiManager) this
 		// .getSystemService(Context.WIFI_SERVICE);
 		// UdpHelper udphelper = new UdpHelper(manager);
 		//
-		// //传递WifiManager对象，以便在UDPHelper类里面使用MulticastLock
 		// udphelper.addObserver(SocketService.this);
 		// tReceived = new Thread(udphelper);
 		// tReceived.start();
@@ -396,13 +372,11 @@ public class SocketService extends Service {
 
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		Log.i(TAG, "xxxxxxxxxxxonDestroy");
 		socketThreadIsRun = false;
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		socketClose();
@@ -411,16 +385,16 @@ public class SocketService extends Service {
 
 	public void myMethod() {// String strIpAddr, int port
 		Log.i(TAG, " myMethod");
-		Log.i(TAG, "ip：" + ipAddr + "   port:" + port + "    strIpAddr:"
+		Log.i(TAG, "ip" + ipAddr + "   port:" + port + "    strIpAddr:"
 				+ ipAddr + "    port:" + port + "      socketIsConnected:");
 
 	}
 
 	public void myMethod(int args) {// String strIpAddr, int port
 		Log.i(TAG, " myMethod args:" + args);
-		Toast.makeText(SocketService.this, "正在执行", Toast.LENGTH_SHORT).show();
+		Toast.makeText(SocketService.this, "", Toast.LENGTH_SHORT).show();
 		// Log.i(TAG,
-		// "ip："+ipAddr+"   port:"+port+"    strIpAddr:"+ipAddr+"    port:"+port+
+		// "ip"+ipAddr+"   port:"+port+"    strIpAddr:"+ipAddr+"    port:"+port+
 		// "      socketIsConnected:"+socketIsConnected);
 
 	}
@@ -481,9 +455,7 @@ public class SocketService extends Service {
 		}
 		try {
 			socketOut.write(sendData);
-			Log.i(TAG,
-					"=发送数据=socketSendMessage== send ok hex:"
-							+ StrTools.bytesToHexString(sendData));
+
 			// StrTools.printHexString(sendData);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -535,10 +507,10 @@ public class SocketService extends Service {
 		boolean connOk = false;
 		intent.setAction(Cfg.SendBoardCastName);
 		if (isConnect) {
-			str += "   连接成功。";
+			str += "   ";
 			connOk = true;
 		} else {
-			str += "   连接断开。";
+			str += "   ";
 		}
 		intent.putExtra("result", str);
 		intent.putExtra("conn", connOk);
@@ -575,8 +547,8 @@ public class SocketService extends Service {
 					e1.printStackTrace();
 				}
 				try {
-					local = InetAddress.getByName(Hostip); // 本机测试
-					// local = InetAddress.getLocalHost(); // 本机测试
+					local = InetAddress.getByName(Hostip); //
+					// local = InetAddress.getLocalHost(); //
 					System.out.println("local:" + local);
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
@@ -584,7 +556,7 @@ public class SocketService extends Service {
 					continue;
 				}
 				try {
-					dSocket = new DatagramSocket(port); // 注意此处要先在配置文件里设置权限,否则会抛权限不足的异常
+					dSocket = new DatagramSocket(port);
 				} catch (SocketException e) {
 					e.printStackTrace();
 					System.out

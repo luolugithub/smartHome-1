@@ -39,6 +39,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.demo.smarthome.view.MyDialogView;
 
+
+/*
+ * å·²åºŸå¼ƒ
+ */
+
 public class historyDataActivity extends Activity {
 
     TextView title = null;
@@ -59,12 +64,12 @@ public class historyDataActivity extends Activity {
 
     String userSetDate;
 
-    //???????????????Y??????
+    //
     float YmaxValue;
-    //?????õô???Y??????§³
+    //
     float YaverageValue;
 
-    //?????PM2.5??PM10
+    //
     boolean pmFlag = false;
 
     //time step length (second)
@@ -102,10 +107,10 @@ public class historyDataActivity extends Activity {
                     dataSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            dialogView.showMyDialog("?????????", "???????????§Ø?????????,????");
+                            dialogView.showMyDialog("", "");
                             userSetDate = dateList.get(position);
                             if (userSetDate.isEmpty()) {
-                                Toast.makeText(getApplicationContext(), "???????????", Toast.LENGTH_SHORT)
+                                Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT)
                                         .show();
                                 return;
                             }
@@ -122,7 +127,7 @@ public class historyDataActivity extends Activity {
                 case GET_DATA_SUCCED:
 
                     if(dataType.isEmpty()||allDataList == null) {
-                        Toast.makeText(getApplicationContext(), "???????", Toast.LENGTH_SHORT)
+                        Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT)
                                 .show();
                         return;
                     }
@@ -142,7 +147,7 @@ public class historyDataActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE); // ??????
+        requestWindowFeature(Window.FEATURE_NO_TITLE); //
 
         setContentView(R.layout.activity_history_data);
 
@@ -159,7 +164,7 @@ public class historyDataActivity extends Activity {
         dataSpinner = (Spinner)findViewById(R.id.dataSpinner);
 
         if(Cfg.currentDeviceID.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "?õôID????", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
@@ -168,14 +173,14 @@ public class historyDataActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         dataType = bundle.getString("dataName");
-        //????????????
+        //
         viewType = (TextView) findViewById(R.id.viewType);
         if(dataType.isEmpty()){
-            Toast.makeText(getApplicationContext(), "???????", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
-        //????????????????????????????????§³
+        //
         if(Cfg.phoneWidth == 480){
             historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -187,7 +192,7 @@ public class historyDataActivity extends Activity {
         }
 
         if(dataType.equals("hcho")){
-            viewType.setText("???");
+            viewType.setText("ç”²é†›");
         }else if(dataType.equals("pm2_5")) {
             viewType.setText("PM2.5");
         }else if(dataType.equals("pm10")){
@@ -195,13 +200,13 @@ public class historyDataActivity extends Activity {
         }else if(dataType.equals("tvoc")){
             viewType.setText("TVOC");
         }else {
-            Toast.makeText(getApplicationContext(), "???????", Toast.LENGTH_SHORT)
+            Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
-        //?????
+        //
         dialogView = new MyDialogView(historyDataActivity.this);
-        dialogView.showMyDialog("?????????", "???????????§Ø?????????,????");
+        dialogView.showMyDialog("", "");
 
         new getDateList().start();
 
@@ -303,15 +308,15 @@ public class historyDataActivity extends Activity {
             handler.sendMessage(message);
         }
     }
-    //???????????????????
+    //
     private int drawLineByHistoryData(String type,List<DeviceDataSet> allData){
 
         int result = DRAW_FAIL;
 
         if(type.equals("hcho")){
-            //????Y??????
+            //
             hchoSetYMaxValue(allData);
-            //???????????????????1000??
+            //
             SetDateToline(allData,type,100);
             historyDataViewItem.setyUnit(this.getResources()
                     .getString(R.string.device_hcho_unit));
@@ -336,11 +341,11 @@ public class historyDataActivity extends Activity {
         return result;
     }
 
-    //????hcho???????????Y??????
+    //
     private void hchoSetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //???????
+        //
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getHcho())) {
                 maxValue = Integer.parseInt(data.get(i).getHcho());
@@ -358,11 +363,11 @@ public class historyDataActivity extends Activity {
             YaverageValue = 0.2f;
         }
     }
-    //????1000
+    //
     private void pm2_5SetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //???????
+        //
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getPm2_5())){
                 maxValue = Integer.parseInt(data.get(i).getPm2_5());
@@ -390,11 +395,11 @@ public class historyDataActivity extends Activity {
         }
         pmFlag = true;
     }
-    //????1000
+    //
     private void pm10SetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //???????
+        //
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getPm10())){
                 maxValue = Integer.parseInt(data.get(i).getPm10());
@@ -422,11 +427,11 @@ public class historyDataActivity extends Activity {
         }
         pmFlag = true;
     }
-    //????5.00
+    //
     private void tvocSetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //???????
+        //
         for(int i = 0;i < data.size();i++) {
             if(maxValue < Integer.parseInt(data.get(i).getTvoc())){
                 maxValue = Integer.parseInt(data.get(i).getTvoc());
@@ -455,7 +460,7 @@ public class historyDataActivity extends Activity {
     }
 
     /*
-    *   ???????????timeStepLength?????????,???????????????
+    *
      */
     private void SetDateToline(List<DeviceDataSet> allData,String dataType,int unitChange){
         String tempTime = userSetDate + " 00:00:00";
@@ -469,11 +474,11 @@ public class historyDataActivity extends Activity {
             Date CreateTime = dfs.parse(allData.get(0).getCreateTime());
             for(i = 0,j=0; i < stepCount ;i++){
 
-                //??????????????
+                //
                 diff = (int)((CreateTime.getTime() - Start.getTime())/1000);
-                //????????????§Õ????????????????5????
+                //
                 if(diff < timeStepLength && j < allData.size()) {
-                    //???????§Ø?????????????????¦Ë
+                    //
                     if(dataType.equals("hcho")) {
                         value = ((double) Integer.parseInt(allData.get(j).getHcho())) / unitChange;
                     }else if(dataType.equals("tvoc")) {

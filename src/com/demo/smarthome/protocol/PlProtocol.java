@@ -13,7 +13,6 @@ import com.demo.smarthome.tools.IpTools;
 import com.demo.smarthome.tools.StrTools;
 
 /**
- * 协议类
  * 
  * @author Administrator
  * 
@@ -47,22 +46,22 @@ public class PlProtocol implements IProtocol {
 		da = new byte[len * 2];
 
 		// buff[index++] = 0x55;
-		// 长度
+
 		buff[index++] = (byte) (len % 256);
 		buff[index++] = (byte) (len / 256);
-		// 命令类别
+
 		buff[index++] = (byte) ((msg.getCmdType().val()) % 256);
-		// 命令字
+
 		buff[index++] = (byte) (msg.getCmd().val() % 256);
-		// 扩展信息 包括序号，加密等其它扩展
+
 		buff[index++] = 0;
 		buff[index++] = 0;
 		buff[index++] = 0;
 		buff[index++] = 0;
-		// 状态
+
 		buff[index++] = (byte) (msg.getState().val());
 
-		// 设备ID
+
 		torken = msg.getId();
 		val = torken.length;
 
@@ -74,7 +73,6 @@ public class PlProtocol implements IProtocol {
 			}
 		}
 
-		// Torken 通信令牌，登录成功后才有此字段,第一字节表示长度
 		torken = msg.getTorken();
 		if (torken == null) {
 			val = 0;
@@ -111,7 +109,7 @@ public class PlProtocol implements IProtocol {
 		daLength = 0;
 		index = 0;
 		da[index++] = 0x55;
-		for (i = 0; i < buffLength; i++, index++)// 编码 55=> 54 01 54=> 54 02
+		for (i = 0; i < buffLength; i++, index++)// 锟斤拷锟斤拷 55=> 54 01 54=> 54 02
 		{
 			da[index] = buff[i];
 			if (buff[i] == 0x55) {
@@ -150,7 +148,7 @@ public class PlProtocol implements IProtocol {
 		}else{
 			da[daLength++] =csVal;
 		}
-		// 包尾
+
 		da[daLength++] = 0x55;
 		msg.setSendData(new byte[daLength]);
 		System.arraycopy(da, 0, msg.getSendData(), 0, daLength);
@@ -158,7 +156,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 封装发送数据
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="listStr"></param>
@@ -239,7 +236,6 @@ public class PlProtocol implements IProtocol {
 		System.arraycopy(b, 0, data, index, 4);
 		index += 4;
 
-		// 子网掩码
 		str = listStr[strIndex++];
 		if (str == null) {
 			error = true;
@@ -248,7 +244,6 @@ public class PlProtocol implements IProtocol {
 		System.arraycopy(b, 0, data, index, 4);
 		index += 4;
 
-		// 默认网关
 		str = listStr[strIndex++];
 		if (str == null) {
 			error = true;
@@ -257,7 +252,6 @@ public class PlProtocol implements IProtocol {
 		System.arraycopy(b, 0, data, index, 4);
 		index += 4;
 
-		// 端口
 		str = listStr[strIndex++];
 		val = StrTools.stringToInt(str);
 		if ((val >= 0) && (val <= 65535)) {
@@ -268,7 +262,7 @@ public class PlProtocol implements IProtocol {
 			error = true;
 		}
 
-		if (!error) //
+		if (!error)
 		{
 			msg.setDataLen(data.length);
 			msg.setData(data);
@@ -296,10 +290,9 @@ public class PlProtocol implements IProtocol {
 			return ok;
 		}
 		byte[] data = new byte[42];
-		// 参数个数
+
 		data[index++] = 0x06;
 		data[index++] = 0;
-		// 主服务器IP地址
 
 		data[index++] = 0x01;
 		data[index++] = 0;
@@ -310,7 +303,7 @@ public class PlProtocol implements IProtocol {
 		b = IpTools.getIpV4Byte(str);
 		System.arraycopy(b, 0, data, index, 4);
 		index += 4;
-		// 端口
+
 
 		data[index++] = 0x02;
 		data[index++] = 0;
@@ -323,14 +316,13 @@ public class PlProtocol implements IProtocol {
 		} else {
 			error = true;
 		}
-		// 主服务器密码
+
 
 		data[index++] = 0x03;
 		data[index++] = 0;
 		str = listStr[strIndex++];
 		index += 8;
 
-		// 备用服务器IP地址
 
 		data[index++] = 0x04;
 		data[index++] = 0;
@@ -342,7 +334,6 @@ public class PlProtocol implements IProtocol {
 		System.arraycopy(b, 0, data, index, 4);
 		index += 4;
 
-		// 端口
 
 		data[index++] = 0x05;
 		data[index++] = 0;
@@ -909,8 +900,7 @@ public class PlProtocol implements IProtocol {
 		return listResultMsg;
 	}
 
-	private List<byte[]> recvDataToList(Buff bu) { // 把接收到的数据一条分解成多条
-													// int index = 0;
+	private List<byte[]> recvDataToList(Buff bu) {
 
 		System.out
 				.println("private List<byte[]> recvDataToList( byte[] data start......bu.length:"
@@ -932,9 +922,8 @@ public class PlProtocol implements IProtocol {
 		for (; i < bu.data.length; i++) {
 			buff[buffLength++] = bu.data[i];
 			if (bu.data[i] == 0x55) {
-				if (start) { // 结束了
+				if (start) {
 					// ok = false;
-					// 通过 返回byte【】 ，不通过返回null；
 					da = checkStrMsg(buff, buffLength);
 					if (da != null) {
 						listData.add(da);
@@ -964,11 +953,10 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 检查消息是否正确
 	// / </summary>
 	// / <param name="data"></param>
 	// / <param name="len"></param>
-	// / <returns></returns>// 通过 返回byte【】 ，不通过返回null；
+	// / <returns></returns>
 	private byte[] checkStrMsg(byte[] data, int len) {
 		System.out
 				.println(" private byte[] checkStrMsg(byte[] data, int len) start......len:"
@@ -978,7 +966,6 @@ public class PlProtocol implements IProtocol {
 		int i = 0;
 		int buffLength = 0;
 		buff = new byte[len * 2];
-		// 把0x54 0x02还原成0x54 把0x54 0x01还原成0x55
 		buff[buffLength++] = 0x55;
 		for (i = 1; i < len - 1; i++) {
 			buff[buffLength++] = data[i];
@@ -1021,7 +1008,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 把byte[]组装成msg
 	// / </summary>
 	// / <param name="data"></param>
 	// / <returns></returns>
@@ -1037,24 +1023,22 @@ public class PlProtocol implements IProtocol {
 		Msg msg = new Msg();
 		String torken = "";
 		byte[] da;
-		// 长度
+
 		len = StrTools.byteToUint(data[2]);
 		len *= 256;
 		len += StrTools.byteToUint(data[1]);
 		msg.setPackLen(len);
-		// 命令类别
+
 		msg.setCmdType(MSGCMDTYPE.valueOf(data[3] & 0xFF));
 		System.out.println("data[3]:" + data[3]);
 		System.out.println("msg.getCmdType():" + msg.getCmdType());
-		// 命令字
+
 		msg.setCmd(MSGCMD.valueOf(data[4] & 0xFF));
 		System.out.println("data[4]:" + data[4]);
 		System.out.println("msg.getCmd():" + msg.getCmd());
-		// 命令序号 data[5][6]
-		// 扩展信息 data[7][8]
-		// 状态
+
 		msg.setState(MSGSTATE.valueOf(data[9]));
-		// 设备ID
+
 		byte[] b = new byte[8];
 		b[0] = data[10];
 		b[1] = data[11];
@@ -1085,7 +1069,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 解码
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <returns></returns>
@@ -1122,25 +1105,23 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之前运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageBfore(Msg msg) {
-		if (msg.getState() == MSGSTATE.MSG_SEND_OK) // 命令返回的结果，成功。
+		if (msg.getState() == MSGSTATE.MSG_SEND_OK)
 		{
 			msg.setAck(true);
-		} else if (msg.getState() == MSGSTATE.MSG_SEND_ERROE)// 命令返回的结果，失败。
+		} else if (msg.getState() == MSGSTATE.MSG_SEND_ERROE)
 		{
 			msg.setNoAck(true);
 
-		} else // 请求命令
+		} else
 		{
 			msg.setAck(false);
 		}
 	}
 
 	// / <summary>
-	// / 方法之后运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageAfter(Msg msg) {
@@ -1168,27 +1149,25 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之前运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageA0Bfore(Msg msg) {
-		// if (msg.getState() == MSGSTATE.MSG_SEND_OK) //命令返回的结果，成功。
+		// if (msg.getState() == MSGSTATE.MSG_SEND_OK)
 		// {
 		// msg.setAck(true);
 		// }
-		// else if (msg.getState() == MSGSTATE.MSG_SEND_ERROE)//命令返回的结果，失败。
+		// else if (msg.getState() == MSGSTATE.MSG_SEND_ERROE)
 		// {
 		// msg.setNoAck(true);
 
 		// }
-		// else //请求命令
+		// else
 		// {
 		// msg.setAck(false);
 		// }
 	}
 
 	// / <summary>
-	// / 方法之后运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageA0After(Msg msg) {
@@ -1218,7 +1197,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之前运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageAABfore(Msg msg) {
@@ -1226,7 +1204,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之后运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageAAAfter(Msg msg) {
@@ -1262,7 +1239,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之前运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageACBfore(Msg msg) {
@@ -1270,7 +1246,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之后运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageACAfter(Msg msg) {
@@ -1306,7 +1281,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之前运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageF0Bfore(Msg msg) {
@@ -1314,7 +1288,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之后运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageF0After(Msg msg) {
@@ -1338,7 +1311,7 @@ public class PlProtocol implements IProtocol {
 			listResultMsg = DeCodeMessageEF01(msg);
 		} else if (MSGCMD.CMD06 == msg.getCmd()) {
 			listResultMsg = DeCodeMessageEF06(msg);
-		} else if (MSGCMD.CMD07 == msg.getCmd()) {	//设备被删除
+		} else if (MSGCMD.CMD07 == msg.getCmd()) {	//锟借备锟斤拷删锟斤拷
 			listResultMsg = DeCodeMessageEF07(msg);
 		}
 		// switch (msg.cmd)
@@ -1356,7 +1329,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之前运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageEFBfore(Msg msg) {
@@ -1364,7 +1336,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之后运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessageEFAfter(Msg msg) {
@@ -1372,15 +1343,12 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 方法之前运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessage0ABfore(Msg msg) {
 
 	}
 
-	// / <summary>
-	// / 方法之后运行
 	// / </summary>
 	// / <param name="msg"></param>
 	private void DeCodeMessage0AAfter(Msg msg) {
@@ -1388,7 +1356,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 A0 00
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1399,7 +1366,7 @@ public class PlProtocol implements IProtocol {
 				.println(" private List<Msg> DeCodeMessageA000(Msg msg) start......msg:"
 						+ msg.getId());
 		List<Msg> listResultMsg = new ArrayList<Msg>();
-		if (msg.getState() == MSGSTATE.MSG_SEND_OK) { // 命令返回的结果，成功或失败。
+		if (msg.getState() == MSGSTATE.MSG_SEND_OK) {
 			// if (MessageEnCode(msg))
 			{
 				System.out
@@ -1407,7 +1374,7 @@ public class PlProtocol implements IProtocol {
 				Cfg.tcpTorken = msg.getData();
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1417,7 +1384,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 03 02
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1429,12 +1395,12 @@ public class PlProtocol implements IProtocol {
 						+ msg.getId());
 		List<Msg> listResultMsg = new ArrayList<Msg>();
 		if ((msg.getState() == MSGSTATE.MSG_SEND_OK)
-				|| (msg.getState() == MSGSTATE.MSG_SEND_ERROE)) { // 命令返回的结果，成功或失败。
+				|| (msg.getState() == MSGSTATE.MSG_SEND_ERROE)) {
 			// if (MessageEnCode(msg))
 			{
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 			msg.setSponse(true);
 			listResultMsg.add(msg);
@@ -1444,7 +1410,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 04 01 设置控制器时段信息（0x0001）
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1461,11 +1426,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1473,7 +1438,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 04 02
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1484,7 +1448,7 @@ public class PlProtocol implements IProtocol {
 		System.out.println("DeCodeMessageAAEE");
 		List<Msg> listResultMsg = new ArrayList<Msg>();
 		if ((msg.getState() == MSGSTATE.MSG_SEND)
-				|| (msg.getState() == MSGSTATE.MSG_SEND_OK)) { // 命令返回的结果，成功或失败。
+				|| (msg.getState() == MSGSTATE.MSG_SEND_OK)) {
 			String id = StrTools.byteHexNumToStr(msg.getId());
 			Dev dev = Cfg.getDevById(id);
 			if (dev == null) {
@@ -1502,12 +1466,12 @@ public class PlProtocol implements IProtocol {
 				if (info[0].equals("LIGHT")) {
 					if (!info[1].equals("?")) {
 						String[] txtVal = info[1].split(";");
-						if (txtVal[0].equals("1")) {// 开灯
+						if (txtVal[0].equals("1")) {
 							dev.setLightState(true);
 
-							System.out.println("DeCodeMessageAAEE 开灯");
-						} else if (txtVal[0].equals("0")) {// 关灯
-							System.out.println("DeCodeMessageAAEE 关灯");
+							System.out.println("DeCodeMessageAAEE 锟斤拷锟斤拷");
+						} else if (txtVal[0].equals("0")) {
+							System.out.println("DeCodeMessageAAEE 锟截碉拷");
 							dev.setLightState(false);
 						} else {
 							System.out.println("DeCodeMessageAAEE 未知");
@@ -1568,7 +1532,7 @@ public class PlProtocol implements IProtocol {
 			// if (MessageEnCode(msg)) {
 			// listResultMsg.add(msg);
 			// }
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1576,7 +1540,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 04 03
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1584,7 +1547,7 @@ public class PlProtocol implements IProtocol {
 	private List<Msg> DeCodeMessageAAFF(Msg msg) {
 		// ok = true;
 		List<Msg> listResultMsg = new ArrayList<Msg>();
-		if ((msg.getState() == MSGSTATE.MSG_SEND_OK)) { // 命令返回的结果，成功或失败。
+		if ((msg.getState() == MSGSTATE.MSG_SEND_OK)) {
 			String id = StrTools.byteHexNumToStr(msg.getId());
 			Dev dev = Cfg.getDevById(id);
 			if (dev == null) {
@@ -1597,9 +1560,9 @@ public class PlProtocol implements IProtocol {
 			String[] info = new String(data).split(":");
 			if (info.length != 2) {
 				if ((info[0].equals("LIGHT")) && (!info[1].equals("?"))) {
-					if (info[1].equals("1")) {// 开灯
+					if (info[1].equals("1")) {
 						dev.setLightState(true);
-					} else if (info[1].equals("0")) {// 关灯
+					} else if (info[1].equals("0")) {
 						dev.setLightState(false);
 					} else {
 
@@ -1623,7 +1586,7 @@ public class PlProtocol implements IProtocol {
 			// if (MessageEnCode(msg)) {
 			// listResultMsg.add(msg);
 			// }
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1631,7 +1594,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 06 02
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1654,19 +1616,19 @@ public class PlProtocol implements IProtocol {
 						// DHCP
 						value = StrTools.byteToUint(data[dataIndex++]);
 						strList[index++] = value + "";
-						// IP地址
+
 						strList[index++] = IpTools.getIpV4StringByByte(data,
 								dataIndex);
 						dataIndex += 4;
-						// 子网掩码
+
 						strList[index++] = IpTools.getIpV4StringByByte(data,
 								dataIndex);
 						dataIndex += 4;
-						// 默认网关
+
 						strList[index++] = IpTools.getIpV4StringByByte(data,
 								dataIndex);
 						dataIndex += 4;
-						// 端口号
+
 						value = StrTools.byteToUint(data[dataIndex++]) * 256;
 						value += StrTools.byteToUint(data[dataIndex++]);
 						strList[index++] = value + "";
@@ -1674,11 +1636,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1706,36 +1668,36 @@ public class PlProtocol implements IProtocol {
 						byte[] data = msg.getData();
 						index = 0;
 						dataIndex = 0;
-						// 主服务器IP地址
+
 						strList[index++] = IpTools.getIpV4StringByByte(data,
 								dataIndex);
 						dataIndex += 4;
-						// 主服务器端口
+
 						value = StrTools.byteToUint(data[dataIndex++]) * 256;
 						value += StrTools.byteToUint(data[dataIndex++]);
 						strList[index++] = value + "";
-						// 主服务器密码(不用)
+
 						dataIndex += 8;
 						strList[index++] = "";
-						// 备用服务器IP地址
+
 						strList[index++] = IpTools.getIpV4StringByByte(data,
 								dataIndex);
 						dataIndex += 4;
-						// 备用服务器端口
+
 						value = StrTools.byteToUint(data[dataIndex++]) * 256;
 						value += StrTools.byteToUint(data[dataIndex++]);
 						strList[index++] = value + "";
-						// 备用服务器密码(不用)
+
 						strList[index++] = "";
 						msg.setResult(strList);
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1777,11 +1739,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1817,11 +1779,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1859,11 +1821,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1871,7 +1833,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 07 04
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1899,11 +1860,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1911,7 +1872,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 07 05
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1932,11 +1892,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1944,7 +1904,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 07 06
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1970,11 +1929,11 @@ public class PlProtocol implements IProtocol {
 					}
 				}
 			}
-			// 命令返回的结果，成功或失败。
+
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -1982,7 +1941,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 09 01
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -1991,16 +1949,16 @@ public class PlProtocol implements IProtocol {
 		// ok = true;
 		List<Msg> listResultMsg = new ArrayList<Msg>();
 		if ((msg.getState() == MSGSTATE.MSG_SEND_OK)
-				|| (msg.getState() == MSGSTATE.MSG_SEND_ERROE)) { // 命令返回的结果，成功或失败。
+				|| (msg.getState() == MSGSTATE.MSG_SEND_ERROE)) {
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 				if (msg.getState() == MSGSTATE.MSG_SEND_OK) {
-					Log.i(TAG, DateTools.getNowTimeString() + "==> socket登录成功！");
+					Log.i(TAG, DateTools.getNowTimeString() + "==> socket锟斤拷录锟缴癸拷锟斤拷");
 				} else if (msg.getState() == MSGSTATE.MSG_SEND_ERROE) {
-					Log.i(TAG, DateTools.getNowTimeString() + "==>socket登录失败！");
+					Log.i(TAG, DateTools.getNowTimeString() + "==>socket锟斤拷录失锟杰ｏ拷");
 				}
 			}
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -2008,7 +1966,6 @@ public class PlProtocol implements IProtocol {
 	}
 
 	// / <summary>
-	// / 命令 09 02
 	// / </summary>
 	// / <param name="msg"></param>
 	// / <param name="ok"></param>
@@ -2017,16 +1974,16 @@ public class PlProtocol implements IProtocol {
 		// ok = true;
 		List<Msg> listResultMsg = new ArrayList<Msg>();
 		if ((msg.getState() == MSGSTATE.MSG_SEND_OK)
-				|| (msg.getState() == MSGSTATE.MSG_SEND_ERROE)) { // 命令返回的结果，成功或失败。
+				|| (msg.getState() == MSGSTATE.MSG_SEND_ERROE)) {
 			if (MessageEnCode(msg)) {
 				listResultMsg.add(msg);
 				if (msg.getState() == MSGSTATE.MSG_SEND_OK) {
-					Log.i(TAG, DateTools.getNowTimeString() + "==> socket心跳成功！");
+					Log.i(TAG, DateTools.getNowTimeString() + "==> socket锟斤拷锟斤拷锟缴癸拷锟斤拷");
 				} else if (msg.getState() == MSGSTATE.MSG_SEND_ERROE) {
-					Log.i(TAG, DateTools.getNowTimeString() + "==>socket心跳失败！");
+					Log.i(TAG, DateTools.getNowTimeString() + "==>socket锟斤拷锟斤拷失锟杰ｏ拷");
 				}
 			}
-		} else // 请求命令
+		} else
 		{
 			msg.setState(MSGSTATE.MSG_SEND_OK);
 			msg.setSponse(true);
@@ -2041,9 +1998,9 @@ public class PlProtocol implements IProtocol {
 	 */
 	private List<Msg> DeCodeMessageEF06(Msg msg) {
 		List<Msg> listResultMsg = new ArrayList<Msg>();
-		if (msg.getState() == MSGSTATE.MSG_SEND_OK) { // 命令返回的结果，成功或失败。
+		if (msg.getState() == MSGSTATE.MSG_SEND_OK) {
 			Cfg.isSubmitDev = true;
-		} else // 请求命令
+		} else
 		{
 
 		}
@@ -2052,9 +2009,9 @@ public class PlProtocol implements IProtocol {
 
 	private List<Msg> DeCodeMessageEF07(Msg msg) {
 		List<Msg> listResultMsg = new ArrayList<Msg>();
-		if (msg.getState() == MSGSTATE.MSG_SEND_OK) { // 命令返回的结果，成功或失败。
+		if (msg.getState() == MSGSTATE.MSG_SEND_OK) {
 			Cfg.isDeleteDev = true;
-		} else // 请求命令
+		} else
 		{
 
 		}

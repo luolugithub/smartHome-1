@@ -58,14 +58,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 /**
- * Ö÷½çÃæÀà
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
  * @author Administrator
  * 
  */
 public class MainActivity extends Activity {
 
-	//ºóÌ¨×ªµ½Ç°Ì¨
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -108,10 +107,8 @@ public class MainActivity extends Activity {
 	ConfigService dbService;
 
 	Handler handler = new Handler() {
-
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			failAlert = new AlertDialog.Builder(MainActivity.this);
 			switch (msg.what) {
@@ -126,7 +123,7 @@ public class MainActivity extends Activity {
 
 			case BUTTON_DELETE:
 				dialogView.closeMyDialog();
-				Toast.makeText(getApplicationContext(), "³É¹¦É¾³ıÉè±¸", Toast.LENGTH_SHORT)
+				Toast.makeText(getApplicationContext(), "åˆ é™¤è®¾å¤‡æˆåŠŸ", Toast.LENGTH_SHORT)
 						.show();
 				finish();
 				tempIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -135,7 +132,7 @@ public class MainActivity extends Activity {
 
 			case DELETE_ERROR:
 				dialogView.closeMyDialog();
-				Toast.makeText(MainActivity.this, "É¾³ıÉè±¸Ê§°Ü£¡", Toast.LENGTH_SHORT)
+				Toast.makeText(MainActivity.this, "åˆ é™¤è®¾å¤‡å¤±è´¥", Toast.LENGTH_SHORT)
 						.show();
 
 				break;
@@ -144,27 +141,27 @@ public class MainActivity extends Activity {
 				break;
 			case FIND_DEV_SUCCEED:
 				dialogView.closeMyDialog();
-				//Èç¹û¸ÃÉè±¸ÒÑ¾­´æÔÚ
+
 				if(Cfg.devInfo != null) {
 					for (String devID : Cfg.devInfo) {
 						if (deviceInfo.getDeviceID().equals(devID)) {
-							failAlert.setTitle(" Ìí¼ÓÊ§°Ü").setIcon(R.drawable.cloud_fail).setMessage("   Ã»ÓĞĞÂµÄ±¾µØÉè±¸");
+							failAlert.setTitle("è­¦å‘Š").setIcon(R.drawable.warning_01).setMessage("è¯·å‹¿é‡å¤ç»‘å®šè®¾å¤‡");
 							failAlert.create().show();
 							return;
 						}
 					}
 				}
-				failAlert.setTitle(" Ìí¼Ó±¾µØÉè±¸").setMessage("   ÊÇ·ñÌí¼Ó±¾µØÉè±¸\n  Éè±¸ID:"+ deviceInfo.getDeviceID())
-				.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+				failAlert.setTitle("å‘ç°è®¾å¤‡").setMessage("å‘ç°è®¾å¤‡ ID:"+ deviceInfo.getDeviceID())
+				.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
-						//µÈ´ı¿ò
+
 						dialogView = new MyDialogView(MainActivity.this);
-						dialogView.showMyDialog("Ìí¼ÓÉè±¸µ½ÔÆ¶Ë", "ÕıÔÚÌí¼Ó±¾µØÉè±¸µ½ÔÆ¶Ë,ÇëµÈ´ı");
+						dialogView.showMyDialog("æ·»åŠ è®¾å¤‡", "æ­£åœ¨æ·»åŠ è®¾å¤‡,è¯·ç¨ç­‰");
 						new addDeviceThread().start();
 					}
-				}).setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+				}).setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
@@ -175,12 +172,12 @@ public class MainActivity extends Activity {
 			case FIND_DEV_TIMEOUT:
 				dialogView.closeMyDialog();
 
-				failAlert.setTitle(" Ìí¼ÓÊ§°Ü").setIcon(R.drawable.cloud_fail).setMessage("   ÎŞ·¨ÕÒµ½±¾µØÉè±¸");
+				failAlert.setTitle("é”™è¯¯").setIcon(R.drawable.error_01).setMessage("è¯·æ£€æŸ¥è®¾å¤‡æ˜¯å¦ä¸ºæœç´¢ç½‘ç»œæ¨¡å¼");
 				failAlert.create().show();
 					break;
 			case ADD_DEV_SUCCED:
 				dialogView.closeMyDialog();
-				Toast.makeText(MainActivity.this, "Ìí¼ÓÉè±¸³É¹¦", Toast.LENGTH_SHORT)
+				Toast.makeText(MainActivity.this, "æ·»åŠ è®¾å¤‡æˆåŠŸè¿‡", Toast.LENGTH_SHORT)
 						.show();
 				tempIntent = new Intent(MainActivity.this, DeviceRealtimeDataActivity.class);
 				startActivity(tempIntent);
@@ -198,7 +195,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // ×¢ÒâË³Ğò
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 
 		TextView title = (TextView) findViewById(R.id.titleMain);
@@ -219,14 +216,13 @@ public class MainActivity extends Activity {
 		listView = (ListView) findViewById(R.id.devListView);
 
 		dbService = new ConfigDao(MainActivity.this.getBaseContext());
-		//µÈ´ı¿ò
+
 		dialogView = new MyDialogView(MainActivity.this);
-		dialogView.showMyDialog("ÕıÔÚ»ñÈ¡Éè±¸", "ÕıÔÚ´Ó·şÎñÆ÷»ñÈ¡Éè±¸,ÇëµÈ´ı");
+		dialogView.showMyDialog("è¯»å–æ•°æ®", "...è¯·ç­‰å¾…");
 		new GetDevThread().start();
 
 	}
 
-	//²¶×½back¼ü
 	@Override
 	public void onBackPressed(){
 		Intent intent = getIntent();
@@ -247,29 +243,29 @@ public class MainActivity extends Activity {
 		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
 
 		if(Cfg.devInfo == null) {
-			Toast.makeText(MainActivity.this, "ÇëÌí¼ÓÉè±¸", Toast.LENGTH_SHORT)
+			Toast.makeText(MainActivity.this, "æ— ç»‘å®šè®¾å¤‡,è¯·ç»‘å®šè®¾å¤‡", Toast.LENGTH_SHORT)
 					.show();
 			return;
 		}
-		//Èç¹ûÃ»ÓĞÑ¡Ôñ¹ıÉè±¸,ÈÃËûÑ¡Ôñ.
+
 		if(Cfg.currentDeviceID.isEmpty())
 		{
-			Toast.makeText(MainActivity.this, "ÇëÑ¡ÔñÉè±¸", Toast.LENGTH_SHORT)
+			Toast.makeText(MainActivity.this, "è¯·é€‰æ‹©ç»‘å®šè®¾å¤‡", Toast.LENGTH_SHORT)
 					.show();
 		}
 		for (String devID : Cfg.devInfo) {
 			HashMap<String, Object> item = new HashMap<String, Object>();
 			item.put("id", devID);
-			item.put("name", "Î´¶¨Òå");
+			item.put("name", "æœªå‘½å");
 			data.add(item);
 		}
-		// ´´½¨SimpleAdapterÊÊÅäÆ÷½«Êı¾İ°ó¶¨µ½itemÏÔÊ¾¿Ø¼şÉÏ
+		//
 		SimpleAdapter adapter = new MySimpleAdapter(this, data,
 				R.layout.devitem, new String[] { "id", "name"},
 				new int[] { R.id.devId, R.id.devName});
-		// ÊµÏÖÁĞ±íµÄÏÔÊ¾
+		// Êµï¿½ï¿½ï¿½Ğ±ï¿½ï¿½ï¿½ï¿½Ê¾
 		listView.setAdapter(adapter);
-		// É¾³ı·Ö¸îÏß
+		// É¾ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½
 		listView.setDivider(null);
 
 		listView.setOnItemClickListener(new ItemClickListener());
@@ -282,7 +278,7 @@ public class MainActivity extends Activity {
 //	}
 
 
-	//½«Éè±¸ÁĞ±í´¢´æµ½Cfg.devInfo¾²Ì¬±äÁ¿ÖĞ
+
 	class GetDevThread extends Thread {
 		@Override
 		public void run() {
@@ -301,7 +297,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * Ë¢ĞÂ °´Å¥¼àÌıÊÂ¼ş
+	 * Ë¢ï¿½ï¿½ ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
 	 * 
 	 * @author Administrator
 	 * 
@@ -324,9 +320,9 @@ public class MainActivity extends Activity {
 			final View layout = inflater.inflate(R.layout.add_device_wifi_password, null);
 
 			AlertDialog.Builder myDialog = new AlertDialog.Builder(MainActivity.this)
-					.setTitle("ÇëÊäÈëÂ·ÓÉÆ÷ÃÜÂë");
+					.setTitle("è¯·è¾“å…¥WI-FIå¯†ç ");
 			myDialog.setView(layout);
-			myDialog.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+			myDialog.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					EditText userSetPassword = (EditText) layout.findViewById(R.id.apPassword);
@@ -334,15 +330,24 @@ public class MainActivity extends Activity {
 					SSIDisHidden = ((Switch)layout.findViewById(R.id.IsHiddenSSID)).isChecked();
 					dialog.dismiss();
 
-					//µÈ´ı¿ò
-					dialogView = new MyDialogView(MainActivity.this);
-					dialogView.showMyDialog("ÕıÔÚÌí¼ÓÉè±¸", "ÕıÔÚÉ¨Ãè±¾µØÖÇÄÜÓ²¼ş,ÇëµÈ´ı");
-					//É¨ÃèÉè±¸
-					new ConnectDevThread().start();
+					AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+					alertDialog.setTitle("æ³¨æ„").setMessage("è¯·ç¡®å®šå·²ç»å°†è®¾å¤‡è®¾ç½®æˆæœç´¢ç½‘ç»œæ¨¡å¼")
+							.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.dismiss();
+
+									dialogView = new MyDialogView(MainActivity.this);
+									dialogView.showMyDialog("æ³¨å†Œ", "æ­£åœ¨æ‰«æè®¾å¤‡,è¯·ç¨ç­‰");
+
+									new ConnectDevThread().start();
+								}
+							});
+					alertDialog.create().show();
 				}
 
 			});
-			myDialog.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+			myDialog.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog,
 									int which) {
@@ -352,7 +357,7 @@ public class MainActivity extends Activity {
 			myDialog.create().show();
 		}
 	}
-	//ÏÈÅäÖÃÉè±¸Á¬½ÓWI-FI,ÔÙÉ¨Ãè±¾µØÉè±¸»ñÈ¡±¾µØÉè±¸ID.
+
 	class ConnectDevThread extends Thread {
 		@Override
 		public void run() {
@@ -360,13 +365,13 @@ public class MainActivity extends Activity {
 
 			deviceInfo = new ConfigDevice(wifiPassword,SSIDisHidden, IpTools
 					.getIp((WifiManager) getSystemService(Context.WIFI_SERVICE)),MainActivity.this);
-			//¼ì²éÊÇ·ñÓĞÍøÂç
+
 			if(!NetworkStatusTools.isNetworkAvailable(MainActivity.this)){
 				message.what = FIND_DEV_TIMEOUT;
 				handler.sendMessage(message);
 				return;
 			}
-			//Ö´ĞĞÅäÖÃÏß³Ì
+
 			deviceInfo.configDeviceThread();
 			while(true){
 
@@ -428,7 +433,6 @@ public class MainActivity extends Activity {
 
 	}
 
-	// »ñÈ¡µã»÷ÊÂ¼ş
 	private final class ItemClickListener implements OnItemClickListener {
 
 		public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -440,13 +444,13 @@ public class MainActivity extends Activity {
 			String devId = (String) data.get("id");
 
 			if (devId == null) {
-				Toast.makeText(getApplicationContext(), "ÇëÖØĞÂÑ¡ÔñÉè±¸", Toast.LENGTH_SHORT)
+				Toast.makeText(getApplicationContext(), "è®¾å¤‡å‡ºç°é”™è¯¯", Toast.LENGTH_SHORT)
 						.show();
 				return;
 			}
-			// Ìø×ªµ½ÉèÖÃ½çÃæ
+
 			Cfg.currentDeviceID = devId;
-			//±£´æÑ¡ÔñÉè±¸
+
 			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
 
 			Intent listIntent = new Intent();
@@ -477,14 +481,12 @@ public class MainActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					Message message = new Message();
-					message.what = BUTTON_DELETE;
+					message.what = DELETE_ERROR;
 					message.arg1 = mPosition;
 
 					HashMap<String, Object> data1 = (HashMap<String, Object>) listView
 							.getItemAtPosition(message.arg1);
 					final String deleteDevId = (String) data1.get("id");
-
-					Log.i(TAG, "ItemClickListener devId£º" + deleteDevId);
 
 					if (deleteDevId == null) {
 
@@ -493,25 +495,24 @@ public class MainActivity extends Activity {
 
 						return;
 					}
-					//µ¯³ö"È·¶¨É¾³ı"¾¯Ê¾¿ò
+
 					AlertDialog.Builder deleteAlert = new AlertDialog.Builder(MainActivity.this);
-					deleteAlert.setTitle("  È·¶¨É¾³ı¸ÃÉè±¸?");
+					deleteAlert.setTitle("ç¡®å®šåˆ é™¤è¯¥è®¾å¤‡?");
 					deleteAlert.setIcon(R.drawable.delete_alert);
 
-					deleteAlert.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+					deleteAlert.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 
-							//µÈ´ı¿ò
 							dialogView = new MyDialogView(MainActivity.this);
-							dialogView.showMyDialog("É¾³ıÉè±¸ÖĞ", "ÕıÔÚ´Ó·şÎñÆ÷É¾³ıÉè±¸,ÇëµÈ´ı");
+							dialogView.showMyDialog("åˆ é™¤", "æ­£åœ¨åˆ é™¤è®¾å¤‡ä¸­");
 
 							new DelDevThread(deleteDevId).start();
 							return;
 						}
 					});
 
-					deleteAlert.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+					deleteAlert.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 
@@ -550,7 +551,6 @@ public class MainActivity extends Activity {
 
 			setServerURL removeUser= new setServerURL();
 
-			//ĞèÒªÅĞ¶Ï·şÎñÆ÷ÊÇ·ñ¿ªÆô
 			if((jsonResult = removeUser.sendParamToServer("removeDeviceById", paramsName, paramsValue)).isEmpty()){
 				message.what = SERVER_CONNECT_ERROR;
 				handler.sendMessage(message);

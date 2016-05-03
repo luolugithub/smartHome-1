@@ -16,7 +16,7 @@ public class MyDialogView {
         dialogView = new ProgressDialog(context);
     }
     public void showMyDialog(String title,String text){
-        //?????????????dialog
+
         if(showDialogFlag == true){
             return;
         }
@@ -30,7 +30,7 @@ public class MyDialogView {
             }
         });
         dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-                "ÇëµÈ´ý", new DialogInterface.OnClickListener() {
+                "è¯·ç­‰å¾…...", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -55,7 +55,7 @@ public class MyDialogView {
         return showDialogFlag;
     }
     public void closeMyDialog(){
-        //???dialog????§Ø????????
+        //???dialog????ï¿½ï¿½????????
         if(showDialogFlag == false){
             return;
         }

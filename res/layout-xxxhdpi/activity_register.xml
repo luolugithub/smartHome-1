@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
@@ -18,14 +18,14 @@
 
         <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="60dp" >
-           <TextView
-            android:id="@+id/titleRegister"
-            android:layout_width="20dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/control2_03" />
+            android:layout_height="70dp" >
+            <TextView
+                android:id="@+id/titleRegister"
+                android:layout_width="20dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/control2_03" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:text="注  册"
                 android:textColor="#FFFFFF"
-                android:textSize="25sp" />
+                android:textSize="30sp" />
         </FrameLayout>
     </LinearLayout>
 
@@ -43,8 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -52,7 +51,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -62,20 +61,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:text="用户名"
-                android:textSize="18sp" />
+                android:textSize="23sp" />
 
             <EditText
                 android:id="@+id/registerTxtName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="110dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginLeft="130dp"
+                android:layout_marginTop="10dp"
                 android:background="@null"
-                android:hint="请输入邮箱名"
-                android:ems="8" />
+                android:hint="请输入邮箱名"/>
         </FrameLayout>
     </LinearLayout>
 
@@ -85,8 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -94,7 +91,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -104,20 +101,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="5dp"
                 android:text="密  码"
-                android:textSize="18sp" />
+                android:textSize="23sp" />
 
             <EditText
                 android:id="@+id/registerTxtPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="110dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginLeft="130dp"
+                android:layout_marginTop="10dp"
                 android:background="@null"
-                android:ems="10"
-                android:hint="请输入至少6位数字或字母"
+                android:hint="至少6位数字或字母"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -128,8 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -137,7 +132,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -147,19 +142,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="5dp"
                 android:text="确认密码"
-                android:textSize="18sp" />
+                android:textSize="23sp" />
 
             <EditText
                 android:id="@+id/againPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="110dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginLeft="130dp"
+                android:layout_marginTop="10dp"
                 android:background="@null"
-                android:ems="10"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -169,8 +163,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -178,7 +171,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -188,14 +181,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:layout_marginTop="8dp"
                 android:text="网络名称"
-                android:textSize="18sp" />
+                android:textSize="23sp" />
 
             <TextView
                 android:id="@+id/wifiSSID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="150dp"/>
+                android:layout_marginLeft="150dp"
+                android:textSize="20sp"
+                android:layout_marginTop="7dp"/>
         </FrameLayout>
     </LinearLayout>
     <!-- WIFI密码 -->
@@ -203,8 +199,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -212,7 +207,7 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -222,9 +217,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="10dp"
                 android:text="无线网络密码"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/wifiPassword"
@@ -232,9 +227,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="150dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="10dp"
                 android:background="@null"
-                android:ems="8"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -250,13 +244,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/switchIsSsidHiddenTitle"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <Switch
             android:id="@+id/wifiIsHidden"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="80dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -267,14 +261,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/registerBtnReg"
-            android:layout_width="wrap_content"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/regist_13" />
+            android:background="@drawable/register_long" />
     </LinearLayout>
 
     <LinearLayout

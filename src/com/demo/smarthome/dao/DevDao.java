@@ -34,9 +34,9 @@ public class DevDao implements DevService {
 		}
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		try {
-			if (findDevById(db, dev.getId())) { // 有记录 update
+			if (findDevById(db, dev.getId())) {
 				flag = updateDev(db, dev);
-			} else { // 无记录 insert
+			} else {
 				flag = insertDev(db, dev);
 			}
 		} catch (Exception e) {
@@ -81,8 +81,7 @@ public class DevDao implements DevService {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		try {
 			int index = 0;
-			String sqlStr = "SELECT id,name  from dev  where id=? ";// 按id升序
-																	// 【desc】降序
+			String sqlStr = "SELECT id,name  from dev  where id=? ";
 			Cursor cursor = db.rawQuery(sqlStr, new String[] { id + "" });
 			// if(cursor.moveToNext()){
 			if (cursor.moveToFirst()) {
@@ -125,8 +124,8 @@ public class DevDao implements DevService {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		try {
 			int index = 0;
-			String sqlStr = "SELECT id,name  from dev order by id";// 按id升序
-																	// 【desc】降序
+			String sqlStr = "SELECT id,name  from dev order by id";
+
 			Cursor cursor = db.rawQuery(sqlStr, null);
 			while (cursor.moveToNext()) {
 				index = 0;
@@ -191,9 +190,7 @@ public class DevDao implements DevService {
 	}
 
 	/**
-	 * 根据ID,查找一条记录的id,没有的话，返回false
-	 * 
-	 * @param true
+	 * @param
 	 * @return
 	 * */
 	private boolean findDevById(SQLiteDatabase db, int id) {
@@ -217,7 +214,6 @@ public class DevDao implements DevService {
 	}
 
 	/**
-	 * 根据ID,查找一条记录的id,没有的话，返回false
 	 * 
 	 * @param true
 	 * @return
