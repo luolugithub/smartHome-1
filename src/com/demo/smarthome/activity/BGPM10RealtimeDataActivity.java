@@ -23,7 +23,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.dao.ConfigDao;
+import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.server.DeviceDataResult;
 import com.demo.smarthome.server.DeviceDataSet;
 import com.demo.smarthome.server.setServerURL;
@@ -45,7 +47,7 @@ import java.io.File;
 /**********************************************************
  *:2016-03-24
  **********************************************************/
-public class DeviceRealtimeDataActivity extends Activity {
+public class BGPM10RealtimeDataActivity extends Activity {
 
     Button deviceListBtn;
     Button hchoBtn;
@@ -161,7 +163,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                         crrentValue = 0;
                         dataTitle.setText("离线");
                         dataTitle.setTextColor(ContextCompat.getColor
-                                (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                                (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
                         presentation.setText("设备不在线");
                         currentType = currentdataTitle.outline;
                     }
@@ -169,22 +171,22 @@ public class DeviceRealtimeDataActivity extends Activity {
                     break;
                 case GET_CURRENT_FAIL:
                     dialogView.dismiss();
-                    Toast.makeText(DeviceRealtimeDataActivity.this, "设备错误", Toast.LENGTH_SHORT)
+                    Toast.makeText(BGPM10RealtimeDataActivity.this, "设备错误", Toast.LENGTH_SHORT)
                             .show();
 
-                    intent.setClass(DeviceRealtimeDataActivity.this, MainActivity.class);
+                    intent.setClass(BGPM10RealtimeDataActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                     break;
                 case CHOSE_DEVICE_NULL:
                     dialogView.dismiss();
-                    ConfigService dbService = new ConfigDao(DeviceRealtimeDataActivity.this.getBaseContext());
+                    ConfigService dbService = new ConfigDao(BGPM10RealtimeDataActivity.this.getBaseContext());
                     Cfg.currentDeviceID = "";
                     dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
 
-                    Toast.makeText(DeviceRealtimeDataActivity.this, "设备错误,请重新选择", Toast.LENGTH_SHORT)
+                    Toast.makeText(BGPM10RealtimeDataActivity.this, "设备错误,请重新选择", Toast.LENGTH_SHORT)
                             .show();
-                    intent.setClass(DeviceRealtimeDataActivity.this, MainActivity.class);
+                    intent.setClass(BGPM10RealtimeDataActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                     break;
@@ -234,17 +236,25 @@ public class DeviceRealtimeDataActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_device_realtime_data);
+        if(Cfg.isNavigationBar){
+            setContentView(R.layout.activity_bgpm10_realtime_data);
+        }else {
+            setContentView(R.layout.activity_bgpm10_realtime_data_no_navigation_bar);
+        }
+
+        ActivityControl.getInstance().addActivity(this);
 
         //initialize current data
         crrentValue = 0;
         //device list
+        //历史数据参数
+        Cfg.historyType = DeviceInformation.HISTORY_TYPE_HCHO;
         deviceListBtn = (Button) findViewById(R.id.devicelist);
         deviceListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 Intent intent = new Intent();
-                intent.setClass(DeviceRealtimeDataActivity.this,MainActivity.class);
+                intent.setClass(BGPM10RealtimeDataActivity.this,MainActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -255,7 +265,7 @@ public class DeviceRealtimeDataActivity extends Activity {
             public void onClick(View arg0)
             {
                 Intent intent = new Intent();
-                intent.setClass(DeviceRealtimeDataActivity.this,DeviceHistoryDataActivitiy.class);
+                intent.setClass(BGPM10RealtimeDataActivity.this,DeviceHistoryDataActivitiy.class);
                 startActivity(intent);
             }
         });
@@ -264,7 +274,7 @@ public class DeviceRealtimeDataActivity extends Activity {
             @Override
             public void onClick(View arg0)
             {
-                onBackPressed();
+                resign();
             }
         });
         shareBtn = (Button)findViewById(R.id.shareBtn);
@@ -290,7 +300,7 @@ public class DeviceRealtimeDataActivity extends Activity {
 
         currentType = currentdataTitle.hcho;
 
-        dialogView = new ProgressDialog(DeviceRealtimeDataActivity.this);
+        dialogView = new ProgressDialog(BGPM10RealtimeDataActivity.this);
         dialogView.setTitle("读取数据");
         dialogView.setMessage("正在读取数据,请等待");
 
@@ -369,20 +379,35 @@ public class DeviceRealtimeDataActivity extends Activity {
             }
         }
     };
-
-    //
-    @Override
-    public void onBackPressed(){
-        AlertDialog.Builder failAlert = new AlertDialog.Builder(DeviceRealtimeDataActivity.this);
+    private void resign(){
+        AlertDialog.Builder failAlert = new AlertDialog.Builder(BGPM10RealtimeDataActivity.this);
         failAlert.setTitle("注销").setMessage("是否注销登录")
                 .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         Intent intent = new Intent();
-                        intent.setClass(DeviceRealtimeDataActivity.this, LoginActivity.class);
+                        intent.setClass(BGPM10RealtimeDataActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        failAlert.create().show();
+    }
+    //
+    @Override
+    public void onBackPressed(){
+        AlertDialog.Builder failAlert = new AlertDialog.Builder(BGPM10RealtimeDataActivity.this);
+        failAlert.setTitle("注销").setMessage("是否退出程序")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityControl.getInstance().finishAllActivity();
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
@@ -397,11 +422,11 @@ public class DeviceRealtimeDataActivity extends Activity {
     class shareToTimeline implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Toast.makeText(DeviceRealtimeDataActivity.this, "分享朋友圈中,请等待", Toast.LENGTH_SHORT)
+            Toast.makeText(BGPM10RealtimeDataActivity.this, "分享朋友圈中,请等待", Toast.LENGTH_SHORT)
                     .show();
-            if(shareToWiexin.shareToWeiXinTimeline(DeviceRealtimeDataActivity.this)
+            if(shareToWiexin.shareToWeiXinTimeline(BGPM10RealtimeDataActivity.this)
                     != shareSucceed){
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(DeviceRealtimeDataActivity.this);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(BGPM10RealtimeDataActivity.this);
                 alertDialog.setTitle("错误").setIcon(R.drawable.error_01).setMessage("请确定微信可以启动")
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
@@ -433,7 +458,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                     crrentValue = 0;
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
-                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                            (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
                     currentType = currentdataTitle.outline;
                 }
                 new Thread(updateDataThread).start();
@@ -461,7 +486,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                     crrentValue = 0;
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
-                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                            (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
                     currentType = currentdataTitle.outline;
                 }
                 new Thread(updateDataThread).start();
@@ -489,7 +514,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                     crrentValue = 0;
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
-                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                            (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
                     currentType = currentdataTitle.outline;
                 }
                 new Thread(updateDataThread).start();
@@ -517,7 +542,7 @@ public class DeviceRealtimeDataActivity extends Activity {
                     crrentValue = 0;
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
-                            (DeviceRealtimeDataActivity.this, R.color.sbc_snippet_text));
+                            (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
                     currentType = currentdataTitle.outline;
                 }
                 new Thread(updateDataThread).start();
@@ -557,7 +582,7 @@ public class DeviceRealtimeDataActivity extends Activity {
 
         setServerURL regiterUser= new setServerURL();
 
-        if((jsonResult = regiterUser.sendParamToServer("getCurrentDeviceData", paramsName
+        if((jsonResult = regiterUser.sendParamToServer("getDeviceRealtimeData", paramsName
                 , paramsValue)).isEmpty()){
             return SERVER_CANT_CONNECT;
         }
@@ -598,6 +623,13 @@ public class DeviceRealtimeDataActivity extends Activity {
                 is_get_data_success = false;
                 return  CHOSE_DEVICE_NULL;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 结束Activity&从栈中移除该Activity
+        ActivityControl.getInstance().removeActivity(this);
     }
 
 //    @Override

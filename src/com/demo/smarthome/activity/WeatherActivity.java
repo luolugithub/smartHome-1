@@ -23,6 +23,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationClientOption.AMapLocationMode;
 import com.amap.api.location.AMapLocationListener;
+import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.server.DeviceDataResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
@@ -150,6 +151,7 @@ public class WeatherActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_weather);
+        ActivityControl.getInstance().addActivity(this);
 
         TextView titleText = (TextView) findViewById(R.id.titleWeatherView);
         titleText.setClickable(true);
@@ -220,29 +222,13 @@ public class WeatherActivity extends Activity {
                     mCity = amapLocation.getCity();
                 }
                 mDistrict = amapLocation.getDistrict();//???????
-//                mLatitude = String.valueOf(amapLocation.getLatitude());//???��??
-//                mLongitude = String.valueOf(amapLocation.getLongitude());//???????
-//                amapLocation.getLocationType();//????????��??????
-//                amapLocation.getAccuracy();//??????????
-//                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                Date date = new Date(amapLocation.getTime());
-//                df.format(date);//??��???
-//                amapLocation.getAddress();//????????option??????isNeedAddress?false??????��????????�N��????��??��???????GPS??��?????????????
-//                amapLocation.getCountry();//???????
 
-//                amapLocation.getStreet();//??????
-//                amapLocation.getStreetNum();//???????????
-//                amapLocation.getCityCode();//???��???
-//                amapLocation.getAdCode();//????????
-                //??��??????????
-
-                //?????��??????��???????????
                 if(WeatherInformationTools.isCitySupportGetWeather(mCity) == false){
                     msg.what = CITY_NOT_SUPPORT;
                     handler.sendMessage(msg);
                     return;
                 }
-                //??��???��?????????????????
+
                 new getWeatherFromServerThread().start();
             } else {
                 msg.what = GET_CITY_ERROR;
@@ -314,5 +300,6 @@ public class WeatherActivity extends Activity {
             mLocationClient = null;
             mLocationClient = null;
         }
+        ActivityControl.getInstance().removeActivity(this);
     }
 }

@@ -59,7 +59,7 @@ public class ConfigDao implements ConfigService {
 	}
 
 	/**
-	 * �����ֵ��
+	 *
 	 */
 	@Override
 	public boolean SaveSysCfgByKey(String key, String value) {

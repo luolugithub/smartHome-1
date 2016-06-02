@@ -10,8 +10,11 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.dao.DevDao;
+import com.demo.smarthome.device.DeviceInformation;
+import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
@@ -86,7 +89,7 @@ public class RegisterActivity extends Activity {
 
 	String jsonResult;
 	ServerReturnResult getResult = new ServerReturnResult();
-
+	ConfigService dbService;
 	static final int WAIT_RESULT  = 0;
 	static final int FIND_DEVID = 2;
 	static final int NO_WIFI    = 3;
@@ -109,7 +112,7 @@ public class RegisterActivity extends Activity {
 			switch (msg.what) {
 
 			case REGISTER_SUCCESS:
-				ConfigService dbService = new ConfigDao(RegisterActivity.this.getBaseContext());
+
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, userRegName);
 				dbService.SaveSysCfgByKey(Cfg.KEY_PASS_WORD, userRegPassword);
 				dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, deviceInfo.getDeviceID());
@@ -130,9 +133,16 @@ public class RegisterActivity extends Activity {
 				Bundle bundle = new Bundle();
 				bundle.putString("activity", "register");
 				Intent mainIntent = new Intent();
-				mainIntent.setClass(RegisterActivity.this, DeviceRealtimeDataActivity.class);
+				if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+				{
+					mainIntent = new Intent(RegisterActivity.this, BGPM02LRealtimeDataActivity.class);
+
+				}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+				{
+					mainIntent = new Intent(RegisterActivity.this, BGPM10RealtimeDataActivity.class);
+				}
 				mainIntent.putExtras(bundle);
-				startActivity(mainIntent);//
+				startActivity(mainIntent);
 				finish();
 				break;
 			case NO_WIFI:
@@ -168,7 +178,8 @@ public class RegisterActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); // ??????
+		requestWindowFeature(Window.FEATURE_NO_TITLE); //
+		ActivityControl.getInstance().addActivity(this);
 
 		setContentView(R.layout.activity_register);
 		TextView title = (TextView) findViewById(R.id.titleRegister);
@@ -197,7 +208,7 @@ public class RegisterActivity extends Activity {
 		}
 		Button btnSetup = (Button) findViewById(R.id.registerBtnReg);
 		btnSetup.setOnClickListener(new BtnRegOnClickListener());
-
+		dbService = new ConfigDao(RegisterActivity.this.getBaseContext());
 		failAlert = new AlertDialog.Builder(RegisterActivity.this);
 
 
@@ -302,6 +313,18 @@ public class RegisterActivity extends Activity {
 		public void run() {
 			Message message = new Message();
 			message.what = REGISTER_FAIL;
+
+			if(Cfg.currentDeviceID.isEmpty()){
+				handler.sendMessage(message);
+				return;
+			}
+			//先获取绑定设备类型
+			if(!LoginServer.getDeviceType(Cfg.currentDeviceID)){
+				handler.sendMessage(message);
+				return;
+			}
+			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
+
 			Gson gson = new Gson();
 
 			String[] paramsName = {"userName", "userPassword","deviceId", "devicePassword"};
@@ -315,7 +338,7 @@ public class RegisterActivity extends Activity {
 			}
 			try {
 				getResult = gson.fromJson(jsonResult
-						, com.demo.smarthome.server.ServerReturnResult.class);
+						, ServerReturnResult.class);
 			}
 			catch (JsonSyntaxException e){
 				e.printStackTrace();
@@ -338,5 +361,12 @@ public class RegisterActivity extends Activity {
 			}
 			handler.sendMessage(message);
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// 结束Activity&从栈中移除该Activity
+		ActivityControl.getInstance().removeActivity(this);
 	}
 }

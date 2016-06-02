@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.demo.smarthome.R;
+import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.service.Cfg;
 
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ public class DeviceHistoryDataView extends View {
 	//左右宽度留的边
 	private int blwidh;
 	private boolean isMeasure = true;
+	String  kind;
 	/**
 	 * Y轴最大值
 	 */
@@ -61,6 +63,8 @@ public class DeviceHistoryDataView extends View {
 	 * Y轴间距值
 	 */
 	private float averageValue;
+
+	private int averageValueInt;
 
 	//the type of the data
 	int dataType = 1;
@@ -79,8 +83,8 @@ public class DeviceHistoryDataView extends View {
 	private int xSpaceCount = 13;
 
 	//顶部底部留白
-	private int marginTop = 50;
-	private int marginBottom = 100;
+	private int marginTop = 40;
+	private int marginBottom = 120;
 
 	private static int noData = -1;
 
@@ -199,14 +203,27 @@ public class DeviceHistoryDataView extends View {
 							, bheight - (bheight / spacingHeight) * i + marginTop , canvas);
 				}
 			}else {
-				drawText(String.valueOf(averageValue * i), blwidh / 2 - dip2px(yTextChange)
-						, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
+				if(kind.equals(DeviceInformation.HISTORY_TYPE_HCHO)){
+					drawText(String.valueOf(averageValue * i), blwidh / 2 - dip2px(yTextChange)
+							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
+				}else {
+					drawText(String.valueOf(averageValueInt * i), blwidh / 2 - dip2px(yTextChange)
+							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
+				}
+
 			}
 
 		}
-		//显示单位
-		drawText(String.valueOf("(" + getResources().getString(R.string.device_pm2_5_unit) + ")")
-				, blwidh / 2 - dip2px(yTextChange) - dip2px(5),  dip2px(yTextUnit), canvas);
+
+		if(kind.equals(DeviceInformation.HISTORY_TYPE_HCHO)){
+			drawText(String.valueOf("(" + getResources().getString(R.string.device_hcho_unit) + ")")
+					, blwidh / 2 - dip2px(yTextChange) - dip2px(8),  dip2px(yTextUnit), canvas);
+		}else{
+			//显示单位
+			drawText(String.valueOf("(" + getResources().getString(R.string.device_pm2_5_unit) + ")")
+					, blwidh / 2 - dip2px(yTextChange) - dip2px(8),  dip2px(yTextUnit), canvas);
+		}
+
 	}
 
 	/**
@@ -215,7 +232,7 @@ public class DeviceHistoryDataView extends View {
 	private void drawAllYLine(Canvas canvas) {
 		//当分辨率是480时时间标志会和X轴重叠,所以要向下偏移时间
 		int offset = 0;
-		if(Cfg.phoneWidth == 480){
+		if(Cfg.widthPixels <= 480){
 			offset = dip2px(10);
 		}
 		Paint YlinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -223,7 +240,7 @@ public class DeviceHistoryDataView extends View {
 
 
 		SimpleDateFormat dfs = new SimpleDateFormat("MM-dd");
-		ArrayList<String> Xtext = new ArrayList();
+		ArrayList<String> Xtext = new ArrayList<String>();
 		if(dataType == type_week) {
 			for (int i = 0; i < xSpaceCount; i++){
 				Calendar cal = Calendar.getInstance();
@@ -353,7 +370,7 @@ public class DeviceHistoryDataView extends View {
 	private void drawText(String text, int x, int y, Canvas canvas) {
 
 		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-		p.setTextSize(dip2px(12));
+		p.setTextSize(dip2px(10));
 		p.setColor(ContextCompat.getColor(mContext,R.color.sbc_header_view));
 		p.setTextAlign(Paint.Align.LEFT);
 		canvas.drawText(text, x, y, p);
@@ -379,7 +396,7 @@ public class DeviceHistoryDataView extends View {
 		return points;
 	}
 
-	public void setData(ArrayList<Double> yRawData, float maxValue, float averageValue,int type) {
+	public void setData(ArrayList<Double> yRawData, float maxValue, float averageValue,int type,String kind) {
 
 		this.maxValue = maxValue;
 		this.averageValue = averageValue;
@@ -387,6 +404,7 @@ public class DeviceHistoryDataView extends View {
 		this.yRawData = yRawData;
 		this.spacingHeight = (int)(maxValue / averageValue);
 		this.dataType = type;
+		this.kind = kind;
 		if(type == type_day)
 		{
 			xSpaceCount = 13;
@@ -397,6 +415,9 @@ public class DeviceHistoryDataView extends View {
 		{
 			xSpaceCount = 11;
 		}
+
+		averageValueInt = (int)averageValue;
+
 		isInitDatafinish = true;
 		//重新调用onDraw
 		postInvalidate();

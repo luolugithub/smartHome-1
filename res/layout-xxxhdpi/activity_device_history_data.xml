@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:text="甲醛趋势"
+            android:text="PM2.5 趋势"
             android:textColor="@color/status_text"
             android:textSize="30sp" />
         <Button android:id="@+id/shareBtn"
@@ -66,8 +66,8 @@
         <com.demo.smarthome.view.DeviceHistoryDataView
             android:id="@+id/historyDataView"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginTop="5dp">
+            android:layout_height="420dp"
+            android:layout_marginTop="0dp">
         </com.demo.smarthome.view.DeviceHistoryDataView>
     </LinearLayout>
 </LinearLayout>

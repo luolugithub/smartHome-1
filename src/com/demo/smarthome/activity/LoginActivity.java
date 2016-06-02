@@ -1,21 +1,11 @@
 package com.demo.smarthome.activity;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.util.List;
-
+import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.dao.ConfigDao;
+import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.service.ConfigService;
-import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.R;
 
@@ -73,6 +63,8 @@ public class LoginActivity extends Activity {
 	static final int SEND_PWD2EMAIL_SUCCEED 	= 2;
 	static final int SEND_PWD2EMAIL_ERROR 		= 3;
 	static final int SEND_PWD2EMAIL_EXCEPTION 	= 4;
+	static final int BASE_TYPE_LOGIN_SUCCEED	= 5;
+	static final int BASE_TYPE_LOGIN_FAILED		= 6;
 	static final int SERVER_ERROR = 7;
 
 	ServerReturnResult loginResult = new ServerReturnResult();
@@ -87,6 +79,7 @@ public class LoginActivity extends Activity {
 			// TODO Auto-generated method stub
 			super.handleMessage(msg);
 			dialogView.closeMyDialog();
+			Intent intent = new Intent();
 			switch (msg.what) {
 			case LOGIN_SUCCEED:
 				isLogin = true;
@@ -107,20 +100,18 @@ public class LoginActivity extends Activity {
 
 				if(!Cfg.currentDeviceID.isEmpty()){
 
-					Intent intent = new Intent();
-					intent.setClass(LoginActivity.this, DeviceRealtimeDataActivity.class);
-					startActivity(intent);
-					finish();
+					new getDeviceType().start();
 				}
 				else {
 					Bundle bundle = new Bundle();
 					bundle.putString("activity", "login");
-					Intent intent = new Intent();
+
 					intent.putExtras(bundle);
 					intent.setClass(LoginActivity.this, MainActivity.class);
 					startActivity(intent);
 				}
 				break;
+
 			case PASSWORD_ERROR:
 
 				Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT)
@@ -145,6 +136,28 @@ public class LoginActivity extends Activity {
 						.show();
 
 				break;
+			case BASE_TYPE_LOGIN_SUCCEED:
+
+				if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+				{
+					intent.setClass(LoginActivity.this, BGPM02LRealtimeDataActivity.class);
+					startActivity(intent);
+					finish();
+				}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+				{
+					intent.setClass(LoginActivity.this, BGPM10RealtimeDataActivity.class);
+					startActivity(intent);
+					finish();
+				}
+				break;
+			case BASE_TYPE_LOGIN_FAILED:
+				Bundle bundle = new Bundle();
+				bundle.putString("activity", "login");
+
+				intent.putExtras(bundle);
+				intent.setClass(LoginActivity.this, MainActivity.class);
+				startActivity(intent);
+					break;
 			case SERVER_ERROR:
 				break;
 			default:
@@ -174,6 +187,7 @@ public class LoginActivity extends Activity {
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_login);
+		ActivityControl.getInstance().addActivity(this);
 		// getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,R.layout.title);
 
 		txtName = (EditText) findViewById(R.id.loginTxtName);
@@ -329,7 +343,26 @@ public class LoginActivity extends Activity {
 		}
 	};
 
-
+	private class getDeviceType extends Thread {
+		@Override
+		public void run () {
+			Message message = new Message();
+			if(Cfg.currentDeviceID.isEmpty()){
+				message.what = BASE_TYPE_LOGIN_FAILED;
+				handler.sendMessage(message);
+				return;
+			}
+			if(!LoginServer.getDeviceType(Cfg.currentDeviceID)){
+				message.what = BASE_TYPE_LOGIN_FAILED;
+				handler.sendMessage(message);
+				return;
+			}
+			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
+			message.what = BASE_TYPE_LOGIN_SUCCEED;
+			handler.sendMessage(message);
+			return;
+		}
+	}
 
 	/**
 	 * 
@@ -372,7 +405,6 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * �һ�����
 	 *
 	 * @author Administrator
 	 *
@@ -417,6 +449,12 @@ public class LoginActivity extends Activity {
 			}
 			handler.sendMessage(message);
 		}
+	}
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// 结束Activity&从栈中移除该Activity
+		ActivityControl.getInstance().removeActivity(this);
 	}
 
 }

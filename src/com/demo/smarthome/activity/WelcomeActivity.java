@@ -1,7 +1,10 @@
 package com.demo.smarthome.activity;
 
 import com.demo.smarthome.R;
+import com.demo.smarthome.control.ActivityControl;
+import com.demo.smarthome.control.initPhoneConfig;
 import com.demo.smarthome.dao.ConfigDao;
+import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
@@ -49,7 +52,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * ��ӭ������
  * 
  * @author sl
  * 
@@ -87,9 +89,28 @@ public class WelcomeActivity extends Activity {
 			Intent intent = new Intent();
 			switch (msg.what){
 				case LOGIN_SUCCEED:
-					intent.setClass(WelcomeActivity.this, DeviceRealtimeDataActivity.class);
-					startActivity(intent);
-					finish();
+					String tempDeviceType = dbService.getCfgByKey(Cfg.KEY_DEVICE_TYPE);
+					if(!tempDeviceType.isEmpty()){
+						Cfg.deviceType = tempDeviceType;
+						if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+						{
+							intent.setClass(WelcomeActivity.this, BGPM02LRealtimeDataActivity.class);
+							startActivity(intent);
+							finish();
+						}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+						{
+							intent.setClass(WelcomeActivity.this, BGPM10RealtimeDataActivity.class);
+							startActivity(intent);
+							finish();
+						}
+					}
+					else{
+						Toast.makeText(getApplicationContext(), "请先绑定设备", Toast.LENGTH_SHORT).show();
+						intent.setClass(WelcomeActivity.this, MainActivity.class);
+						startActivity(intent);
+						finish();
+					}
+
 				break;
 				case LOGIN_ERROR:
 					post(r);
@@ -154,6 +175,7 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_welcome);
+		ActivityControl.getInstance().addActivity(this);
 
 		if(!NetworkStatusTools.isNetworkAvailable(WelcomeActivity.this)){
 			failAlert = new AlertDialog.Builder(WelcomeActivity.this);
@@ -161,7 +183,7 @@ public class WelcomeActivity extends Activity {
 					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							android.os.Process.killProcess(android.os.Process.myPid());
+							ActivityControl.getInstance().finishAllActivity();
 						}
 					});
 			failAlert.create().show();
@@ -173,25 +195,22 @@ public class WelcomeActivity extends Activity {
 		new CheckVersionThread().start();
 	}
 
- 	@Override
-	protected void onDestroy(){
+	@Override
+	protected void onDestroy() {
 		super.onDestroy();
+	// 结束Activity&从栈中移除该Activity
+		ActivityControl.getInstance().removeActivity(this);
 	}
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.welcome, menu);
-//		return true;
-//	}
+
 	void accessViewInit(){
 
-		initPhoneConfig(WelcomeActivity.this);
+		initPhoneConfig.initPhoneScreen(this);
+		Cfg.isNavigationBar = initPhoneConfig.IsNavigationBar(this);
 	}
 
 	Runnable r = new Runnable() {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			Intent intent = new Intent();
 			intent.setClass(WelcomeActivity.this, LoginActivity.class);
 
@@ -262,8 +281,8 @@ public class WelcomeActivity extends Activity {
 
 				URL url = new URL(path);
 				HttpURLConnection conn =  (HttpURLConnection) url.openConnection();
-				conn.setConnectTimeout(5000);
-				conn.setReadTimeout(5000);
+				conn.setConnectTimeout(15000);
+				conn.setReadTimeout(15000);
 				InputStream is =conn.getInputStream();
 				info =  getUpdataInfo(is);
 				if(!info.getVersion().equals(Cfg.versionNumber)) {
@@ -407,23 +426,6 @@ public class WelcomeActivity extends Activity {
 		}
 		else{
 			return null;
-		}
-	}
-	//设置分辨率属性,估计以后用不到了
-	private DisplayMetrics dm = new DisplayMetrics();
-	private void initPhoneConfig(Context context) {
-
-		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		wm.getDefaultDisplay().getMetrics(dm);
-
-		if(dm.widthPixels <= 480 && dm.heightPixels <= 800){
-			Cfg.phoneWidth = 480;
-		}else if(dm.widthPixels <= 768 && dm.heightPixels <= 1280){
-			Cfg.phoneWidth = 720;
-		}else if(dm.widthPixels <= 1200 && dm.heightPixels <= 1920){
-			Cfg.phoneWidth = 1080;
-		}else if(dm.widthPixels >= 1440 && dm.heightPixels >= 2560){
-			Cfg.phoneWidth = 1440;
 		}
 	}
 }

@@ -49,19 +49,14 @@ public class EspWifiAdminSimple {
 	}
 
 	private boolean isWifiConnected() {
-		NetworkInfo mWiFiNetworkInfo = getWifiNetworkInfo();
-		boolean isWifiConnected = false;
-		if (mWiFiNetworkInfo != null) {
-			isWifiConnected = mWiFiNetworkInfo.isConnected();
+		ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		if (activeNetwork != null) { // connected to the internet
+			if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+				return true;
+			}
 		}
-		return isWifiConnected;
+		return false;
 	}
 
-	private NetworkInfo getWifiNetworkInfo() {
-		ConnectivityManager mConnectivityManager = (ConnectivityManager) mContext
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo mWiFiNetworkInfo = mConnectivityManager
-				.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		return mWiFiNetworkInfo;
-	}
 }

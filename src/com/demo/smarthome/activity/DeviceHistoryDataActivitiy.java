@@ -7,30 +7,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.smarthome.R;
+import com.demo.smarthome.control.ActivityControl;
+import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.server.DeviceDataResult;
 import com.demo.smarthome.server.DeviceDataSet;
-import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
-import com.demo.smarthome.tools.BitmapTools;
 import com.demo.smarthome.tools.NetworkStatusTools;
 import com.demo.smarthome.tools.shareToWiexin;
 import com.demo.smarthome.view.DeviceHistoryDataView;
-import com.demo.smarthome.view.HistoryDataLineView;
 import com.demo.smarthome.view.MyDialogView;
 import com.google.gson.Gson;
 import java.util.Date;
@@ -53,7 +46,9 @@ public class DeviceHistoryDataActivitiy extends Activity {
     List<DeviceDataSet> dayDataList;
 
     static final int GET_DATA_SUCCESS              = 0;
-    static final int GET_DATA_FAIL                 = 1;
+    static final int GET_DAY_FAIL                  = 1;
+    static final int GET_WEEK_FAIL                 = 2;
+    static final int GET_MONTH_FAIL                = 3;
     static final int SERVER_CANT_CONNECT           = 10;
 
     String jsonResult;
@@ -67,6 +62,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
     Button weekBtn;
     Button monthBtn;
     Button shareBtn;
+    TextView viewTitle;
 
     String currentDay;
     String tomorrow;
@@ -78,7 +74,6 @@ public class DeviceHistoryDataActivitiy extends Activity {
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            // TODO Auto-generated method stub
             super.handleMessage(msg);
 
             switch (msg.what) {
@@ -97,7 +92,21 @@ public class DeviceHistoryDataActivitiy extends Activity {
                             .show();
                     finish();
                     break;
-                case GET_DATA_FAIL:
+                case GET_DAY_FAIL:
+                    currentType = type_week;
+                    dayBtn.setBackgroundResource(R.drawable.day);
+                    weekBtn.setBackgroundResource(R.drawable.week_check);
+                    monthBtn.setBackgroundResource(R.drawable.month);
+                    new getDataByWeek().start();
+                    break;
+                case GET_WEEK_FAIL:
+                    currentType = type_month;
+                    dayBtn.setBackgroundResource(R.drawable.day);
+                    weekBtn.setBackgroundResource(R.drawable.week);
+                    monthBtn.setBackgroundResource(R.drawable.month_check);
+                    new getDataByMonth().start();
+                    break;
+                case GET_MONTH_FAIL:
                     dialogView.closeMyDialog();
                     Toast.makeText(getApplicationContext(), "获取数据失败", Toast.LENGTH_SHORT)
                             .show();
@@ -117,6 +126,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_device_history_data);
+        ActivityControl.getInstance().addActivity(this);
 
         Button backBtn = (Button) findViewById(R.id.backBtn);
         backBtn.setClickable(true);
@@ -139,16 +149,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
         }
 
         historyDataViewItem = (DeviceHistoryDataView)findViewById(R.id.historyDataView);
-        //for various screen
-//        if(Cfg.phoneWidth == 480){
-//            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    BitmapTools.dp2px(DeviceHistoryDataActivitiy.this, 280)));
-//        }else if(Cfg.phoneWidth == 1440){
-//            historyDataViewItem.setLayoutParams(new LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    BitmapTools.dp2px(DeviceHistoryDataActivitiy.this, 400)));
-//        }
+
         shareBtn = (Button)findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener(new shareToTimeline());
 
@@ -167,6 +168,12 @@ public class DeviceHistoryDataActivitiy extends Activity {
         cal.add(Calendar.DAY_OF_MONTH, 1);
         tomorrow = dfs.format(cal.getTime());
 
+        viewTitle = (TextView)findViewById(R.id.viewType);
+        if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM2_5)){
+            viewTitle.setText("PM2.5趋势");
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_HCHO)){
+            viewTitle.setText("甲醛趋势");
+        }
         //wait dialog
         dialogView = new MyDialogView(DeviceHistoryDataActivitiy.this);
         //network is available or not
@@ -203,6 +210,13 @@ public class DeviceHistoryDataActivitiy extends Activity {
                 alertDialog.create().show();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 结束Activity&从栈中移除该Activity
+        ActivityControl.getInstance().removeActivity(this);
     }
 
     private View.OnTouchListener showViewByDay = new View.OnTouchListener(){
@@ -291,7 +305,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
         @Override
         public void run() {
             Message message = new Message();
-            message.what = GET_DATA_FAIL;
+            message.what = GET_DAY_FAIL;
 
             //get date today
 
@@ -319,7 +333,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
                     message.what = GET_DATA_SUCCESS;
                     break;
                 default:
-                    message.what = GET_DATA_FAIL;
+                    message.what = GET_DAY_FAIL;
                     break;
             }
             handler.sendMessage(message);
@@ -330,7 +344,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
         @Override
         public void run() {
             Message message = new Message();
-            message.what = GET_DATA_FAIL;
+            message.what = GET_WEEK_FAIL;
 
             //get date today
             SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
@@ -363,7 +377,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
                     message.what = GET_DATA_SUCCESS;
                     break;
                 default:
-                    message.what = GET_DATA_FAIL;
+                    message.what = GET_WEEK_FAIL;
                     break;
             }
             handler.sendMessage(message);
@@ -374,7 +388,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
         @Override
         public void run() {
             Message message = new Message();
-            message.what = GET_DATA_FAIL;
+            message.what = GET_MONTH_FAIL;
 
             //get date today
             SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
@@ -407,7 +421,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
                     message.what = GET_DATA_SUCCESS;
                     break;
                 default:
-                    message.what = GET_DATA_FAIL;
+                    message.what = GET_MONTH_FAIL;
                     break;
             }
             handler.sendMessage(message);
@@ -427,22 +441,49 @@ public class DeviceHistoryDataActivitiy extends Activity {
     private void SetYMaxValue(List<DeviceDataSet> data){
 
         int maxValue = 0;
-        //
-        for(int i = 0;i < data.size();i++) {
-            if(maxValue < Integer.parseInt(data.get(i).getHcho())) {
-                maxValue = Integer.parseInt(data.get(i).getHcho());
-            }
-        }
 
-        if(maxValue>200){
-            YmaxValue = 3.0f;
-            YaverageValue = 0.5f;
-        }else if(maxValue > 100){
-            YmaxValue = 2.0f;
-            YaverageValue = 0.4f;
-        }else{
-            YmaxValue = 1.0f;
-            YaverageValue = 0.2f;
+
+        if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_HCHO)){
+            for(int i = 0;i < data.size();i++) {
+                if(maxValue < Integer.parseInt(data.get(i).getHcho())) {
+                    maxValue = Integer.parseInt(data.get(i).getHcho());
+                }
+            }
+            if(maxValue>200){
+                YmaxValue = 3.0f;
+                YaverageValue = 0.5f;
+            }else if(maxValue > 100){
+                YmaxValue = 2.0f;
+                YaverageValue = 0.4f;
+            }else{
+                YmaxValue = 1.0f;
+                YaverageValue = 0.2f;
+            }
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM2_5)){
+            for(int i = 0;i < data.size();i++) {
+                if(maxValue < Integer.parseInt(data.get(i).getPm2_5())) {
+                    maxValue = Integer.parseInt(data.get(i).getPm2_5());
+                }
+            }
+            if(maxValue > 800){
+                YmaxValue = 1000;
+                YaverageValue = 200;
+            }else if(maxValue>500){
+                YmaxValue = 800;
+                YaverageValue = 100;
+            }else if(maxValue>300){
+                YmaxValue = 500;
+                YaverageValue = 100;
+            }else if(maxValue>200){
+                YmaxValue = 300;
+                YaverageValue = 50;
+            }else if(maxValue>100){
+                YmaxValue = 200;
+                YaverageValue = 40;
+            }else {
+                YmaxValue = 100;
+                YaverageValue = 20;
+            }
         }
     }
 
@@ -479,7 +520,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
             timeStepLength = 5*60;
         }
 
-        ArrayList<Double> yData = new ArrayList();
+        ArrayList<Double> yData = new ArrayList<Double>();
         try{
             Date Start = dfs.parse(tempTime);
             Date CreateTime = dfs.parse(allData.get(0).getCreateTime());
@@ -489,7 +530,11 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
                 if(diff >= 0 && diff < timeStepLength && j < allData.size()) {
                     //The data from server need divide 100
-                    value = ((double) Integer.parseInt(allData.get(j).getHcho())) / 100;
+                    if(Cfg.historyType.equals("hcho")) {
+                        value = ((double) Integer.parseInt(allData.get(j).getHcho())) / 100;
+                    }else {
+                        value = (double) Integer.parseInt(allData.get(j).getPm2_5());
+                    }
                     yData.add(value);
                     CreateTime = dfs.parse(allData.get(j).getCreateTime());
                     j++;
@@ -502,18 +547,18 @@ public class DeviceHistoryDataActivitiy extends Activity {
         catch (ParseException e){
             e.printStackTrace();
         }
-        historyDataViewItem.setData(yData,YmaxValue,YaverageValue,currentType);
+        historyDataViewItem.setData(yData,YmaxValue,YaverageValue,currentType,Cfg.historyType);
     }
     private void SetBlankView(){
 
         int stepCount = 24*60/5;
 
-        ArrayList<Double> yData = new ArrayList();
+        ArrayList<Double> yData = new ArrayList<Double>();
         for(int i = 0; i < stepCount ;i++){
            yData.add(-1.0);
         }
 
-        historyDataViewItem.setData(yData,3.0f,0.5f,type_day);
+        historyDataViewItem.setData(yData,3.0f,0.5f,type_day,Cfg.historyType);
     }
 
 //    @Override

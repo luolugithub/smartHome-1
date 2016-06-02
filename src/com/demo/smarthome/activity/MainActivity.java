@@ -1,15 +1,22 @@
 package com.demo.smarthome.activity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.demo.smarthome.R;
+import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.dao.ConfigDao;
+import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.iprotocol.IProtocol;
 import com.demo.smarthome.protocol.Msg;
 import com.demo.smarthome.protocol.PlProtocol;
+import com.demo.smarthome.server.DeviceDataResult;
+import com.demo.smarthome.server.DeviceDataSet;
 import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
@@ -18,6 +25,7 @@ import com.demo.smarthome.service.ConfigDevice;
 import com.demo.smarthome.service.ConfigService;
 import com.demo.smarthome.service.SocketService;
 import com.demo.smarthome.service.SocketService.SocketBinder;
+import com.demo.smarthome.staticString.StringRes;
 import com.demo.smarthome.tools.IpTools;
 import com.demo.smarthome.tools.NetworkStatusTools;
 import com.demo.smarthome.view.MyDialogView;
@@ -91,14 +99,20 @@ public class MainActivity extends Activity {
 	static final int SERVER_CONNECT_ERROR = 6;
 	static final int ADD_DEV_SUCCED 		= 7;
 	static final int ADD_DEV_FAIL 		    = 8;
+	static final int GET_DEV_TYPE_SUCCEED	= 9;
+	static final int GET_DEV_TYPE_ERROR		= 10;
 
 	static final int WAIT_RESULT  = 0;
 	static final int FIND_DEVID = 2;
 	static final int CMD_TIMEOUT = 6;
 
-	static final int FIND_DEV_SUCCEED = 0X10;
-	static final int FIND_DEV_TIMEOUT = 0X11;
+	static final int FIND_DEV_SUCCEED = 0X20;
+	static final int FIND_DEV_TIMEOUT = 0X21;
 
+	private static enum getTypeFunc {
+		addDevice , clickList
+	}
+	getTypeFunc getTypeFor;
 	String jsonResult;
 	ServerReturnResult getResult = new ServerReturnResult();
 
@@ -110,15 +124,18 @@ public class MainActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			failAlert = new AlertDialog.Builder(MainActivity.this);
 			switch (msg.what) {
-
 			case GET_DEV_SUCCEED:
 				dialogView.closeMyDialog();
 				getDevList();
 				break;
 			case GET_DEV_ERROR:
-
+				dialogView.closeMyDialog();
+				Toast.makeText(getApplicationContext(), "请重新登录", Toast.LENGTH_SHORT)
+						.show();
+				tempIntent = new Intent(MainActivity.this, LoginActivity.class);
+				startActivity(tempIntent);
+				finish();
 				break;
 
 			case BUTTON_DELETE:
@@ -137,7 +154,9 @@ public class MainActivity extends Activity {
 
 				break;
 			case SERVER_CONNECT_ERROR:
-
+				dialogView.closeMyDialog();
+				Toast.makeText(MainActivity.this, "删除设备失败,"+ StringRes.canNotConnetServer, Toast.LENGTH_SHORT)
+						.show();
 				break;
 			case FIND_DEV_SUCCEED:
 				dialogView.closeMyDialog();
@@ -159,7 +178,8 @@ public class MainActivity extends Activity {
 
 						dialogView = new MyDialogView(MainActivity.this);
 						dialogView.showMyDialog("添加设备", "正在添加设备,请稍等");
-						new addDeviceThread().start();
+						getTypeFor = getTypeFunc.addDevice;
+						new getDeviceType().start();
 					}
 				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
 					@Override
@@ -177,11 +197,45 @@ public class MainActivity extends Activity {
 					break;
 			case ADD_DEV_SUCCED:
 				dialogView.closeMyDialog();
-				Toast.makeText(MainActivity.this, "添加设备成功过", Toast.LENGTH_SHORT)
+				Toast.makeText(MainActivity.this, "添加设备成功", Toast.LENGTH_SHORT)
 						.show();
-				tempIntent = new Intent(MainActivity.this, DeviceRealtimeDataActivity.class);
+				if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+				{
+					tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
+
+				}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+				{
+					tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
+				}
+
 				startActivity(tempIntent);
 				finish();
+				break;
+			case ADD_DEV_FAIL:
+				dialogView.closeMyDialog();
+				Toast.makeText(MainActivity.this, "添加设备失败,请重新添加", Toast.LENGTH_SHORT)
+						.show();
+					break;
+			case GET_DEV_TYPE_SUCCEED:
+				if(getTypeFor == getTypeFunc.addDevice) {
+					new addDeviceThread().start();
+				}else {
+					if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+					{
+						tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
+
+					}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+					{
+						tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
+					}
+					startActivity(tempIntent);
+					finish();
+				}
+				break;
+			case GET_DEV_TYPE_ERROR:
+				dialogView.closeMyDialog();
+				Toast.makeText(MainActivity.this, "请重新绑定", Toast.LENGTH_SHORT)
+						.show();
 				break;
 			default:
 				break;
@@ -197,7 +251,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
-
+		ActivityControl.getInstance().addActivity(this);
 		TextView title = (TextView) findViewById(R.id.titleMain);
 		title.setClickable(true);
 		title.setOnClickListener(new OnClickListener() {
@@ -216,6 +270,8 @@ public class MainActivity extends Activity {
 		listView = (ListView) findViewById(R.id.devListView);
 
 		dbService = new ConfigDao(MainActivity.this.getBaseContext());
+
+		failAlert = new AlertDialog.Builder(MainActivity.this);
 
 		dialogView = new MyDialogView(MainActivity.this);
 		dialogView.showMyDialog("读取数据", "...请等待");
@@ -242,7 +298,7 @@ public class MainActivity extends Activity {
 	private void getDevList() {
 		List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
 
-		if(Cfg.devInfo == null) {
+		if(Cfg.devInfo == null || Cfg.devInfo.length == 0) {
 			Toast.makeText(MainActivity.this, "无绑定设备,请绑定设备", Toast.LENGTH_SHORT)
 					.show();
 			return;
@@ -250,7 +306,7 @@ public class MainActivity extends Activity {
 
 		if(Cfg.currentDeviceID.isEmpty())
 		{
-			Toast.makeText(MainActivity.this, "请选择绑定设备", Toast.LENGTH_SHORT)
+			Toast.makeText(MainActivity.this, "请绑定设备", Toast.LENGTH_SHORT)
 					.show();
 		}
 		for (String devID : Cfg.devInfo) {
@@ -263,9 +319,9 @@ public class MainActivity extends Activity {
 		SimpleAdapter adapter = new MySimpleAdapter(this, data,
 				R.layout.devitem, new String[] { "id", "name"},
 				new int[] { R.id.devId, R.id.devName});
-		// ʵ���б����ʾ
+		//
 		listView.setAdapter(adapter);
-		// ɾ���ָ���
+		//
 		listView.setDivider(null);
 
 		listView.setOnItemClickListener(new ItemClickListener());
@@ -284,9 +340,13 @@ public class MainActivity extends Activity {
 		public void run() {
 
 			Message message = new Message();
-
-			if((getResult = LoginServer.LoginServerMethod())==null) {
+			getResult = LoginServer.LoginServerMethod();
+			if(getResult.getCode().equals(String.valueOf(Cfg.SERVER_CANT_CONNECT))) {
 				message.what = SERVER_CONNECT_ERROR;
+				handler.sendMessage(message);
+				return;
+			}else if(getResult.getCode().equals(String.valueOf(Cfg.USERNAME_EXCEPTION))){
+				message.what = GET_DEV_ERROR;
 				handler.sendMessage(message);
 				return;
 			}
@@ -297,7 +357,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * ˢ�� ��ť�����¼�
+	 *
 	 * 
 	 * @author Administrator
 	 * 
@@ -396,67 +456,98 @@ public class MainActivity extends Activity {
 
 			Gson gson = new Gson();
 
-			String[] paramsName = {"userName","deviceId","devicePassword"};
-			String[] paramsValue = {Cfg.userName,deviceInfo.getDeviceID(),deviceInfo.getDevicePwd()};
+			String[] paramsName = {"userName", "deviceId", "devicePassword"};
+			String[] paramsValue = {Cfg.userName, deviceInfo.getDeviceID(), deviceInfo.getDevicePwd()};
 
-			setServerURL addDevSet= new setServerURL();
+			setServerURL addDevSet = new setServerURL();
 
-			if((jsonResult = addDevSet.sendParamToServer("addDeviceForUser", paramsName, paramsValue)).isEmpty()){
+			if ((jsonResult = addDevSet.sendParamToServer("addDeviceForUser", paramsName, paramsValue)).isEmpty()) {
 				message.what = Cfg.SERVER_CANT_CONNECT;
 				handler.sendMessage(message);
 				return;
 			}
 			try {
-				getResult = gson.fromJson(jsonResult
-						, com.demo.smarthome.server.ServerReturnResult.class);
-			}
-			catch (JsonSyntaxException e){
+				getResult = gson.fromJson(jsonResult, ServerReturnResult.class);
+			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
+				message.what = ADD_DEV_FAIL;
+				handler.sendMessage(message);
+				return;
 			}
 
 
-			switch (Integer.parseInt(getResult.getCode()))
-			{
+			switch (Integer.parseInt(getResult.getCode())) {
 				case Cfg.CODE_SUCCESS:
 
 					Cfg.currentDeviceID = deviceInfo.getDeviceID();
-					dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
-
+					dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
 					message.what = ADD_DEV_SUCCED;
+					handler.sendMessage(message);
 					break;
 				default:
 					message.what = ADD_DEV_FAIL;
+					handler.sendMessage(message);
 					break;
 			}
-			handler.sendMessage(message);
-		}
 
+		}
 	}
 
+	class getDeviceType extends Thread {
+		@Override
+		public void run () {
+			Message message = new Message();
+			if(getTypeFor == getTypeFunc.addDevice){
+				if (deviceInfo.getDeviceID().isEmpty()) {
+					message.what = GET_DEV_TYPE_ERROR;
+					handler.sendMessage(message);
+					return;
+				}
+				if(!LoginServer.getDeviceType(deviceInfo.getDeviceID())){
+					message.what = GET_DEV_TYPE_ERROR;
+					handler.sendMessage(message);
+					return;
+				}
+			}else {
+				if(Cfg.currentDeviceID.isEmpty()){
+					message.what = GET_DEV_TYPE_ERROR;
+					handler.sendMessage(message);
+					return;
+				}
+				if(!LoginServer.getDeviceType(Cfg.currentDeviceID)){
+					message.what = GET_DEV_TYPE_ERROR;
+					handler.sendMessage(message);
+					return;
+				}
+			}
+			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
+			message.what = GET_DEV_TYPE_SUCCEED;
+			handler.sendMessage(message);
+			return;
+		}
+	}
 	private final class ItemClickListener implements OnItemClickListener {
 
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			ListView listView = (ListView) parent;
+			@SuppressWarnings("unchecked")
 			HashMap<String, Object> data = (HashMap<String, Object>) listView
 					.getItemAtPosition(position);
 
 			String devId = (String) data.get("id");
 
 			if (devId == null) {
-				Toast.makeText(getApplicationContext(), "设备出现错误", Toast.LENGTH_SHORT)
+				Toast.makeText(getApplicationContext(), "设备出现错误,请删除该设备", Toast.LENGTH_SHORT)
 						.show();
 				return;
 			}
 
 			Cfg.currentDeviceID = devId;
-
 			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
 
-			Intent listIntent = new Intent();
-			listIntent.setClass(MainActivity.this, DeviceRealtimeDataActivity.class);
-			startActivity(listIntent);
-			finish();
+			getTypeFor = getTypeFunc.clickList;
+			new getDeviceType().start();
 		}
 	}
 
@@ -484,6 +575,7 @@ public class MainActivity extends Activity {
 					message.what = DELETE_ERROR;
 					message.arg1 = mPosition;
 
+					@SuppressWarnings("unchecked")
 					HashMap<String, Object> data1 = (HashMap<String, Object>) listView
 							.getItemAtPosition(message.arg1);
 					final String deleteDevId = (String) data1.get("id");
@@ -558,7 +650,7 @@ public class MainActivity extends Activity {
 			}
 			try {
 				getResult = gson.fromJson(jsonResult
-						, com.demo.smarthome.server.ServerReturnResult.class);
+						, ServerReturnResult.class);
 			}
 			catch (JsonSyntaxException e){
 				e.printStackTrace();
@@ -580,6 +672,13 @@ public class MainActivity extends Activity {
 			handler.sendMessage(message);
 
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// 结束Activity&从栈中移除该Activity
+		ActivityControl.getInstance().removeActivity(this);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
@@ -38,10 +39,11 @@ public class ScreenShotTools {
         //
         view.getWindowVisibleDisplayFrame(frame);
         int stautsHeight=frame.top;
-
-        int width=pActivity.getWindowManager().getDefaultDisplay().getWidth();
-        int height=pActivity.getWindowManager().getDefaultDisplay().getHeight();
-        //
+        Point outSize = new Point();
+        int width,height;
+        pActivity.getWindowManager().getDefaultDisplay().getSize(outSize);
+        width = outSize.x;
+        height = outSize.y;
         bitmap=Bitmap.createBitmap(bitmap, 0, stautsHeight, width, height-stautsHeight);
         return bitmap;
     }

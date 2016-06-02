@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.demo.smarthome"
-    android:versionCode="2"
-    android:versionName="0.2" >
+    android:versionCode="1"
+    android:versionName="0.1" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -80,18 +80,18 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.historyDataActivity"
-            android:label="@string/title_activity_history_data"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".activity.WeatherActivity"
             android:label="@string/title_activity_weather"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.DeviceRealtimeDataActivity"
+            android:name=".activity.BGPM10RealtimeDataActivity"
             android:label="@string/title_activity_device_realtime_data"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.BGPM02LRealtimeDataActivity"
+            android:label="@string/title_activity_bgpm02l_realtime_data"
             android:screenOrientation="portrait" >
         </activity>
         <activity

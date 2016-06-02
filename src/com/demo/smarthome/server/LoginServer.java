@@ -25,6 +25,7 @@ public class LoginServer {
 
         loginResult.setCode(String.valueOf(Cfg.CODE_PWD_ERROR));
         if(Cfg.userName == null|| Cfg.userPassword ==null){
+            loginResult.setCode(String.valueOf(Cfg.USERNAME_EXCEPTION));
             return loginResult;
         }
 
@@ -43,14 +44,53 @@ public class LoginServer {
                     , com.demo.smarthome.server.ServerReturnResult.class);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
+            loginResult.setCode(String.valueOf(Cfg.SERVER_CANT_CONNECT));
+            return loginResult;
         }
         if(loginResult.getRows().size() != 0) {
             Cfg.devInfo = loginResult.getRows().get(0).split(",");
-            Cfg.devNumber = Cfg.devInfo.length;
         }else{
             Cfg.devInfo = new String[]{};
-            Cfg.devNumber = 0;
         }
         return loginResult;
+    }
+
+    //返回true表示成功,false表失败
+    public static boolean getDeviceType(String deviceId) {
+
+        Gson gson = new Gson();
+        ServerReturnResult tempData;
+        String jsonResult;
+        String[] paramsName = {"deviceID"};
+        String[] paramsValue = new String[1];
+
+        if (deviceId.isEmpty()) {
+            return false;
+        }
+        paramsValue[0] = deviceId;
+
+        setServerURL regiterUser = new setServerURL();
+
+        if ((jsonResult = regiterUser.sendParamToServer("getDeviceType", paramsName
+                , paramsValue)).isEmpty()) {
+            return false;
+        }
+        try {
+            tempData = gson.fromJson(jsonResult, ServerReturnResult.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        switch (Integer.parseInt(tempData.getCode())) {
+            case Cfg.CODE_SUCCESS:
+                if (tempData.getRows().size() != 1) {
+                    return false;
+                }
+                Cfg.deviceType = tempData.getRows().get(0);
+                return true;
+            default:
+                return false;
+        }
     }
 }

@@ -24,8 +24,12 @@ public class Cfg extends Application  {
 
 	public static String savePath="//sdcard//myImage/";
 	public static boolean debug = true;
-	
-	//
+
+	//用户界面宽和高度
+	public static int widthPixels = 1080;
+	public static int heightPixels = 1080;
+	//是否存在虚拟按键
+	public static boolean isNavigationBar = false;
 	public final static String SendBoardCastName ="com.demo.smarthome.service.socketconnect";
 	
 	
@@ -34,6 +38,7 @@ public class Cfg extends Application  {
 	public final static String KEY_AUTO_LOGIN ="autoLogin";
 
 	public final static String KEY_DEVICE_ID  ="deviceId";
+	public final static String KEY_DEVICE_TYPE  ="deviceType";
 
 	//  ������ַ  cloud.ai-thinker.com
 	//	cloud.ai-thinker.com
@@ -59,6 +64,7 @@ public class Cfg extends Application  {
 	public final static int REG_PWD_ERROR   		= 7;
 	public final static int REG_USER_EXISTED    	= 8;
 	public final static int REG_EXCEPTION   		= 9;
+	public final static int USERNAME_EXCEPTION   	= 10;
 
 	public final static int CODE_SUCCESS 		= 000;
 	public final static int CODE_NULL_CODE 		= 222;
@@ -66,19 +72,17 @@ public class Cfg extends Application  {
 	public final static int CODE_USER_EXISTED   = 888;
 	public final static int CODE_EXCEPTION   	= 999;
 
-	//���������ص��豸��Ϣ
 	public static String[] devInfo;
-	//�˺Ű󶨵��豸��Ŀ
-	public static int devNumber;
-	//����ѡ�����豸��ID
+	//
+	//
 	public static String currentDeviceID = "";
-
+	public static String deviceType	= "";
 	public static String versionNumber = "";
 
 //	public final static String DEV_UDP_IPADDR="192.168.5.88"; //192.168.1.255
 	public final static int  DEV_UDP_SEND_PORT=2468;
 	public final static int  DEV_UDP_SEND_DELAY=100;
-	public final static int  DEV_UDP_READ_DELAY=15; //udp ɨ��ȴ�?15��
+	public final static int  DEV_UDP_READ_DELAY=15;
 
 	public final static String DEV_UDP_IPADDR="192.168.4.1";
 	public final static int  DEV_UDP_PORT=8001;
@@ -90,7 +94,8 @@ public class Cfg extends Application  {
 	public static byte[] passWd= new byte[0];
 	public static String torken = "";
 	public static byte[] tcpTorken = new byte[0];
-	
+
+	public static String historyType = "";
 
 	public static boolean isLogin=false;
 	public static boolean isSubmitDev=false;
@@ -108,9 +113,6 @@ public class Cfg extends Application  {
 //	public static final int timeOutDef = 30 * (1000 / timeDelayDef); // ���ʱʱ��
 //																		// 20��
 //	public static final int timeReSendTimeDef = 5 * (1000 / timeDelayDef); // �����ط���ʱʱ��
-
-	//��ȡ�ֻ��ֱ��� 1080����1080p,1440����2K�ֱ���,480����480*800
-	public static int phoneWidth = 1080;
 
 	public static Dev getDevById(String id) {
 		Dev dev = null;

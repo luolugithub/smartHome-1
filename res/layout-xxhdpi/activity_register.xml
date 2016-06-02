@@ -73,6 +73,7 @@
                 android:layout_marginLeft="110dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
+                android:ems="8"
                 android:hint="请输入邮箱名"/>
         </FrameLayout>
     </LinearLayout>
@@ -114,6 +115,7 @@
                 android:layout_marginTop="3dp"
                 android:background="@null"
                 android:hint="至少6位数字或字母"
+                android:ems="8"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -151,9 +153,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="110dp"
+                android:layout_marginLeft="120dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
+                android:hint="再次确认密码"
+                android:ems="8"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
@@ -227,6 +231,7 @@
                 android:layout_marginLeft="150dp"
                 android:layout_marginTop="3dp"
                 android:background="@null"
+                android:ems="7"
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
