@@ -113,6 +113,7 @@ public class RegisterActivity extends Activity {
 
 			case REGISTER_SUCCESS:
 
+				dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, userRegName);
 				dbService.SaveSysCfgByKey(Cfg.KEY_PASS_WORD, userRegPassword);
 				dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, deviceInfo.getDeviceID());
@@ -314,16 +315,24 @@ public class RegisterActivity extends Activity {
 			Message message = new Message();
 			message.what = REGISTER_FAIL;
 
-			if(Cfg.currentDeviceID.isEmpty()){
+			if(deviceInfo.getDeviceID().isEmpty()){
+				handler.sendMessage(message);
+				return;
+			}
+			//wait for the time of device sending data to server
+			try {
+				Thread.sleep(Cfg.WAIT_DEVICE_SEND_DATA_TIME);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				message.what = REGISTER_FAIL;
 				handler.sendMessage(message);
 				return;
 			}
 			//先获取绑定设备类型
-			if(!LoginServer.getDeviceType(Cfg.currentDeviceID)){
+			if(!LoginServer.getDeviceType(deviceInfo.getDeviceID())){
 				handler.sendMessage(message);
 				return;
 			}
-			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
 
 			Gson gson = new Gson();
 
@@ -348,6 +357,7 @@ public class RegisterActivity extends Activity {
 			{
 				case Cfg.CODE_SUCCESS:
 					message.what = REGISTER_SUCCESS;
+					Cfg.currentDeviceID = deviceInfo.getDeviceID();
 					break;
 				case Cfg.CODE_USER_EXISTED:
 					message.what = USER_EXISTED;

@@ -223,6 +223,7 @@ public class BGPM02LRealtimeDataActivity extends Activity {
         dataTitle.setOnClickListener(new freshData());
 
         currentType = currentdataTitle.pm2_5;
+        pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
 
         dialogView = new ProgressDialog(BGPM02LRealtimeDataActivity.this);
         dialogView.setTitle("读取数据");
@@ -462,7 +463,7 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                 try {
                     Date deviceTime = dfs.parse(currentData.getCreateTime());
                     Date currentTime = new Date();
-                    if((currentTime.getTime() - deviceTime.getTime())/1000 > 10*60){
+                    if((currentTime.getTime() - deviceTime.getTime())/1000 > 60){
                         is_device_online = false;
                     }
                 } catch (ParseException e) {
@@ -470,6 +471,11 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                     is_device_online = false;
                     is_get_data_success = false;
                     return  GET_CURRENT_FAIL;
+                }
+                if(currentType == currentdataTitle.outline)
+                {
+                    currentType = currentdataTitle.pm2_5;
+                    pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
                 }
                 is_get_data_success = true;
                 return GET_CURRENT_SUCCED;

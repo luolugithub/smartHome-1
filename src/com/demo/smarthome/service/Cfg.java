@@ -56,7 +56,6 @@ public class Cfg extends Application  {
 //	public final static String TCP_SERVER_URL="182.139.160.79";
 	public final static int  TCP_SERVER_PORT=6009;
 
-
 	//���ڷ��������ش���
 	public final static int REG_SUCCESS 			= 0;
 	public final static int REG_ERROR   			= 1;
@@ -83,6 +82,10 @@ public class Cfg extends Application  {
 	public final static int  DEV_UDP_SEND_PORT=2468;
 	public final static int  DEV_UDP_SEND_DELAY=100;
 	public final static int  DEV_UDP_READ_DELAY=15;
+
+	public final static int  WAIT_WIFI_LANSTART_TIME=10;
+	//wait for the time of device sending data to server
+	public final static int  WAIT_DEVICE_SEND_DATA_TIME = 8000;
 
 	public final static String DEV_UDP_IPADDR="192.168.4.1";
 	public final static int  DEV_UDP_PORT=8001;

@@ -72,7 +72,7 @@ public class ConfigDevice {
             if (result.isSuc()) {
                 //配置WI-FI后等待设备设置成lanstart模式
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(Cfg.WAIT_WIFI_LANSTART_TIME);
                     Log.i(TAG,"config wifi succeed");
                 } catch (InterruptedException e) {
                     e.printStackTrace();

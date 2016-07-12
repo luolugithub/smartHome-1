@@ -299,6 +299,7 @@ public class BGPM10RealtimeDataActivity extends Activity {
 
 
         currentType = currentdataTitle.hcho;
+        hchoBtn.setBackgroundResource(R.drawable.hcho_light);
 
         dialogView = new ProgressDialog(BGPM10RealtimeDataActivity.this);
         dialogView.setTitle("读取数据");
@@ -608,7 +609,7 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 try {
                     Date deviceTime = dfs.parse(currentData.getCreateTime());
                     Date currentTime = new Date();
-                    if((currentTime.getTime() - deviceTime.getTime())/1000 > 10*60){
+                    if((currentTime.getTime() - deviceTime.getTime())/1000 > 60){
                         is_device_online = false;
                     }
                 } catch (ParseException e) {
@@ -618,6 +619,12 @@ public class BGPM10RealtimeDataActivity extends Activity {
                     return  GET_CURRENT_FAIL;
                 }
                 is_get_data_success = true;
+                //if the before status is outline ,but the status is online by now.
+                if(currentType == currentdataTitle.outline)
+                {
+                    currentType = currentdataTitle.hcho;
+                    hchoBtn.setBackgroundResource(R.drawable.hcho_light);
+                }
                 return GET_CURRENT_SUCCED;
             default:
                 is_get_data_success = false;

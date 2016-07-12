@@ -179,6 +179,13 @@ public class MainActivity extends Activity {
 						dialogView = new MyDialogView(MainActivity.this);
 						dialogView.showMyDialog("添加设备", "正在添加设备,请稍等");
 						getTypeFor = getTypeFunc.addDevice;
+						//wait for the time of device sending data to server
+						try {
+							Thread.sleep(Cfg.WAIT_DEVICE_SEND_DATA_TIME);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							return;
+						}
 						new getDeviceType().start();
 					}
 				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -497,12 +504,14 @@ public class MainActivity extends Activity {
 		@Override
 		public void run () {
 			Message message = new Message();
+
 			if(getTypeFor == getTypeFunc.addDevice){
 				if (deviceInfo.getDeviceID().isEmpty()) {
 					message.what = GET_DEV_TYPE_ERROR;
 					handler.sendMessage(message);
 					return;
 				}
+
 				if(!LoginServer.getDeviceType(deviceInfo.getDeviceID())){
 					message.what = GET_DEV_TYPE_ERROR;
 					handler.sendMessage(message);
@@ -531,7 +540,7 @@ public class MainActivity extends Activity {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			ListView listView = (ListView) parent;
-			@SuppressWarnings("unchecked")
+
 			HashMap<String, Object> data = (HashMap<String, Object>) listView
 					.getItemAtPosition(position);
 
@@ -575,7 +584,6 @@ public class MainActivity extends Activity {
 					message.what = DELETE_ERROR;
 					message.arg1 = mPosition;
 
-					@SuppressWarnings("unchecked")
 					HashMap<String, Object> data1 = (HashMap<String, Object>) listView
 							.getItemAtPosition(message.arg1);
 					final String deleteDevId = (String) data1.get("id");
