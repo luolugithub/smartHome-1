@@ -2,27 +2,24 @@ package com.demo.smarthome.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ComponentName;
+
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Switch;
+
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.util.TimerTask;
+import java.util.Timer;
 import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.device.DeviceInformation;
@@ -40,9 +37,9 @@ import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.io.File;
+import android.util.Log;
+
 
 /**********************************************************
  *:2016-03-24
@@ -53,19 +50,18 @@ public class BGPM10RealtimeDataActivity extends Activity {
     Button hchoBtn;
     Button tvocBtn;
     Button pm2_5Btn;
-    Button pm10Btn;
     Button historyDataBtn;
     Button shareBtn;
     Button resignBtn;
 
+    boolean isValueWarning = false;
+
     CircleAndNumberView realDataView;
-    ProgressDialog dialogView;
     int crrentValue;
     String jsonResult;
     Gson gson = new Gson();
     boolean is_device_online = true;
     boolean is_get_data_success = false;
-    TextView title = null;
     TextView dataTitle;
     TextView temperatureTextView;
     TextView dampnessTextView;
@@ -85,18 +81,14 @@ public class BGPM10RealtimeDataActivity extends Activity {
 
     //
     static int shareSucceed     = 0;
-    //
-    static int fileNotExist     = 1;
-    //
-    static int screenShotFail   = 2;
 
+    private Timer timer;
     enum currentdataTitle
     {
         outline,
         hcho,
         tvoc,
-        pm2_5,
-        pm10
+        pm2_5
     }
     currentdataTitle currentType;
     Handler handler = new Handler() {
@@ -110,53 +102,36 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 case GET_COUNT_ERROR:
                     break;
                 case GET_CURRENT_SUCCED:
-                    dialogView.dismiss();
                     if(is_get_data_success&&is_device_online)
                     {
-                        int pm2_5 = Integer.parseInt(currentData.getPm2_5());
-                        if(pm2_5<= 35)
-                        {
-                            presentation.setText("空气质量:优");
-                        }else if(pm2_5<= 75){
-                            presentation.setText("空气质量:良");
-                        }else if(pm2_5<= 115){
-                            presentation.setText("空气质量:轻度污染");
-                        }else if(pm2_5<= 150){
-                            presentation.setText("空气质量:中度污染");
-                        }else if(pm2_5<= 250){
-                            presentation.setText("空气质量:重度污染");
-                        }else if(pm2_5 > 250){
-                            presentation.setText("空气质量:严重污染");
-                        }
                         if(currentType == currentdataTitle.hcho) {
                             hchoBtn.setBackgroundResource(R.drawable.hcho_light);
                             tvocBtn.setBackgroundResource(R.drawable.tvoc);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
-                            pm10Btn.setBackgroundResource(R.drawable.pm10);
                             crrentValue = Integer.parseInt(currentData.getHcho());
                             dataTitle.setText("甲醛");
                         }else if(currentType == currentdataTitle.tvoc) {
                             hchoBtn.setBackgroundResource(R.drawable.hcho);
                             tvocBtn.setBackgroundResource(R.drawable.tvoc_light);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
-                            pm10Btn.setBackgroundResource(R.drawable.pm10);
                             crrentValue = Integer.parseInt(currentData.getTvoc());
                             dataTitle.setText("TVOC");
                         }else if(currentType == currentdataTitle.pm2_5) {
                             hchoBtn.setBackgroundResource(R.drawable.hcho);
                             tvocBtn.setBackgroundResource(R.drawable.tvoc);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
-                            pm10Btn.setBackgroundResource(R.drawable.pm10);
-                            crrentValue = pm2_5;
+                            crrentValue = Integer.parseInt(currentData.getPm2_5());
                             dataTitle.setText("PM 2.5");
-                        }else if(currentType == currentdataTitle.pm10) {
+                        }else
+                        {
                             hchoBtn.setBackgroundResource(R.drawable.hcho);
                             tvocBtn.setBackgroundResource(R.drawable.tvoc);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
-                            pm10Btn.setBackgroundResource(R.drawable.pm10_light);
-                            crrentValue = Integer.parseInt(currentData.getPm10());
-                            dataTitle.setText("PM 10");
+                            crrentValue = 0;
+                            realDataView.isWarningColor(false);
+                            dataTitle.setText("未知");
                         }
+
                     }
                     else
                     {
@@ -167,19 +142,18 @@ public class BGPM10RealtimeDataActivity extends Activity {
                         presentation.setText("设备不在线");
                         currentType = currentdataTitle.outline;
                     }
+
                     new Thread(updateDataThread).start();
                     break;
                 case GET_CURRENT_FAIL:
-                    dialogView.dismiss();
                     Toast.makeText(BGPM10RealtimeDataActivity.this, "设备错误", Toast.LENGTH_SHORT)
-                            .show();
+                        .show();
 
                     intent.setClass(BGPM10RealtimeDataActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                     break;
                 case CHOSE_DEVICE_NULL:
-                    dialogView.dismiss();
                     ConfigService dbService = new ConfigDao(BGPM10RealtimeDataActivity.this.getBaseContext());
                     Cfg.currentDeviceID = "";
                     dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
@@ -285,55 +259,25 @@ public class BGPM10RealtimeDataActivity extends Activity {
         tvocBtn.setOnTouchListener(tvocDataShow);
         pm2_5Btn = (Button) findViewById(R.id.pm2_5Btn);
         pm2_5Btn.setOnTouchListener(pm2_5DataShow);
-        pm10Btn = (Button) findViewById(R.id.pm10Btn);
-        pm10Btn.setOnTouchListener(pm10DataShow);
         temperatureTextView = (TextView)findViewById(R.id.temperature);
         dampnessTextView = (TextView)findViewById(R.id.dampness);
         presentation = (TextView)findViewById(R.id.presentation);
 
         //to touch view fresh data.
         realDataView = (CircleAndNumberView)findViewById(R.id.CircleData);
-        realDataView.setOnClickListener(new freshData());
         dataTitle = (TextView)findViewById(R.id.dataType);
-        dataTitle.setOnClickListener(new freshData());
+
+        //auto fresh
+        timer = new Timer();
+        timer.schedule(freshDataTimer, Cfg.autoFreshTime, Cfg.autoFreshTime);
 
 
         currentType = currentdataTitle.hcho;
         hchoBtn.setBackgroundResource(R.drawable.hcho_light);
 
-        dialogView = new ProgressDialog(BGPM10RealtimeDataActivity.this);
-        dialogView.setTitle("读取数据");
-        dialogView.setMessage("正在读取数据,请等待");
-
-        dialogView.setCanceledOnTouchOutside(false);
-        dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-            }
-        });
-        dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-                "请等待...", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        dialogView.show();
-        dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(false);
-
-        dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    return true;
-                }
-                return false;
-            }
-        });
         new getCurrentDataThread().start();
     }
-
+    
     //updata current data
     final Runnable updateDataThread = new Runnable() {
         public void run() {
@@ -358,20 +302,62 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 {
                     realDataView.setText((float) crrentValue / 100 + "");
                     realDataView.setUnit(getResources().getString(R.string.device_tvoc_unit));
+                    if(crrentValue < 60)
+                    {
+                        presentation.setText("总挥发性有机物含量:低");
+                        realDataView.isWarningColor(false);
+                    }else
+                    {
+                        presentation.setText("总挥发性有机物含量:超标");
+                        realDataView.isWarningColor(true);
+                    }
                 }else if(currentType == currentdataTitle.pm2_5)
                 {
+                    if(crrentValue<= 35)
+                    {
+                        presentation.setText("空气质量:优");
+                    }else if(crrentValue<= 75){
+                        presentation.setText("空气质量:良");
+                    }else if(crrentValue<= 115){
+                        presentation.setText("空气质量:轻度污染");
+                    }else if(crrentValue<= 150){
+                        presentation.setText("空气质量:中度污染");
+                    }else if(crrentValue<= 250){
+                        presentation.setText("空气质量:重度污染");
+                    }else if(crrentValue > 250){
+                        presentation.setText("空气质量:严重污染");
+                    }
+                    if(crrentValue < 250)
+                    {
+                        realDataView.isWarningColor(false);
+                    }else
+                    {
+                        realDataView.isWarningColor(true);
+                    }
+
                     realDataView.setText( crrentValue  + "");
                     realDataView.setUnit(getResources().getString(R.string.device_pm2_5_unit));
-                }else if(currentType == currentdataTitle.pm10)
-                {
-                    realDataView.setText( crrentValue  + "");
-                    realDataView.setUnit(getResources().getString(R.string.device_pm2_5_unit));
+
                 }else if(currentType == currentdataTitle.hcho)
                 {
+                    if(crrentValue<= 5)
+                    {
+                        presentation.setText("甲醛含量:低");
+                        realDataView.isWarningColor(false);
+                    }else if(crrentValue<= 10){
+                        presentation.setText("甲醛含量:较低");
+                        realDataView.isWarningColor(false);
+                    }else{
+                        presentation.setText("甲醛含量:超标");
+                        realDataView.isWarningColor(true);
+                    }
+
                     realDataView.setText((float) crrentValue / 100 + "");
                     realDataView.setUnit(getResources().getString(R.string.device_hcho_unit));
+
                     range = 300;
                 }else{
+                    realDataView.isWarningColor(false);
                     realDataView.setText( crrentValue  + "");
                     realDataView.setUnit("");
                 }
@@ -445,11 +431,11 @@ public class BGPM10RealtimeDataActivity extends Activity {
 
         public boolean onTouch(View view, MotionEvent event) {
             int iAction = event.getAction();
+            Cfg.historyType = DeviceInformation.HISTORY_TYPE_HCHO;
             if (iAction == MotionEvent.ACTION_DOWN) {
                 hchoBtn.setBackgroundResource(R.drawable.hcho_light);
                 tvocBtn.setBackgroundResource(R.drawable.tvoc);
                 pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
-                pm10Btn.setBackgroundResource(R.drawable.pm10);
             } else if (iAction == MotionEvent.ACTION_UP) {
                 if (is_get_data_success && is_device_online) {
                     crrentValue = Integer.parseInt(currentData.getHcho());
@@ -470,11 +456,11 @@ public class BGPM10RealtimeDataActivity extends Activity {
     private View.OnTouchListener tvocDataShow = new View.OnTouchListener(){
         public boolean onTouch(View view, MotionEvent event) {
             int iAction = event.getAction();
+            Cfg.historyType = DeviceInformation.HISTORY_TYPE_TVOC;
             if (iAction == MotionEvent.ACTION_DOWN) {
                 tvocBtn.setBackgroundResource(R.drawable.tvoc_light);
                 hchoBtn.setBackgroundResource(R.drawable.hcho);
                 pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
-                pm10Btn.setBackgroundResource(R.drawable.pm10);
             } else if (iAction == MotionEvent.ACTION_UP) {
                 if(is_get_data_success&&is_device_online)
                 {
@@ -498,11 +484,11 @@ public class BGPM10RealtimeDataActivity extends Activity {
     private View.OnTouchListener pm2_5DataShow = new View.OnTouchListener(){
         public boolean onTouch(View view, MotionEvent event) {
             int iAction = event.getAction();
+            Cfg.historyType = DeviceInformation.HISTORY_TYPE_PM2_5;
             if (iAction == MotionEvent.ACTION_DOWN) {
                 hchoBtn.setBackgroundResource(R.drawable.hcho);
                 tvocBtn.setBackgroundResource(R.drawable.tvoc);
                 pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
-                pm10Btn.setBackgroundResource(R.drawable.pm10);
             } else if (iAction == MotionEvent.ACTION_UP) {
                 if(is_get_data_success&&is_device_online)
                 {
@@ -523,44 +509,13 @@ public class BGPM10RealtimeDataActivity extends Activity {
             return false;
         }
     };
-    private View.OnTouchListener pm10DataShow = new View.OnTouchListener(){
-        public boolean onTouch(View view, MotionEvent event) {
-            int iAction = event.getAction();
-            if (iAction == MotionEvent.ACTION_DOWN) {
-                hchoBtn.setBackgroundResource(R.drawable.hcho);
-                tvocBtn.setBackgroundResource(R.drawable.tvoc);
-                pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
-                pm10Btn.setBackgroundResource(R.drawable.pm10_light);
-            } else if (iAction == MotionEvent.ACTION_UP) {
-                if(is_get_data_success&&is_device_online)
-                {
-                    crrentValue = Integer.parseInt(currentData.getPm10());
-                    dataTitle.setText("PM 10");
-                    currentType = currentdataTitle.pm10;
-                }
-                else
-                {
-                    crrentValue = 0;
-                    dataTitle.setText("离线");
-                    dataTitle.setTextColor(ContextCompat.getColor
-                            (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
-                    currentType = currentdataTitle.outline;
-                }
-                new Thread(updateDataThread).start();
-            }
-            return false;
-        }
-    };
 
-    class freshData implements View.OnClickListener{
+    private TimerTask freshDataTimer = new TimerTask(){
         @Override
-        public void onClick(View v) {
-            dialogView.setTitle("刷新");
-            dialogView.setMessage("刷新中,请等待");
-            dialogView.show();
+        public void run() {
             new getCurrentDataThread().start();
         }
-    }
+    };
 
     class getCurrentDataThread extends Thread {
 
@@ -609,8 +564,11 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 try {
                     Date deviceTime = dfs.parse(currentData.getCreateTime());
                     Date currentTime = new Date();
-                    if((currentTime.getTime() - deviceTime.getTime())/1000 > 60){
+                    if(currentTime.getTime() - deviceTime.getTime() > Cfg.outlineTime){
                         is_device_online = false;
+                    }
+                    else {
+                        is_device_online = true;
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -635,6 +593,8 @@ public class BGPM10RealtimeDataActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        timer.cancel();
+        freshDataTimer.cancel();
         // 结束Activity&从栈中移除该Activity
         ActivityControl.getInstance().removeActivity(this);
     }

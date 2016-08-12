@@ -53,7 +53,7 @@ public class StringRes {
             ,"雅安","青岛","鞍山","韶关","马鞍山","驻马店","鸡西","鹤壁","鹤岗","鹰潭"
             ,"黄冈","黄南州","黄山","黄石","黑河","黔东南州","黔南州","黔西南州","齐齐哈尔","龙岩"};
 
-        public final static String canNotConnetServer = "请联系贝谷科技售后服务部";
+        public final static String canNotConnetServer = "请检查网络是否正确";
 
 
 }

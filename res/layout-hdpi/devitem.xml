@@ -3,16 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-"
-
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/line"
-        android:text="" />
 
     <!-- ID -->
 
@@ -20,30 +10,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal" >
-
-        <FrameLayout
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:text="设备ID:"
+            android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:text="设备ID:"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/devId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
-                android:layout_marginTop="0dp"
-                android:text=""
-                android:textSize="18sp" />
-        </FrameLayout>
+        <TextView
+            android:id="@+id/devId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="0dp"
+            android:text=""
+            android:textSize="18sp" />
     </LinearLayout>
 
     <!-- 名称 -->

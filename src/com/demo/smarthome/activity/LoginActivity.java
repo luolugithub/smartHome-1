@@ -138,25 +138,33 @@ public class LoginActivity extends Activity {
 				break;
 			case BASE_TYPE_LOGIN_SUCCEED:
 
-				if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+				if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
 				{
 					intent.setClass(LoginActivity.this, BGPM02LRealtimeDataActivity.class);
 					startActivity(intent);
 					finish();
-				}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+				}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 				{
 					intent.setClass(LoginActivity.this, BGPM10RealtimeDataActivity.class);
+					startActivity(intent);
+					finish();
+				}else {
+					Bundle bundle = new Bundle();
+					bundle.putString("activity", "login");
+
+					intent.putExtras(bundle);
+					intent.setClass(LoginActivity.this, MainActivity.class);
 					startActivity(intent);
 					finish();
 				}
 				break;
 			case BASE_TYPE_LOGIN_FAILED:
-				Bundle bundle = new Bundle();
-				bundle.putString("activity", "login");
+					Bundle bundle = new Bundle();
+					bundle.putString("activity", "login");
 
-				intent.putExtras(bundle);
-				intent.setClass(LoginActivity.this, MainActivity.class);
-				startActivity(intent);
+					intent.putExtras(bundle);
+					intent.setClass(LoginActivity.this, MainActivity.class);
+					startActivity(intent);
 					break;
 			case SERVER_ERROR:
 				break;
@@ -357,7 +365,8 @@ public class LoginActivity extends Activity {
 				handler.sendMessage(message);
 				return;
 			}
-			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
+			dbService.SaveSysCfgByKey(Cfg.currentDeviceID, Cfg.deviceType);
+			Cfg.currentDeviceType = Cfg.deviceType;
 			message.what = BASE_TYPE_LOGIN_SUCCEED;
 			handler.sendMessage(message);
 			return;

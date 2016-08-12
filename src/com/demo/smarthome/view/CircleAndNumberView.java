@@ -9,10 +9,11 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-
+import android.content.res.Resources;
 import com.demo.smarthome.R;
 
 /**
@@ -44,13 +45,16 @@ public class CircleAndNumberView extends View {
     private int rimColor = 0xAADDDDDD;
     private int textColor = 0xFF000000;
 
+    //set circle view warning color
+    private boolean isWarning = false;
+    private boolean isSetPaint = false;
     // Paints
     private Paint barPaint = new Paint();
     private Paint circlePaint = new Paint();
     private Paint rimPaint = new Paint();
     private Paint textPaint = new Paint();
     private Paint unitPaint = new Paint();
-
+    private Context mContext;
     // Rectangles
     @SuppressWarnings("unused")
     private RectF rectBounds = new RectF();
@@ -68,6 +72,16 @@ public class CircleAndNumberView extends View {
          */
         @Override
         public void handleMessage(Message msg) {
+
+            if(isWarning)
+            {
+                setupWarningPaints();
+            }
+            else
+            {
+                setupPaints();
+            }
+
             invalidate();
             if (isSpinning) {
                 progress += spinSpeed;
@@ -100,7 +114,7 @@ public class CircleAndNumberView extends View {
      */
     public CircleAndNumberView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        mContext = context;
         parseAttributes(context.obtainStyledAttributes(attrs, R.styleable.ProgressWheel));
     }
 
@@ -154,6 +168,36 @@ public class CircleAndNumberView extends View {
         unitPaint.setStyle(Style.FILL);
         unitPaint.setAntiAlias(true);
         unitPaint.setTextSize(unitSize);
+    }
+    private void setupWarningPaints() {
+        barPaint.setColor(ContextCompat.getColor(mContext,R.color.red));
+        barPaint.setAntiAlias(true);
+        barPaint.setStyle(Style.STROKE);
+        barPaint.setStrokeWidth(barWidth);
+
+        rimPaint.setColor(ContextCompat.getColor(mContext,R.color.red));
+        rimPaint.setAntiAlias(true);
+        rimPaint.setStyle(Style.STROKE);
+        rimPaint.setStrokeWidth(rimWidth);
+
+        circlePaint.setColor(circleColor);
+        circlePaint.setAntiAlias(true);
+        circlePaint.setStyle(Style.FILL);
+
+        textPaint.setColor(ContextCompat.getColor(mContext,R.color.red));
+        textPaint.setStyle(Style.FILL);
+        textPaint.setAntiAlias(true);
+        textPaint.setTextSize(textSize);
+
+        unitPaint.setColor(ContextCompat.getColor(mContext,R.color.red));
+        unitPaint.setStyle(Style.FILL);
+        unitPaint.setAntiAlias(true);
+        unitPaint.setTextSize(unitSize);
+    }
+    public void isWarningColor(boolean isWarning)
+    {
+            this.isSetPaint = true;
+            this.isWarning = isWarning;
     }
 
     /**

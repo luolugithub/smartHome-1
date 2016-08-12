@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
 	static final int FIND_DEV_SUCCEED = 0X20;
 	static final int FIND_DEV_TIMEOUT = 0X21;
 
-	private static enum getTypeFunc {
+	private enum getTypeFunc {
 		addDevice , clickList
 	}
 	getTypeFunc getTypeFor;
@@ -176,16 +176,10 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 
-						dialogView = new MyDialogView(MainActivity.this);
 						dialogView.showMyDialog("添加设备", "正在添加设备,请稍等");
+						Log.d(TAG,"add device alert view,thread "+Thread.currentThread().getName());
 						getTypeFor = getTypeFunc.addDevice;
-						//wait for the time of device sending data to server
-						try {
-							Thread.sleep(Cfg.WAIT_DEVICE_SEND_DATA_TIME);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-							return;
-						}
+
 						new getDeviceType().start();
 					}
 				}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -206,11 +200,11 @@ public class MainActivity extends Activity {
 				dialogView.closeMyDialog();
 				Toast.makeText(MainActivity.this, "添加设备成功", Toast.LENGTH_SHORT)
 						.show();
-				if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+				if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
 				{
 					tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
 
-				}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+				}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 				{
 					tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
 				}
@@ -227,11 +221,11 @@ public class MainActivity extends Activity {
 				if(getTypeFor == getTypeFunc.addDevice) {
 					new addDeviceThread().start();
 				}else {
-					if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+					if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
 					{
 						tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
 
-					}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+					}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 					{
 						tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
 					}
@@ -319,16 +313,26 @@ public class MainActivity extends Activity {
 		for (String devID : Cfg.devInfo) {
 			HashMap<String, Object> item = new HashMap<String, Object>();
 			item.put("id", devID);
-			item.put("name", "未命名");
+			if(dbService.getCfgByKey(devID).equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+			{
+				item.put("name", "PM2.5监测仪");
+			}
+			else if(dbService.getCfgByKey(devID).equals(DeviceInformation.DEV_TYPE_BGPM_10))
+			{
+				item.put("name", "多功能PM2.5监测仪");
+			}
+			else{
+				item.put("name", "未知");
+			}
 			data.add(item);
 		}
-		//
+
 		SimpleAdapter adapter = new MySimpleAdapter(this, data,
 				R.layout.devitem, new String[] { "id", "name"},
 				new int[] { R.id.devId, R.id.devName});
-		//
+
 		listView.setAdapter(adapter);
-		//
+
 		listView.setDivider(null);
 
 		listView.setOnItemClickListener(new ItemClickListener());
@@ -404,7 +408,6 @@ public class MainActivity extends Activity {
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
 
-									dialogView = new MyDialogView(MainActivity.this);
 									dialogView.showMyDialog("注册", "正在扫描设备,请稍等");
 
 									new ConnectDevThread().start();
@@ -447,6 +450,7 @@ public class MainActivity extends Activity {
 				}
 				if(deviceInfo.getConfigResult() == FIND_DEVID){
 					message.what = FIND_DEV_SUCCEED;
+					Log.d(TAG,"FIND_DEV_SUCCEED");
 				}else{
 					message.what = FIND_DEV_TIMEOUT;
 				}
@@ -489,6 +493,7 @@ public class MainActivity extends Activity {
 					Cfg.currentDeviceID = deviceInfo.getDeviceID();
 					dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
 					message.what = ADD_DEV_SUCCED;
+					Log.d(TAG,"ADD_DEV_SUCCED");
 					handler.sendMessage(message);
 					break;
 				default:
@@ -529,7 +534,8 @@ public class MainActivity extends Activity {
 					return;
 				}
 			}
-			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
+			dbService.SaveSysCfgByKey(deviceInfo.getDeviceID(), Cfg.deviceType);
+			Cfg.currentDeviceType = Cfg.deviceType;
 			message.what = GET_DEV_TYPE_SUCCEED;
 			handler.sendMessage(message);
 			return;
@@ -541,6 +547,7 @@ public class MainActivity extends Activity {
 				long id) {
 			ListView listView = (ListView) parent;
 
+			@SuppressWarnings("unchecked")
 			HashMap<String, Object> data = (HashMap<String, Object>) listView
 					.getItemAtPosition(position);
 
@@ -556,7 +563,23 @@ public class MainActivity extends Activity {
 			dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,Cfg.currentDeviceID);
 
 			getTypeFor = getTypeFunc.clickList;
-			new getDeviceType().start();
+			Cfg.currentDeviceType = dbService.getCfgByKey(devId);
+			if(Cfg.currentDeviceType.isEmpty())
+			{
+				Toast.makeText(getApplicationContext(), "该设备出现错误,请删除该设备", Toast.LENGTH_SHORT)
+						.show();
+				return;
+			}
+			if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+			{
+				tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
+
+			}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
+			{
+				tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
+			}
+			startActivity(tempIntent);
+			finish();
 		}
 	}
 
@@ -584,8 +607,10 @@ public class MainActivity extends Activity {
 					message.what = DELETE_ERROR;
 					message.arg1 = mPosition;
 
+					@SuppressWarnings("unchecked")
 					HashMap<String, Object> data1 = (HashMap<String, Object>) listView
 							.getItemAtPosition(message.arg1);
+
 					final String deleteDevId = (String) data1.get("id");
 
 					if (deleteDevId == null) {
@@ -604,7 +629,6 @@ public class MainActivity extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 
-							dialogView = new MyDialogView(MainActivity.this);
 							dialogView.showMyDialog("删除", "正在删除设备中");
 
 							new DelDevThread(deleteDevId).start();

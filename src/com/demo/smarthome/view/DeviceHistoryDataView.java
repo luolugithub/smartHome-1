@@ -203,7 +203,8 @@ public class DeviceHistoryDataView extends View {
 							, bheight - (bheight / spacingHeight) * i + marginTop , canvas);
 				}
 			}else {
-				if(kind.equals(DeviceInformation.HISTORY_TYPE_HCHO)){
+				if(kind.equals(DeviceInformation.HISTORY_TYPE_HCHO)
+						|| kind.equals(DeviceInformation.HISTORY_TYPE_TVOC)){
 					drawText(String.valueOf(averageValue * i), blwidh / 2 - dip2px(yTextChange)
 							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
 				}else {
@@ -215,7 +216,8 @@ public class DeviceHistoryDataView extends View {
 
 		}
 
-		if(kind.equals(DeviceInformation.HISTORY_TYPE_HCHO)){
+		if(kind.equals(DeviceInformation.HISTORY_TYPE_HCHO)
+				|| kind.equals(DeviceInformation.HISTORY_TYPE_TVOC)){
 			drawText(String.valueOf("(" + getResources().getString(R.string.device_hcho_unit) + ")")
 					, blwidh / 2 - dip2px(yTextChange) - dip2px(8),  dip2px(yTextUnit), canvas);
 		}else{

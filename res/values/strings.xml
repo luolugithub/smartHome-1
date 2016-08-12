@@ -24,7 +24,7 @@
     <string name="device_hcho_unit">mg/m³</string>
     <string name="device_pm2_5_unit">μg/m³</string>
     <string name="device_pm10_unit">μg/m³</string>
-    <string name="device_tvoc_unit">μg/m³</string>
+    <string name="device_tvoc_unit">mg/m³</string>
     <string name="device_temperature_unit">°C</string>
     <string name="device_hygrometer_unit">%</string>
     <string name="device_degrees_prompt">选择查看的日期</string>

@@ -31,15 +31,9 @@ import android.net.Uri;
 import android.os.*;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Process;
-import android.util.DisplayMetrics;
 import android.util.Xml;
-import android.view.Menu;
-import android.view.View;
 import android.view.Window;
 import android.util.Log;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -89,15 +83,15 @@ public class WelcomeActivity extends Activity {
 			Intent intent = new Intent();
 			switch (msg.what){
 				case LOGIN_SUCCEED:
-					String tempDeviceType = dbService.getCfgByKey(Cfg.KEY_DEVICE_TYPE);
+					String tempDeviceType = dbService.getCfgByKey(Cfg.currentDeviceID);
 					if(!tempDeviceType.isEmpty()){
-						Cfg.deviceType = tempDeviceType;
-						if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+						Cfg.currentDeviceType = tempDeviceType;
+						if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
 						{
 							intent.setClass(WelcomeActivity.this, BGPM02LRealtimeDataActivity.class);
 							startActivity(intent);
 							finish();
-						}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+						}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 						{
 							intent.setClass(WelcomeActivity.this, BGPM10RealtimeDataActivity.class);
 							startActivity(intent);
@@ -238,10 +232,7 @@ public class WelcomeActivity extends Activity {
 				handler.sendMessage(message);
 				return;
 			}
-			String tempDevID = dbService.getCfgByKey(Cfg.KEY_DEVICE_ID);
-			if(tempDevID != null){
-				Cfg.currentDeviceID = tempDevID;
-			}
+			Cfg.currentDeviceID = dbService.getCfgByKey(Cfg.KEY_DEVICE_ID);
 
 			loginResult = LoginServer.LoginServerMethod();
 			switch (Integer.parseInt(loginResult.getCode()))
@@ -249,8 +240,22 @@ public class WelcomeActivity extends Activity {
 				case Cfg.CODE_SUCCESS:
 					if(Cfg.currentDeviceID.isEmpty()) {
 						message.what = AUTO_LOGIN_NO_DEVID;
+						dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID,"");
 					}else{
 						message.what = LOGIN_SUCCEED;
+						for(int i = 0;i<Cfg.devInfo.length;i++)
+						{
+							if(dbService.getCfgByKey(Cfg.devInfo[i]).isEmpty()) {
+								if(!LoginServer.getDeviceType(Cfg.devInfo[i])){
+									//handler.sendMessage(message);
+									return;
+								}
+								else{
+									dbService.SaveSysCfgByKey(Cfg.devInfo[i],Cfg.deviceType);
+								}
+							}
+						}
+
 					}
 					break;
 				default:

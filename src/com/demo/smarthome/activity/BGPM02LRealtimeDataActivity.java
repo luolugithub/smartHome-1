@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +17,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
+import java.util.TimerTask;
+import java.util.Timer;
 import com.demo.smarthome.R;
 import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.dao.ConfigDao;
@@ -46,7 +48,6 @@ public class BGPM02LRealtimeDataActivity extends Activity {
     Button resignBtn;
 
     CircleAndNumberView realDataView;
-    ProgressDialog dialogView;
     int crrentValue;
     String jsonResult;
     Gson gson = new Gson();
@@ -57,7 +58,7 @@ public class BGPM02LRealtimeDataActivity extends Activity {
     TextView presentation;
     DeviceDataResult deviceData = new DeviceDataResult();
     DeviceDataSet currentData = new DeviceDataSet();
-
+    private Timer timer;
     static final int GET_COUNT_SUCCEED     = 0;
     static final int GET_COUNT_ERROR       = 1;
     static final int CHOSE_DEVICE_NULL       = 2;
@@ -95,7 +96,6 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                 case GET_COUNT_ERROR:
                     break;
                 case GET_CURRENT_SUCCED:
-                    dialogView.dismiss();
                     if(is_get_data_success&&is_device_online)
                     {
                         int pm2_5 = Integer.parseInt(currentData.getPm2_5());
@@ -133,10 +133,10 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                         presentation.setText("设备不在线");
                         currentType = currentdataTitle.outline;
                     }
+
                     new Thread(updateDataThread).start();
                     break;
                 case GET_CURRENT_FAIL:
-                    dialogView.dismiss();
                     Toast.makeText(BGPM02LRealtimeDataActivity.this, "设备错误", Toast.LENGTH_SHORT)
                             .show();
 
@@ -145,7 +145,6 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                     finish();
                     break;
                 case CHOSE_DEVICE_NULL:
-                    dialogView.dismiss();
                     ConfigService dbService = new ConfigDao(BGPM02LRealtimeDataActivity.this.getBaseContext());
                     Cfg.currentDeviceID = "";
                     dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, Cfg.currentDeviceID);
@@ -216,46 +215,24 @@ public class BGPM02LRealtimeDataActivity extends Activity {
         pm2_5Btn.setOnTouchListener(pm2_5DataShow);
         presentation = (TextView)findViewById(R.id.presentation);
 
-        //to touch view fresh data.
         realDataView = (CircleAndNumberView)findViewById(R.id.CircleData);
-        realDataView.setOnClickListener(new freshData());
         dataTitle = (TextView)findViewById(R.id.dataType);
-        dataTitle.setOnClickListener(new freshData());
+        //auto fresh
+        timer = new Timer();
+        timer.schedule(freshDataTimer, Cfg.autoFreshTime, Cfg.autoFreshTime);
 
         currentType = currentdataTitle.pm2_5;
         pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
 
-        dialogView = new ProgressDialog(BGPM02LRealtimeDataActivity.this);
-        dialogView.setTitle("读取数据");
-        dialogView.setMessage("正在读取数据,请等待");
-
-        dialogView.setCanceledOnTouchOutside(false);
-        dialogView.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-            }
-        });
-        dialogView.setButton(DialogInterface.BUTTON_POSITIVE,
-                "请等待...", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-        dialogView.show();
-        dialogView.getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(false);
-
-        dialogView.setOnKeyListener(new DialogInterface.OnKeyListener() {
-
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    return true;
-                }
-                return false;
-            }
-        });
         new getCurrentDataThread().start();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+        freshDataTimer.cancel();
+        // 结束Activity&从栈中移除该Activity
+        ActivityControl.getInstance().removeActivity(this);
     }
 
     //updata current data
@@ -406,15 +383,12 @@ public class BGPM02LRealtimeDataActivity extends Activity {
         }
     };
 
-    class freshData implements View.OnClickListener{
+    private TimerTask freshDataTimer = new TimerTask(){
         @Override
-        public void onClick(View v) {
-            dialogView.setTitle("刷新");
-            dialogView.setMessage("刷新中,请等待");
-            dialogView.show();
+        public void run() {
             new getCurrentDataThread().start();
         }
-    }
+    };
 
     class getCurrentDataThread extends Thread {
 
@@ -463,8 +437,11 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                 try {
                     Date deviceTime = dfs.parse(currentData.getCreateTime());
                     Date currentTime = new Date();
-                    if((currentTime.getTime() - deviceTime.getTime())/1000 > 60){
+                    if(currentTime.getTime() - deviceTime.getTime() > Cfg.outlineTime){
                         is_device_online = false;
+                    }
+                    else {
+                        is_device_online = true;
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();

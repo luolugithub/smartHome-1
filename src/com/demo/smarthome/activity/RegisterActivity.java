@@ -113,7 +113,7 @@ public class RegisterActivity extends Activity {
 
 			case REGISTER_SUCCESS:
 
-				dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_TYPE, Cfg.deviceType);
+				dbService.SaveSysCfgByKey(Cfg.currentDeviceID, Cfg.deviceType);
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, userRegName);
 				dbService.SaveSysCfgByKey(Cfg.KEY_PASS_WORD, userRegPassword);
 				dbService.SaveSysCfgByKey(Cfg.KEY_DEVICE_ID, deviceInfo.getDeviceID());
@@ -134,11 +134,11 @@ public class RegisterActivity extends Activity {
 				Bundle bundle = new Bundle();
 				bundle.putString("activity", "register");
 				Intent mainIntent = new Intent();
-				if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
+				if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
 				{
 					mainIntent = new Intent(RegisterActivity.this, BGPM02LRealtimeDataActivity.class);
 
-				}else if(Cfg.deviceType.equals(DeviceInformation.DEV_TYPE_BGFM_10))
+				}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 				{
 					mainIntent = new Intent(RegisterActivity.this, BGPM10RealtimeDataActivity.class);
 				}
@@ -319,21 +319,13 @@ public class RegisterActivity extends Activity {
 				handler.sendMessage(message);
 				return;
 			}
-			//wait for the time of device sending data to server
-			try {
-				Thread.sleep(Cfg.WAIT_DEVICE_SEND_DATA_TIME);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				message.what = REGISTER_FAIL;
-				handler.sendMessage(message);
-				return;
-			}
+
 			//先获取绑定设备类型
 			if(!LoginServer.getDeviceType(deviceInfo.getDeviceID())){
 				handler.sendMessage(message);
 				return;
 			}
-
+			Cfg.currentDeviceType = Cfg.deviceType;
 			Gson gson = new Gson();
 
 			String[] paramsName = {"userName", "userPassword","deviceId", "devicePassword"};

@@ -49,8 +49,17 @@ public class LoginServer {
         }
         if(loginResult.getRows().size() != 0) {
             Cfg.devInfo = loginResult.getRows().get(0).split(",");
+            for(int i = 0;i<Cfg.devInfo.length;i++)
+            {
+                if(Cfg.devInfo[i].equals(Cfg.currentDeviceID))
+                {
+                    return loginResult;
+                }
+            }
+            Cfg.currentDeviceID = "";
         }else{
             Cfg.devInfo = new String[]{};
+            Cfg.currentDeviceID = "";
         }
         return loginResult;
     }

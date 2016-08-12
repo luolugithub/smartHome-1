@@ -171,7 +171,11 @@ public class DeviceHistoryDataActivitiy extends Activity {
         viewTitle = (TextView)findViewById(R.id.viewType);
         if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM2_5)){
             viewTitle.setText("PM2.5趋势");
-        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_HCHO)){
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM10)){
+            viewTitle.setText("PM10趋势");
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_TVOC)){
+            viewTitle.setText("TVOC趋势");
+        }else {
             viewTitle.setText("甲醛趋势");
         }
         //wait dialog
@@ -190,7 +194,6 @@ public class DeviceHistoryDataActivitiy extends Activity {
             monthBtn.setBackgroundResource(R.drawable.month);
             new getDataByDay().start();
         }
-
     }
 
     class shareToTimeline implements View.OnClickListener {
@@ -459,10 +462,38 @@ public class DeviceHistoryDataActivitiy extends Activity {
                 YmaxValue = 1.0f;
                 YaverageValue = 0.2f;
             }
-        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM2_5)){
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_TVOC)){
             for(int i = 0;i < data.size();i++) {
-                if(maxValue < Integer.parseInt(data.get(i).getPm2_5())) {
-                    maxValue = Integer.parseInt(data.get(i).getPm2_5());
+                if(maxValue < Integer.parseInt(data.get(i).getTvoc())) {
+                    maxValue = Integer.parseInt(data.get(i).getTvoc());
+                }
+            }
+            if(maxValue > 300){
+                YmaxValue = 10.0f;
+                YaverageValue = 2.0f;
+            }else if(maxValue>200){
+                YmaxValue = 3.0f;
+                YaverageValue = 0.5f;
+            }else if(maxValue > 100){
+                YmaxValue = 2.0f;
+                YaverageValue = 0.4f;
+            }else{
+                YmaxValue = 1.0f;
+                YaverageValue = 0.2f;
+            }
+        }
+        else{
+            for(int i = 0;i < data.size();i++) {
+                if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM2_5))
+                {
+                    if(maxValue < Integer.parseInt(data.get(i).getPm2_5())) {
+                        maxValue = Integer.parseInt(data.get(i).getPm2_5());
+                    }
+                }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM10))
+                {
+                    if(maxValue < Integer.parseInt(data.get(i).getPm10())) {
+                        maxValue = Integer.parseInt(data.get(i).getPm10());
+                    }
                 }
             }
             if(maxValue > 800){
@@ -530,10 +561,14 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
                 if(diff >= 0 && diff < timeStepLength && j < allData.size()) {
                     //The data from server need divide 100
-                    if(Cfg.historyType.equals("hcho")) {
+                    if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_HCHO)) {
                         value = ((double) Integer.parseInt(allData.get(j).getHcho())) / 100;
-                    }else {
+                    }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM2_5)){
                         value = (double) Integer.parseInt(allData.get(j).getPm2_5());
+                    }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM10)){
+                        value = (double) Integer.parseInt(allData.get(j).getPm10());
+                    }else{
+                        value = (double) Integer.parseInt(allData.get(j).getTvoc());
                     }
                     yData.add(value);
                     CreateTime = dfs.parse(allData.get(j).getCreateTime());

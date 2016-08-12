@@ -38,7 +38,6 @@ public class Cfg extends Application  {
 	public final static String KEY_AUTO_LOGIN ="autoLogin";
 
 	public final static String KEY_DEVICE_ID  ="deviceId";
-	public final static String KEY_DEVICE_TYPE  ="deviceType";
 
 	//  ������ַ  cloud.ai-thinker.com
 	//	cloud.ai-thinker.com
@@ -75,8 +74,12 @@ public class Cfg extends Application  {
 	//
 	//
 	public static String currentDeviceID = "";
+	public static String currentDeviceType = "";
 	public static String deviceType	= "";
 	public static String versionNumber = "";
+	//The time(millisecond) of auto freshing of real-time data of device
+	public static int autoFreshTime = 5000;
+	public static int outlineTime = 15000;
 
 //	public final static String DEV_UDP_IPADDR="192.168.5.88"; //192.168.1.255
 	public final static int  DEV_UDP_SEND_PORT=2468;
@@ -84,12 +87,10 @@ public class Cfg extends Application  {
 	public final static int  DEV_UDP_READ_DELAY=15;
 
 	public final static int  WAIT_WIFI_LANSTART_TIME=10;
-	//wait for the time of device sending data to server
-	public final static int  WAIT_DEVICE_SEND_DATA_TIME = 8000;
 
 	public final static String DEV_UDP_IPADDR="192.168.4.1";
 	public final static int  DEV_UDP_PORT=8001;
-	
+
 	public static byte[] userId= new byte[0];
 	public static String userName="";
 	public static String userPassword="";
