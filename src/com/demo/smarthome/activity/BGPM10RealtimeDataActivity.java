@@ -38,7 +38,7 @@ import com.google.gson.Gson;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import android.util.Log;
+import com.tencent.bugly.crashreport.CrashReport;
 
 
 /**********************************************************
@@ -109,18 +109,47 @@ public class BGPM10RealtimeDataActivity extends Activity {
                             tvocBtn.setBackgroundResource(R.drawable.tvoc);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
                             crrentValue = Integer.parseInt(currentData.getHcho());
+                            if(crrentValue<= 5)
+                            {
+                                presentation.setText("甲醛含量:低");
+                            }else if(crrentValue<= 10){
+                                presentation.setText("甲醛含量:较低");
+                            }else{
+                                presentation.setText("甲醛含量:超标");
+                            }
                             dataTitle.setText("甲醛");
                         }else if(currentType == currentdataTitle.tvoc) {
                             hchoBtn.setBackgroundResource(R.drawable.hcho);
                             tvocBtn.setBackgroundResource(R.drawable.tvoc_light);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
                             crrentValue = Integer.parseInt(currentData.getTvoc());
+                            if(crrentValue < 60)
+                            {
+                                presentation.setText("总挥发性有机物含量:低");
+                            }else
+                            {
+                                presentation.setText("总挥发性有机物含量:超标");
+                            }
                             dataTitle.setText("TVOC");
                         }else if(currentType == currentdataTitle.pm2_5) {
                             hchoBtn.setBackgroundResource(R.drawable.hcho);
                             tvocBtn.setBackgroundResource(R.drawable.tvoc);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
                             crrentValue = Integer.parseInt(currentData.getPm2_5());
+                            if(crrentValue<= 35)
+                            {
+                                presentation.setText("空气质量:优");
+                            }else if(crrentValue<= 75){
+                                presentation.setText("空气质量:良");
+                            }else if(crrentValue<= 115){
+                                presentation.setText("空气质量:轻度污染");
+                            }else if(crrentValue<= 150){
+                                presentation.setText("空气质量:中度污染");
+                            }else if(crrentValue<= 250){
+                                presentation.setText("空气质量:重度污染");
+                            }else if(crrentValue > 250){
+                                presentation.setText("空气质量:严重污染");
+                            }
                             dataTitle.setText("PM 2.5");
                         }else
                         {
@@ -128,6 +157,7 @@ public class BGPM10RealtimeDataActivity extends Activity {
                             tvocBtn.setBackgroundResource(R.drawable.tvoc);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
                             crrentValue = 0;
+                            presentation.setText("");
                             realDataView.isWarningColor(false);
                             dataTitle.setText("未知");
                         }
@@ -137,6 +167,7 @@ public class BGPM10RealtimeDataActivity extends Activity {
                     {
                         crrentValue = 0;
                         dataTitle.setText("离线");
+                        presentation.setText("");
                         dataTitle.setTextColor(ContextCompat.getColor
                                 (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
                         presentation.setText("设备不在线");
@@ -271,10 +302,8 @@ public class BGPM10RealtimeDataActivity extends Activity {
         timer = new Timer();
         timer.schedule(freshDataTimer, Cfg.autoFreshTime, Cfg.autoFreshTime);
 
-
         currentType = currentdataTitle.hcho;
         hchoBtn.setBackgroundResource(R.drawable.hcho_light);
-
         new getCurrentDataThread().start();
     }
     
@@ -304,29 +333,13 @@ public class BGPM10RealtimeDataActivity extends Activity {
                     realDataView.setUnit(getResources().getString(R.string.device_tvoc_unit));
                     if(crrentValue < 60)
                     {
-                        presentation.setText("总挥发性有机物含量:低");
                         realDataView.isWarningColor(false);
                     }else
                     {
-                        presentation.setText("总挥发性有机物含量:超标");
                         realDataView.isWarningColor(true);
                     }
                 }else if(currentType == currentdataTitle.pm2_5)
                 {
-                    if(crrentValue<= 35)
-                    {
-                        presentation.setText("空气质量:优");
-                    }else if(crrentValue<= 75){
-                        presentation.setText("空气质量:良");
-                    }else if(crrentValue<= 115){
-                        presentation.setText("空气质量:轻度污染");
-                    }else if(crrentValue<= 150){
-                        presentation.setText("空气质量:中度污染");
-                    }else if(crrentValue<= 250){
-                        presentation.setText("空气质量:重度污染");
-                    }else if(crrentValue > 250){
-                        presentation.setText("空气质量:严重污染");
-                    }
                     if(crrentValue < 250)
                     {
                         realDataView.isWarningColor(false);
@@ -342,13 +355,10 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 {
                     if(crrentValue<= 5)
                     {
-                        presentation.setText("甲醛含量:低");
                         realDataView.isWarningColor(false);
                     }else if(crrentValue<= 10){
-                        presentation.setText("甲醛含量:较低");
                         realDataView.isWarningColor(false);
                     }else{
-                        presentation.setText("甲醛含量:超标");
                         realDataView.isWarningColor(true);
                     }
 
@@ -439,10 +449,19 @@ public class BGPM10RealtimeDataActivity extends Activity {
             } else if (iAction == MotionEvent.ACTION_UP) {
                 if (is_get_data_success && is_device_online) {
                     crrentValue = Integer.parseInt(currentData.getHcho());
+                    if(crrentValue<= 5)
+                    {
+                        presentation.setText("甲醛含量:低");
+                    }else if(crrentValue<= 10){
+                        presentation.setText("甲醛含量:较低");
+                    }else{
+                        presentation.setText("甲醛含量:超标");
+                    }
                     dataTitle.setText("甲醛");
                     currentType = currentdataTitle.hcho;
                 } else {
                     crrentValue = 0;
+                    presentation.setText("");
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
                             (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
@@ -465,12 +484,20 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 if(is_get_data_success&&is_device_online)
                 {
                     crrentValue = Integer.parseInt(currentData.getTvoc());
+                    if(crrentValue < 60)
+                    {
+                        presentation.setText("总挥发性有机物含量:低");
+                    }else
+                    {
+                        presentation.setText("总挥发性有机物含量:超标");
+                    }
                     dataTitle.setText("TVOC");
                     currentType = currentdataTitle.tvoc;
                 }
                 else
                 {
                     crrentValue = 0;
+                    presentation.setText("");
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
                             (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
@@ -493,12 +520,27 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 if(is_get_data_success&&is_device_online)
                 {
                     crrentValue = Integer.parseInt(currentData.getPm2_5());
+                    if(crrentValue<= 35)
+                    {
+                        presentation.setText("空气质量:优");
+                    }else if(crrentValue<= 75){
+                        presentation.setText("空气质量:良");
+                    }else if(crrentValue<= 115){
+                        presentation.setText("空气质量:轻度污染");
+                    }else if(crrentValue<= 150){
+                        presentation.setText("空气质量:中度污染");
+                    }else if(crrentValue<= 250){
+                        presentation.setText("空气质量:重度污染");
+                    }else if(crrentValue > 250){
+                        presentation.setText("空气质量:严重污染");
+                    }
                     dataTitle.setText("PM 2.5");
                     currentType = currentdataTitle.pm2_5;
                 }
                 else
                 {
                     crrentValue = 0;
+                    presentation.setText("");
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
                             (BGPM10RealtimeDataActivity.this, R.color.sbc_snippet_text));
@@ -581,7 +623,6 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 if(currentType == currentdataTitle.outline)
                 {
                     currentType = currentdataTitle.hcho;
-                    hchoBtn.setBackgroundResource(R.drawable.hcho_light);
                 }
                 return GET_CURRENT_SUCCED;
             default:

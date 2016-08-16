@@ -1,9 +1,14 @@
 buildscript {
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.0.0'
+    }
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
+}
+allprojects {
+    repositories {
+        jcenter()
     }
 }
 apply plugin: 'com.android.application'
@@ -14,6 +19,11 @@ dependencies {
     compile files('gsno-2.3.1.jar')
     compile files('libs/AMap_Location_v2.3.0_20160112.jar')
 }
+
+dependencies {
+    compile 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.1.5
+}
+
 allprojects {
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {

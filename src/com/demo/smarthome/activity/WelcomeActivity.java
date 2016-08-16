@@ -44,6 +44,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * 
@@ -186,7 +187,9 @@ public class WelcomeActivity extends Activity {
 
 		startTimestamp = System.currentTimeMillis();
 		accessViewInit();
-		new CheckVersionThread().start();
+        //崩溃日志收集
+        CrashReport.initCrashReport(getApplicationContext(), "d6a693f16b", false);
+        new CheckVersionThread().start();
 	}
 
 	@Override
@@ -195,7 +198,7 @@ public class WelcomeActivity extends Activity {
 	// 结束Activity&从栈中移除该Activity
 		ActivityControl.getInstance().removeActivity(this);
 	}
-
+    //屏幕信息初始化
 	void accessViewInit(){
 
 		initPhoneConfig.initPhoneScreen(this);

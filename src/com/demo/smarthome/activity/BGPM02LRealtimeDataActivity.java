@@ -43,6 +43,7 @@ public class BGPM02LRealtimeDataActivity extends Activity {
 
     Button deviceListBtn;
     Button pm2_5Btn;
+    Button pm10Btn;
     Button historyDataBtn;
     Button shareBtn;
     Button resignBtn;
@@ -98,29 +99,34 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                 case GET_CURRENT_SUCCED:
                     if(is_get_data_success&&is_device_online)
                     {
-                        int pm2_5 = Integer.parseInt(currentData.getPm2_5());
-                        if(pm2_5<= 35)
-                        {
-                            presentation.setText("空气质量:优");
-                        }else if(pm2_5<= 75){
-                            presentation.setText("空气质量:良");
-                        }else if(pm2_5<= 115){
-                            presentation.setText("空气质量:轻度污染");
-                        }else if(pm2_5<= 150){
-                            presentation.setText("空气质量:中度污染");
-                        }else if(pm2_5<= 250){
-                            presentation.setText("空气质量:重度污染");
-                        }else if(pm2_5 > 250){
-                            presentation.setText("空气质量:严重污染");
-                        }
-
                         if(currentType == currentdataTitle.pm2_5) {
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
-                            crrentValue = pm2_5;
+                            pm10Btn.setBackgroundResource(R.drawable.pm10);
+                            crrentValue = Integer.parseInt(currentData.getPm2_5());
+                            if(crrentValue<= 35)
+                            {
+                                presentation.setText("空气质量:优");
+                            }else if(crrentValue<= 75){
+                                presentation.setText("空气质量:良");
+                            }else if(crrentValue<= 115){
+                                presentation.setText("空气质量:轻度污染");
+                            }else if(crrentValue<= 150){
+                                presentation.setText("空气质量:中度污染");
+                            }else if(crrentValue<= 250){
+                                presentation.setText("空气质量:重度污染");
+                            }else{
+                                presentation.setText("空气质量:严重污染");
+                            }
                             dataTitle.setText("PM 2.5");
-                        }else if(currentType == currentdataTitle.pm10) {
+                        }else {
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
+                            pm10Btn.setBackgroundResource(R.drawable.pm10_light);
                             crrentValue = Integer.parseInt(currentData.getPm10());
+                            if(crrentValue<= 150){
+                                presentation.setText("可吸入颗粒物较少");
+                            }else{
+                                presentation.setText("可吸入颗粒物较多");
+                            }
                             dataTitle.setText("PM 10");
                         }
                     }
@@ -213,6 +219,8 @@ public class BGPM02LRealtimeDataActivity extends Activity {
         shareBtn.setOnClickListener(new shareToTimeline());
         pm2_5Btn = (Button) findViewById(R.id.pm2_5Btn);
         pm2_5Btn.setOnTouchListener(pm2_5DataShow);
+        pm10Btn = (Button)findViewById(R.id.pm10Btn);
+        pm10Btn.setOnTouchListener(pm10DataShow);
         presentation = (TextView)findViewById(R.id.presentation);
 
         realDataView = (CircleAndNumberView)findViewById(R.id.CircleData);
@@ -255,12 +263,28 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                 Message message = new Message();
                 message.what = UPDATE_DATA;
                 int range = 1000;
+
+
                if(currentType == currentdataTitle.pm2_5)
                 {
+                    if(crrentValue < 75)
+                    {
+                        realDataView.isWarningColor(false);
+                    }else
+                    {
+                        realDataView.isWarningColor(true);
+                    }
                     realDataView.setText( crrentValue  + "");
                     realDataView.setUnit(getResources().getString(R.string.device_pm2_5_unit));
                 }else if(currentType == currentdataTitle.pm10)
                 {
+                    if(crrentValue < 150)
+                    {
+                        realDataView.isWarningColor(false);
+                    }else
+                    {
+                        realDataView.isWarningColor(true);
+                    }
                     realDataView.setText( crrentValue  + "");
                     realDataView.setUnit(getResources().getString(R.string.device_pm2_5_unit));
                 }else{
@@ -335,18 +359,35 @@ public class BGPM02LRealtimeDataActivity extends Activity {
     private View.OnTouchListener pm2_5DataShow = new View.OnTouchListener(){
         public boolean onTouch(View view, MotionEvent event) {
             int iAction = event.getAction();
+            Cfg.historyType = DeviceInformation.HISTORY_TYPE_PM2_5;
             if (iAction == MotionEvent.ACTION_DOWN) {
                 pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
+                pm10Btn.setBackgroundResource(R.drawable.pm10);
             } else if (iAction == MotionEvent.ACTION_UP) {
                 if(is_get_data_success&&is_device_online)
                 {
                     crrentValue = Integer.parseInt(currentData.getPm2_5());
+                    if(crrentValue<= 35)
+                    {
+                        presentation.setText("空气质量:优");
+                    }else if(crrentValue<= 75){
+                        presentation.setText("空气质量:良");
+                    }else if(crrentValue<= 115){
+                        presentation.setText("空气质量:轻度污染");
+                    }else if(crrentValue<= 150){
+                        presentation.setText("空气质量:中度污染");
+                    }else if(crrentValue<= 250){
+                        presentation.setText("空气质量:重度污染");
+                    }else{
+                        presentation.setText("空气质量:严重污染");
+                    }
                     dataTitle.setText("PM 2.5");
                     currentType = currentdataTitle.pm2_5;
                 }
                 else
                 {
                     crrentValue = 0;
+                    presentation.setText("");
                     dataTitle.setText("离线");
                     dataTitle.setTextColor(ContextCompat.getColor
                             (BGPM02LRealtimeDataActivity.this, R.color.sbc_snippet_text));
@@ -360,12 +401,19 @@ public class BGPM02LRealtimeDataActivity extends Activity {
     private View.OnTouchListener pm10DataShow = new View.OnTouchListener(){
         public boolean onTouch(View view, MotionEvent event) {
             int iAction = event.getAction();
+            Cfg.historyType = DeviceInformation.HISTORY_TYPE_PM10;
             if (iAction == MotionEvent.ACTION_DOWN) {
+                pm10Btn.setBackgroundResource(R.drawable.pm10_light);
                 pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
             } else if (iAction == MotionEvent.ACTION_UP) {
                 if(is_get_data_success&&is_device_online)
                 {
                     crrentValue = Integer.parseInt(currentData.getPm10());
+                    if(crrentValue<= 150){
+                        presentation.setText("可吸入颗粒物较少");
+                    }else{
+                        presentation.setText("可吸入颗粒物较多");
+                    }
                     dataTitle.setText("PM 10");
                     currentType = currentdataTitle.pm10;
                 }
@@ -448,11 +496,6 @@ public class BGPM02LRealtimeDataActivity extends Activity {
                     is_device_online = false;
                     is_get_data_success = false;
                     return  GET_CURRENT_FAIL;
-                }
-                if(currentType == currentdataTitle.outline)
-                {
-                    currentType = currentdataTitle.pm2_5;
-                    pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
                 }
                 is_get_data_success = true;
                 return GET_CURRENT_SUCCED;
