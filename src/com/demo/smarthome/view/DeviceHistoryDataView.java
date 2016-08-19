@@ -77,14 +77,14 @@ public class DeviceHistoryDataView extends View {
 	//Y轴标示微调
 	private static final int yTextChange =5;
 	//Y轴单位位置调整,向下的程度
-	private static final int yTextUnit = 10;
+	private static final int yTextUnit = 12;
 
 	//X轴坐标数
 	private int xSpaceCount = 13;
 
 	//顶部底部留白
-	private int marginTop = 40;
-	private int marginBottom = 120;
+	private int marginTop = 80;
+	private int marginBottom = 150;
 
 	private static int noData = -1;
 
@@ -211,19 +211,17 @@ public class DeviceHistoryDataView extends View {
 					drawText(String.valueOf(averageValueInt * i), blwidh / 2 - dip2px(yTextChange)
 							, bheight - (bheight / spacingHeight) * i + marginTop + dip2px(yTextChange), canvas);
 				}
-
 			}
-
 		}
 
 		if(kind.equals(DeviceInformation.HISTORY_TYPE_HCHO)
 				|| kind.equals(DeviceInformation.HISTORY_TYPE_TVOC)){
 			drawText(String.valueOf("(" + getResources().getString(R.string.device_hcho_unit) + ")")
-					, blwidh / 2 - dip2px(yTextChange) - dip2px(8),  dip2px(yTextUnit), canvas);
+					, blwidh / 2 - dip2px(yTextChange) - dip2px(5),  dip2px(yTextUnit), canvas);
 		}else{
 			//显示单位
 			drawText(String.valueOf("(" + getResources().getString(R.string.device_pm2_5_unit) + ")")
-					, blwidh / 2 - dip2px(yTextChange) - dip2px(8),  dip2px(yTextUnit), canvas);
+					, blwidh / 2 - dip2px(yTextChange) - dip2px(5),  dip2px(yTextUnit), canvas);
 		}
 
 	}
@@ -233,7 +231,7 @@ public class DeviceHistoryDataView extends View {
 	 */
 	private void drawAllYLine(Canvas canvas) {
 		//当分辨率是480时时间标志会和X轴重叠,所以要向下偏移时间
-		int offset = 0;
+		int offset = dip2px(5);
 		if(Cfg.widthPixels <= 480){
 			offset = dip2px(10);
 		}

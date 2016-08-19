@@ -11,10 +11,12 @@ import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.TimerTask;
@@ -216,7 +218,7 @@ public class BGPM02LRealtimeDataActivity extends Activity {
             }
         });
         shareBtn = (Button)findViewById(R.id.shareBtn);
-        shareBtn.setOnClickListener(new shareToTimeline());
+        shareBtn.setOnClickListener(new shareToWeixin());
         pm2_5Btn = (Button) findViewById(R.id.pm2_5Btn);
         pm2_5Btn.setOnTouchListener(pm2_5DataShow);
         pm10Btn = (Button)findViewById(R.id.pm10Btn);
@@ -335,27 +337,63 @@ public class BGPM02LRealtimeDataActivity extends Activity {
         failAlert.create().show();
     }
 
-    //分享到朋友圈
-    class shareToTimeline implements View.OnClickListener {
+    //分享到微信
+    private class shareToWeixin implements View.OnClickListener {
+        PopupMenu popup;
         @Override
         public void onClick(View v) {
-            Toast.makeText(BGPM02LRealtimeDataActivity.this, "分享朋友圈中,请等待", Toast.LENGTH_SHORT)
-                    .show();
-            if(shareToWiexin.shareToWeiXinTimeline(BGPM02LRealtimeDataActivity.this)
-                    != shareSucceed){
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(BGPM02LRealtimeDataActivity.this);
-                alertDialog.setTitle("错误").setIcon(R.drawable.error_01).setMessage("请确定微信可以启动")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                return;
+
+            popup = new PopupMenu(BGPM02LRealtimeDataActivity.this, v);
+            popup.getMenuInflater().inflate(R.menu.share_list, popup.getMenu());
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+            {
+                @Override
+                public boolean onMenuItemClick(MenuItem item)
+                {
+                    Toast.makeText(BGPM02LRealtimeDataActivity.this, "分享朋友圈中,请等待", Toast.LENGTH_SHORT).show();
+                    switch (item.getItemId())
+                    {
+                        case R.id.friends:
+                            if(shareToWiexin.shareToFriend(BGPM02LRealtimeDataActivity.this)
+                                    != shareSucceed){
+                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(BGPM02LRealtimeDataActivity.this);
+                                alertDialog.setTitle("错误").setIcon(R.drawable.error_01).setMessage("请确定微信可以启动")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                return;
+                                            }
+                                        });
+                                alertDialog.create().show();
                             }
-                        });
-                alertDialog.create().show();
-            }
+                            break;
+                        case R.id.timeline:
+                            if(shareToWiexin.shareToWeiXinTimeline(BGPM02LRealtimeDataActivity.this)
+                                    != shareSucceed){
+                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(BGPM02LRealtimeDataActivity.this);
+                                alertDialog.setTitle("错误").setIcon(R.drawable.error_01).setMessage("请确定微信可以启动")
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                return;
+                                            }
+                                        });
+                                alertDialog.create().show();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    popup.dismiss();
+                    return true;
+                }
+            });
+            popup.show();
         }
     }
+
     private View.OnTouchListener pm2_5DataShow = new View.OnTouchListener(){
         public boolean onTouch(View view, MotionEvent event) {
             int iAction = event.getAction();

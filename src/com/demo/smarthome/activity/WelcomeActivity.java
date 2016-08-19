@@ -51,6 +51,7 @@ import com.tencent.bugly.crashreport.CrashReport;
  * @author sl
  * 
  */
+
 public class WelcomeActivity extends Activity {
 
 	static final String TAG = "WelcomeActivity";

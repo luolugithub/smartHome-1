@@ -211,8 +211,6 @@ public class RegisterActivity extends Activity {
 		btnSetup.setOnClickListener(new BtnRegOnClickListener());
 		dbService = new ConfigDao(RegisterActivity.this.getBaseContext());
 		failAlert = new AlertDialog.Builder(RegisterActivity.this);
-
-
 	}
 
 //	@Override
