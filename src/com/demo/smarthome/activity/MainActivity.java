@@ -407,7 +407,11 @@ public class MainActivity extends Activity {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									dialog.dismiss();
-
+									if(!NetworkStatusTools.isWifi(MainActivity.this)){
+										Toast.makeText(MainActivity.this, "请连接先WI-FI", Toast.LENGTH_SHORT)
+												.show();
+										return;
+									}
 									dialogView.showMyDialog("注册", "正在扫描设备,请稍等");
 
 									new ConnectDevThread().start();

@@ -13,10 +13,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,11 +35,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.smarthome.server.setServerURL;
+import com.demo.smarthome.staticString.StringRes;
 import com.demo.smarthome.view.MyDialogView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import com.demo.smarthome.tools.CheckEmailPhoneTools;
+
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+
 /**
  *
  * 
@@ -52,20 +59,27 @@ public class LoginActivity extends Activity {
 	EditText txtPassword = null;
 	TextView textVersion = null;
 	CheckBox isAtuoLogin = null;
+	TextView sendCodeAgain = null;
 	String name = "";
 	String password = "";
-	String userMailName ="";
+	String userPhoneName ="";
+	String newUserPassword = "";
 	boolean isLogin = false;
+	//if sending verification code is successful
+	boolean isSendCodeSuccessful = false;
+	View forgetPwdlayout;
 	private static final String TAG = "LoginActivity";
 	ConfigService dbService;
 	static final int LOGIN_SUCCEED = 0;
 	static final int PASSWORD_ERROR = 1;
-	static final int SEND_PWD2EMAIL_SUCCEED 	= 2;
-	static final int SEND_PWD2EMAIL_ERROR 		= 3;
-	static final int SEND_PWD2EMAIL_EXCEPTION 	= 4;
 	static final int BASE_TYPE_LOGIN_SUCCEED	= 5;
 	static final int BASE_TYPE_LOGIN_FAILED		= 6;
 	static final int SERVER_ERROR = 7;
+
+	static final int USER_EXISTED		 		= 10;
+	static final int USER_NOT_EXISTED		 	= 11;
+	static final int CODE_ERROR 				= 12;
+	static final int NOT_PHONENUMBER		 	= 13;
 
 	ServerReturnResult loginResult = new ServerReturnResult();
 	MyDialogView dialogView;
@@ -118,24 +132,14 @@ public class LoginActivity extends Activity {
 						.show();
 
 				break;
-			case SEND_PWD2EMAIL_SUCCEED:
-
-				Toast.makeText(LoginActivity.this, "发送成功,请到邮箱中查收", Toast.LENGTH_SHORT)
-						.show();
-
+			case USER_EXISTED:
+				sendVerifactionCode();
 				break;
-			case SEND_PWD2EMAIL_ERROR:
-
-				Toast.makeText(LoginActivity.this, "发送失败,请验证邮箱名后再次发送", Toast.LENGTH_SHORT)
+			case USER_NOT_EXISTED:
+				Toast.makeText(LoginActivity.this, "该手机号没有注册过", Toast.LENGTH_SHORT)
 						.show();
-
 				break;
-			case SEND_PWD2EMAIL_EXCEPTION:
 
-				Toast.makeText(LoginActivity.this, "发送失败,请验证邮箱名后再次发送", Toast.LENGTH_SHORT)
-						.show();
-
-				break;
 			case BASE_TYPE_LOGIN_SUCCEED:
 
 				if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
@@ -167,7 +171,18 @@ public class LoginActivity extends Activity {
 					startActivity(intent);
 					break;
 			case SERVER_ERROR:
+				Toast.makeText(LoginActivity.this, "服务器故障", Toast.LENGTH_SHORT)
+						.show();
 				break;
+			case CODE_ERROR:
+				String codeErrorMessage = (String)msg.obj;
+				Toast.makeText(LoginActivity.this,codeErrorMessage, Toast.LENGTH_SHORT)
+						.show();
+				break;
+				case NOT_PHONENUMBER:
+					Toast.makeText(LoginActivity.this,userPhoneName, Toast.LENGTH_SHORT)
+							.show();
+					break;
 			default:
 				break;
 
@@ -208,13 +223,14 @@ public class LoginActivity extends Activity {
 		Button btnReg = (Button) findViewById(R.id.loginBtnReg);
 		btnReg.setOnTouchListener(regsiterTouch);
 
-
-
 		textVersion = (TextView) findViewById(R.id.versionNumber);
 		textVersion.setText("v" + Cfg.versionNumber);
 
 		dbService = new ConfigDao(LoginActivity.this.getBaseContext());
-
+		dialogView = new MyDialogView(LoginActivity.this);
+		//短信验证码
+		SMSSDK.initSDK(LoginActivity.this, StringRes.SMSKEY,StringRes.SMSSECRET);
+		SMSSDK.registerEventHandler(eh); //注册短信回调
 
 		String tempName = dbService.getCfgByKey(Cfg.KEY_USER_NAME);
 		String tempPwd = dbService.getCfgByKey(Cfg.KEY_PASS_WORD);
@@ -228,7 +244,6 @@ public class LoginActivity extends Activity {
 		} else {
 			isAtuoLogin.setChecked(true);
 		}
-
 
 		forgetPassword.setClickable(true);
 		forgetPassword.setOnClickListener(new clickTextForgetPwd());
@@ -277,7 +292,6 @@ public class LoginActivity extends Activity {
 					return false;
 				}
 
-				dialogView = new MyDialogView(LoginActivity.this);
 				dialogView.showMyDialog("正在登录", "验证明用户名密码,请等待");
 
 				Cfg.userName = name;
@@ -288,31 +302,72 @@ public class LoginActivity extends Activity {
 		}
 	};
 
-	class clickTextForgetPwd implements OnClickListener {
+	private class clickTextForgetPwd implements OnClickListener {
 		@Override
 		public void onClick(View arg0) {
+
 			LayoutInflater inflater = LayoutInflater.from(LoginActivity.this);
-			final View layout = inflater.inflate(R.layout.forget_password, null);
+			forgetPwdlayout = inflater.inflate(R.layout.forget_password, null);
 
 			AlertDialog.Builder myDialog = new AlertDialog.Builder(LoginActivity.this)
-					.setTitle("请输入用户名(仅支持邮箱)");
-			myDialog.setView(layout);
+					.setTitle("请输入注册手机号");
+			myDialog.setView(forgetPwdlayout);
+			sendCodeAgain = (TextView) forgetPwdlayout.findViewById(R.id.sendCodeAgainButton);
+			sendCodeAgain.setClickable(true);
+			sendCodeAgain.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					EditText userSetName = (EditText) forgetPwdlayout.findViewById(R.id.userPhoneName);
+					userPhoneName = userSetName.getText().toString();
+					new isUserExist().start();
+				}
+			});
+
 			myDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					EditText userSetName = (EditText) layout.findViewById(R.id.userMailName);
-					userMailName = userSetName.getText().toString();
-					if (userMailName.isEmpty() ||(!CheckEmailPhoneTools.isEmail(userMailName))) {
-						Toast.makeText(LoginActivity.this, "请输入正确的邮箱名", Toast.LENGTH_SHORT)
+					EditText userSetName = (EditText) forgetPwdlayout.findViewById(R.id.userPhoneName);
+					userPhoneName = userSetName.getText().toString();
+					if (userPhoneName.isEmpty() ||(!CheckEmailPhoneTools
+							.isPhoneNumber(userPhoneName))) {
+						Toast.makeText(LoginActivity.this, "请输入正确的手机号", Toast.LENGTH_SHORT)
 								.show();
 						userSetName.setFocusable(true);
 						return;
 					}
+					String verificationCode = ((EditText)forgetPwdlayout.findViewById
+							(R.id.verificationCode)).getText().toString();
+					newUserPassword = ((EditText) forgetPwdlayout.findViewById(R.id.changeUserPassword))
+							.getText().toString();
+					String rePassword = ((EditText) forgetPwdlayout.findViewById(R.id.againPassword))
+							.getText().toString();
+					if (newUserPassword.trim().isEmpty() || (newUserPassword.length() < 6)) {
+						Toast.makeText(getApplicationContext(), "密码至少为六位"
+								, Toast.LENGTH_SHORT).show();
+						txtPassword.setFocusable(true);
+						return;
+					}
+
+					if(!rePassword.equals(newUserPassword)){
+						Toast.makeText(getApplicationContext(), "两次填写的密码不一致"
+								, Toast.LENGTH_SHORT).show();
+						txtPassword.setFocusable(true);
+						return;
+					}
 					dialog.dismiss();
 
-					dialogView = new MyDialogView(LoginActivity.this);
-					dialogView.showMyDialog("找回密码", "...正在找回密码");
-					new forgetPwd().start();
+					if(isSendCodeSuccessful)
+					{
+						dialogView.showMyDialog("更改密码中", "...请等待");
+						SMSSDK.submitVerificationCode(StringRes.ChinaCode
+								,userPhoneName,verificationCode);
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext()
+								, "验证码验证失败", Toast.LENGTH_SHORT).show();
+					}
+
 				}
 			});
 			myDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -325,7 +380,60 @@ public class LoginActivity extends Activity {
 			myDialog.create().show();
 		}
 	}
+	/*
+        * send verification code
+        *
+        * */
+	private void sendVerifactionCode()
+	{
 
+		//send Code
+		SMSSDK.getVerificationCode(StringRes.ChinaCode, txtName.getText().toString());
+
+		sendCodeAgain.setClickable(false);
+		sendCodeAgain.setTextColor(ContextCompat.getColor
+				(LoginActivity.this, R.color.sbc_header_text));
+		new CountDownTimer(Cfg.sendVerficationCodeInterval, 1000) {
+			public void onTick(long millisUntilFinished) {
+				sendCodeAgain.setText("再次发送("+ millisUntilFinished/1000+")");
+			}
+			public void onFinish() {
+				sendCodeAgain.setClickable(true);
+				sendCodeAgain.setTextColor(ContextCompat.getColor
+						(LoginActivity.this, R.color.blue_50));
+				sendCodeAgain.setText("发送验证码");
+			}
+		}.start();
+	}
+
+	EventHandler eh=new EventHandler(){
+
+		@Override
+		public void afterEvent(int event, int result, Object data) {
+			//回调完成
+			if (result == SMSSDK.RESULT_COMPLETE) {
+
+				//提交验证码成功
+				if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+					new userChangePwdThread().start();
+					//获取验证码成功
+				}else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
+					isSendCodeSuccessful = true;
+				}
+			}else{
+				((Throwable)data).printStackTrace();
+				if(isSendCodeSuccessful == true)
+				{
+					isSendCodeSuccessful = false;
+					Message message = new Message();
+					message.what = CODE_ERROR;
+					message.obj = ((Throwable)data).getMessage();
+					handler.sendMessage(message);
+				}
+
+			}
+		}
+	};
 
 	/**
 	 *
@@ -335,6 +443,8 @@ public class LoginActivity extends Activity {
 	private View.OnTouchListener regsiterTouch = new View.OnTouchListener() {
 
 		public boolean onTouch(View view, MotionEvent event) {
+
+
 			int iAction = event.getAction();
 			if (iAction == MotionEvent.ACTION_DOWN) {
 				view.setBackgroundResource(R.drawable.register_light);
@@ -350,7 +460,6 @@ public class LoginActivity extends Activity {
 			return false;
 		}
 	};
-
 	private class getDeviceType extends Thread {
 		@Override
 		public void run () {
@@ -418,21 +527,26 @@ public class LoginActivity extends Activity {
 	 * @author Administrator
 	 *
 	 */
-	class forgetPwd extends Thread {
+	class isUserExist extends Thread {
 
 		@Override
 		public void run() {
 			Message message = new Message();
-			message.what = SEND_PWD2EMAIL_EXCEPTION;
-
+			message.what = USER_NOT_EXISTED;
 			Gson gson = new Gson();
-			String type = "mail";
 
-			String[] paramsName = {"userName", "type"};
-			String[] paramsValue = {userMailName, type};
+			if (userPhoneName.isEmpty()||
+					!CheckEmailPhoneTools.isPhoneNumber(userPhoneName)) {
+				message.what = NOT_PHONENUMBER;
+				handler.sendMessage(message);
+				return;
+			}
 
+			String[] paramsName = {"userName"};
+			String[] paramsValue = {userPhoneName};
 
-			if ((jsonResult = new setServerURL().sendParamToServer("findPassword", paramsName, paramsValue)).isEmpty()) {
+			if ((jsonResult = new setServerURL().sendParamToServer
+					("isUserExist", paramsName, paramsValue)).isEmpty()) {
 				message.what = Cfg.SERVER_CANT_CONNECT;
 				handler.sendMessage(message);
 				return;
@@ -442,18 +556,58 @@ public class LoginActivity extends Activity {
 						, com.demo.smarthome.server.ServerReturnResult.class);
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
+				message.what = Cfg.SERVER_CANT_CONNECT;
+				handler.sendMessage(message);
+				return;
 			}
 
 
 			switch (Integer.parseInt(getResult.getCode())) {
 				case Cfg.CODE_SUCCESS:
-					message.what = SEND_PWD2EMAIL_SUCCEED;
-					break;
-				case Cfg.CODE_USER_EXISTED:
-					message.what = SEND_PWD2EMAIL_ERROR;
+					message.what = USER_EXISTED;
 					break;
 				default:
-					message.what = SEND_PWD2EMAIL_EXCEPTION;
+					message.what = USER_NOT_EXISTED;
+					break;
+			}
+			handler.sendMessage(message);
+		}
+	}
+	class userChangePwdThread extends Thread {
+
+		@Override
+		public void run() {
+			Message message = new Message();
+			message.what = SERVER_ERROR;
+			Gson gson = new Gson();
+
+			String[] paramsName = {"userName","userPassword"};
+			String[] paramsValue = {userPhoneName,newUserPassword};
+
+			if ((jsonResult = new setServerURL().sendParamToServer("updatePassword", paramsName, paramsValue)).isEmpty()) {
+				message.what = Cfg.SERVER_CANT_CONNECT;
+				handler.sendMessage(message);
+				return;
+			}
+			try {
+				getResult = gson.fromJson(jsonResult
+						, com.demo.smarthome.server.ServerReturnResult.class);
+			} catch (JsonSyntaxException e) {
+				e.printStackTrace();
+				message.what = Cfg.SERVER_CANT_CONNECT;
+				handler.sendMessage(message);
+				return;
+			}
+
+
+			switch (Integer.parseInt(getResult.getCode())) {
+				case Cfg.CODE_SUCCESS:
+					Cfg.userName = userPhoneName;
+					Cfg.userPassword =newUserPassword;
+					new LoginThread().start();
+					break;
+				default:
+					message.what = SERVER_ERROR;
 					break;
 			}
 			handler.sendMessage(message);
@@ -462,6 +616,8 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		//注销短信验证回调函数
+		SMSSDK.unregisterEventHandler(eh);
 		// 结束Activity&从栈中移除该Activity
 		ActivityControl.getInstance().removeActivity(this);
 	}

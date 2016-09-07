@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal" >
 
         <FrameLayout
@@ -52,6 +52,7 @@
 
             <ImageView
                 android:layout_width="360dp"
+                android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -61,23 +62,74 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 android:text="用户名"
-                android:textSize="23sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/registerTxtName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="150dp"
+                android:layout_marginLeft="120dp"
                 android:layout_marginTop="10dp"
                 android:background="@null"
                 android:ems="8"
-                android:hint="请输入邮箱名"/>
+                android:inputType="number"
+                android:hint="请输入手机号"/>
         </FrameLayout>
     </LinearLayout>
+    <!-- 验证码 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal" >
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:layout_width="360dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"
+                android:src="@drawable/set_03" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:text="验证码"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/verificationCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="120dp"
+                android:layout_marginTop="13dp"
+                android:background="@null"
+                android:hint="请输入短信验证码"
+                android:ems="7"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+            <TextView
+                android:id="@+id/sendCodeAgainButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="270dp"
+                android:layout_marginTop="15dp"
+                android:text="发送验证码"
+                android:textColor="@color/blue_50"
+                android:textSize="16sp"/>
+        </FrameLayout>
+    </LinearLayout>
     <!-- 密码 -->
 
     <LinearLayout
@@ -93,6 +145,7 @@
 
             <ImageView
                 android:layout_width="360dp"
+                android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -104,14 +157,14 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="5dp"
                 android:text="密  码"
-                android:textSize="23sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/registerTxtPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="150dp"
+                android:layout_marginLeft="120dp"
                 android:layout_marginTop="10dp"
                 android:background="@null"
                 android:ems="8"
@@ -135,6 +188,7 @@
 
             <ImageView
                 android:layout_width="360dp"
+                android:layout_marginLeft="5dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="fitStart"
@@ -146,14 +200,14 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="5dp"
                 android:text="确认密码"
-                android:textSize="23sp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/againPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="150dp"
+                android:layout_marginLeft="120dp"
                 android:layout_marginTop="10dp"
                 android:background="@null"
                 android:hint="再次确认密码"
@@ -161,103 +215,6 @@
                 android:inputType="textPassword"
                 android:singleLine="true" />
         </FrameLayout>
-    </LinearLayout>
-    <!-- WIFI密码 -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal" >
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:layout_width="360dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitStart"
-                android:src="@drawable/set_03" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="8dp"
-                android:text="网络名称"
-                android:textSize="23sp" />
-
-            <TextView
-                android:id="@+id/wifiSSID"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="150dp"
-                android:textSize="20sp"
-                android:layout_marginTop="10dp"/>
-        </FrameLayout>
-    </LinearLayout>
-    <!-- WIFI密码 -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="25dp"
-        android:orientation="horizontal" >
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <ImageView
-                android:layout_width="360dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:scaleType="fitStart"
-                android:src="@drawable/set_03" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
-                android:text="无线网络密码"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/wifiPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="180dp"
-                android:layout_marginTop="10dp"
-                android:background="@null"
-                android:ems="8"
-                android:inputType="textPassword"
-                android:singleLine="true" />
-        </FrameLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="@string/switchIsSsidHiddenTitle"
-            android:textSize="18sp" />
-
-        <Switch
-            android:id="@+id/wifiIsHidden"
-            android:layout_marginLeft="80dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <!-- 按键 -->

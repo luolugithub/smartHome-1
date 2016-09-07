@@ -81,6 +81,9 @@ public class Cfg extends Application  {
 	public static int autoFreshTime = 5000;
 	public static int outlineTime = 15000;
 
+	//send verification code interval
+	public static long sendVerficationCodeInterval = 60*1000;
+
 //	public final static String DEV_UDP_IPADDR="192.168.5.88"; //192.168.1.255
 	public final static int  DEV_UDP_SEND_PORT=2468;
 	public final static int  DEV_UDP_SEND_DELAY=100;

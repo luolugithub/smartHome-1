@@ -9,7 +9,11 @@ public class StringRes {
     public final static String serverPort = "8080";
     public final static String nameSpace ="http://webservice.smarthome.begood.com";
 
-
+    //崩溃日志收集的key
+    public final static String buglyKey = "d6a693f16b";
+    //发送短信验证码KEY
+    public final static String SMSKEY = "16b2713cd4a00";
+    public final static String SMSSECRET = "3a4dc807cb86f51c5b87b47d7551019e";
     public final static String screenShotFileName = "sdcard/Begood/begoodTemp.png";
 
     public final static String weatherSupportCity [] ={"七台河","三亚","三明","三门峡","上海"
@@ -55,5 +59,6 @@ public class StringRes {
 
         public final static String canNotConnetServer = "请检查网络是否正确";
 
+        public final static String ChinaCode = "86";
 
 }

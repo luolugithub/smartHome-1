@@ -11,6 +11,11 @@ allprojects {
         jcenter()
     }
 }
+repositories{
+    flatDir{
+        dirs 'libs'
+    }
+}
 apply plugin: 'com.android.application'
 
 dependencies {
@@ -18,10 +23,10 @@ dependencies {
     compile files('ksoap2-android-assembly-2.4-jar-with-dependencies.jar')
     compile files('gsno-2.3.1.jar')
     compile files('libs/AMap_Location_v2.3.0_20160112.jar')
-}
-
-dependencies {
-    compile 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.1.5
+    //用于收集崩溃信息
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    //发送短信验证码模块
+    compile name:'SMSSDK-2.1.1',ext:'aar'
 }
 
 allprojects {

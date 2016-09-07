@@ -187,9 +187,9 @@ public class WelcomeActivity extends Activity {
 		}
 
 		startTimestamp = System.currentTimeMillis();
-		accessViewInit();
+		applicationInit();
         //崩溃日志收集
-        CrashReport.initCrashReport(getApplicationContext(), "d6a693f16b", false);
+        CrashReport.initCrashReport(getApplicationContext(), StringRes.buglyKey, false);
         new CheckVersionThread().start();
 	}
 
@@ -199,9 +199,10 @@ public class WelcomeActivity extends Activity {
 	// 结束Activity&从栈中移除该Activity
 		ActivityControl.getInstance().removeActivity(this);
 	}
-    //屏幕信息初始化
-	void accessViewInit(){
+    //初始化
+	void applicationInit(){
 
+		//初始化屏幕相关变量
 		initPhoneConfig.initPhoneScreen(this);
 		Cfg.isNavigationBar = initPhoneConfig.IsNavigationBar(this);
 	}
