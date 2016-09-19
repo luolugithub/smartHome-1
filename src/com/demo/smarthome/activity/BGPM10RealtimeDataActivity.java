@@ -10,14 +10,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
-
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 import java.util.TimerTask;
 import java.util.Timer;
 import com.demo.smarthome.control.ActivityControl;
@@ -46,17 +52,18 @@ import com.tencent.bugly.crashreport.CrashReport;
 /**********************************************************
  *:2016-03-24
  **********************************************************/
-public class BGPM10RealtimeDataActivity extends Activity {
+public class BGPM10RealtimeDataActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
+    final String TAG = "BGPM10";
     Button deviceListBtn;
     Button hchoBtn;
     Button tvocBtn;
     Button pm2_5Btn;
-    Button historyDataBtn;
     Button shareBtn;
-    Button resignBtn;
-
-    boolean isValueWarning = false;
+    DrawerLayout drawerMenu;
+    ListView drawerButtonList;
+    ArrayList<String> menuLists;
+    ArrayAdapter<String> drawerAdapter;
 
     CircleAndNumberView realDataView;
     int crrentValue;
@@ -242,7 +249,9 @@ public class BGPM10RealtimeDataActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }
         if(Cfg.isNavigationBar){
             setContentView(R.layout.activity_bgpm10_realtime_data);
         }else {
@@ -266,24 +275,7 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 finish();
             }
         });
-        historyDataBtn = (Button)findViewById(R.id.historyDataBtn);
-        historyDataBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View arg0)
-            {
-                Intent intent = new Intent();
-                intent.setClass(BGPM10RealtimeDataActivity.this,DeviceHistoryDataActivitiy.class);
-                startActivity(intent);
-            }
-        });
-        resignBtn = (Button)findViewById(R.id.resignBtn);
-        resignBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View arg0)
-            {
-                resign();
-            }
-        });
+
         shareBtn = (Button)findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener(new shareToWeixin());
         hchoBtn = (Button) findViewById(R.id.hchoBtn);
@@ -306,6 +298,31 @@ public class BGPM10RealtimeDataActivity extends Activity {
 
         currentType = currentdataTitle.hcho;
         hchoBtn.setBackgroundResource(R.drawable.hcho_light);
+
+        //左划菜单
+        drawerMenu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerButtonList = (ListView) findViewById(R.id.left_menu);
+
+        //添加5个列表项
+        menuLists = new ArrayList<String>();
+        menuLists.add("用户名:"+ Cfg.userName);
+        menuLists.add("历史数据");
+        menuLists.add("设备列表");
+        menuLists.add("注销登陆");
+        //为列表设置适配器
+        drawerAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item, menuLists);
+        drawerButtonList.setAdapter(drawerAdapter);
+
+        //注册列表点击事件，注册为本类，所以本类要实现OnItemClickListener接口。
+        drawerButtonList.setOnItemClickListener(this);
+
+        deviceListBtn = (Button) findViewById(R.id.devicelist);
+        deviceListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                drawerMenu.openDrawer(drawerButtonList);
+            }
+        });
         new getCurrentDataThread().start();
     }
     
@@ -667,7 +684,30 @@ public class BGPM10RealtimeDataActivity extends Activity {
                 return  CHOSE_DEVICE_NULL;
         }
     }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent();
+        switch (position)
+        {
+            case 1:
+                intent.setClass(BGPM10RealtimeDataActivity.this,DeviceHistoryDataActivitiy.class);
+                startActivity(intent);
+                break;
+            case 2:
+                intent.setClass(BGPM10RealtimeDataActivity.this,MainActivity.class);
+                startActivity(intent);
+                break;
+            case 3:
+                resign();
+                break;
+            default:
+                break;
 
+        }
+
+        //主视图显示碎片后把导航栏关了
+        drawerMenu.closeDrawer(drawerButtonList);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

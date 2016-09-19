@@ -27,7 +27,7 @@ public class CircleAndNumberView extends View {
     private int layout_width = 0;
     private int fullRadius = 100;
     private int circleRadius = 80;
-    private int barLength = 60;
+    private int mBarLength = 60;
     private int barWidth = 23;
     private int rimWidth = 20;
     private int textSize = 100;
@@ -249,7 +249,7 @@ public class CircleAndNumberView extends View {
 
         barColor = a.getColor(R.styleable.ProgressWheel_barColor, barColor);
 
-        barLength = (int) a.getDimension(R.styleable.ProgressWheel_barLength, barLength);
+        mBarLength = (int) a.getDimension(R.styleable.ProgressWheel_aBarLength, mBarLength);
 
 //        textSize = (int) a.getDimension(R.styleable.ProgressWheel_textSize, textSize);
 
@@ -278,7 +278,7 @@ public class CircleAndNumberView extends View {
         canvas.drawArc(circleBounds, 360, 360, false, rimPaint);
         // Draw the bar
         if (isSpinning) {
-            canvas.drawArc(circleBounds, progress - 90, barLength, false, barPaint);
+            canvas.drawArc(circleBounds, progress - 90, mBarLength, false, barPaint);
         } else {
             canvas.drawArc(circleBounds, -90, progress, false, barPaint);
         }
@@ -372,12 +372,12 @@ public class CircleAndNumberView extends View {
         this.circleRadius = circleRadius;
     }
 
-    public int getBarLength() {
-        return barLength;
+    public int getmBarLength() {
+        return mBarLength;
     }
 
     public void setBarLength(int barLength) {
-        this.barLength = barLength;
+        this.mBarLength = barLength;
     }
 
     public int getBarWidth() {

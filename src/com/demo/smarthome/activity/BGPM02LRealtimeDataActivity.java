@@ -2,6 +2,8 @@ package com.demo.smarthome.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,16 +11,23 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 import java.util.TimerTask;
 import java.util.Timer;
 import com.demo.smarthome.R;
@@ -41,14 +50,17 @@ import java.util.Date;
 /**********************************************************
 
  **********************************************************/
-public class BGPM02LRealtimeDataActivity extends Activity {
+public class BGPM02LRealtimeDataActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
+    final String TAG = "BGPM02L";
     Button deviceListBtn;
     Button pm2_5Btn;
     Button pm10Btn;
-    Button historyDataBtn;
     Button shareBtn;
-    Button resignBtn;
+    DrawerLayout drawerMenu;
+    ListView drawerButtonList;
+    ArrayList<String> menuLists;
+    ArrayAdapter<String> drawerAdapter;
 
     CircleAndNumberView realDataView;
     int crrentValue;
@@ -176,7 +188,10 @@ public class BGPM02LRealtimeDataActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //remove title
+        if (getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }
         //根据是否有虚拟按键载入不同的布局
         if(Cfg.isNavigationBar){
             setContentView(R.layout.activity_bgpm02l_realtime_data);
@@ -190,33 +205,6 @@ public class BGPM02LRealtimeDataActivity extends Activity {
         //历史数据参数
         Cfg.historyType = DeviceInformation.HISTORY_TYPE_PM2_5;
 
-        deviceListBtn = (Button) findViewById(R.id.devicelist);
-        deviceListBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                Intent intent = new Intent();
-                intent.setClass(BGPM02LRealtimeDataActivity.this,MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        historyDataBtn = (Button)findViewById(R.id.historyDataBtn);
-        historyDataBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View arg0)
-            {
-                Intent intent = new Intent();
-                intent.setClass(BGPM02LRealtimeDataActivity.this,DeviceHistoryDataActivitiy.class);
-                startActivity(intent);
-            }
-        });
-        resignBtn = (Button)findViewById(R.id.resignBtn);
-        resignBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View arg0)
-            {
-                resign();
-            }
-        });
         shareBtn = (Button)findViewById(R.id.shareBtn);
         shareBtn.setOnClickListener(new shareToWeixin());
         pm2_5Btn = (Button) findViewById(R.id.pm2_5Btn);
@@ -233,6 +221,31 @@ public class BGPM02LRealtimeDataActivity extends Activity {
 
         currentType = currentdataTitle.pm2_5;
         pm2_5Btn.setBackgroundResource(R.drawable.pm2_5_light);
+
+        //左划菜单
+        drawerMenu = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerButtonList = (ListView) findViewById(R.id.left_menu);
+
+        //添加5个列表项
+        menuLists = new ArrayList<String>();
+        menuLists.add("用户名:"+ Cfg.userName);
+        menuLists.add("历史数据");
+        menuLists.add("设备列表");
+        menuLists.add("注销登陆");
+        //为列表设置适配器
+        drawerAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item, menuLists);
+        drawerButtonList.setAdapter(drawerAdapter);
+
+        //注册列表点击事件，注册为本类，所以本类要实现OnItemClickListener接口。
+        drawerButtonList.setOnItemClickListener(this);
+
+        deviceListBtn = (Button) findViewById(R.id.devicelist);
+        deviceListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                drawerMenu.openDrawer(drawerButtonList);
+            }
+        });
 
         new getCurrentDataThread().start();
     }
@@ -543,6 +556,30 @@ public class BGPM02LRealtimeDataActivity extends Activity {
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent();
+        switch (position)
+        {
+            case 1:
+                intent.setClass(BGPM02LRealtimeDataActivity.this,DeviceHistoryDataActivitiy.class);
+                startActivity(intent);
+                break;
+            case 2:
+                intent.setClass(BGPM02LRealtimeDataActivity.this,MainActivity.class);
+                startActivity(intent);
+                break;
+            case 3:
+                resign();
+                break;
+            default:
+                break;
+
+        }
+
+        //主视图显示碎片后把导航栏关了
+        drawerMenu.closeDrawer(drawerButtonList);
+    }
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.

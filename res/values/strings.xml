@@ -4,6 +4,8 @@
     <string name="app_name">Begood</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">欢迎使用!</string>
+    <string name="data_down_title">贝谷科技股份有限公司</string>
+    <string name="begood_techology">贝谷科技股份有限公司</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_setup_dev">SetupDevActivity</string>
     <string name="title_activity_dev_view">DevViewActivity</string>

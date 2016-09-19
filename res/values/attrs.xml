@@ -35,6 +35,6 @@
         <attr name="circleColor" format="color" />
         <attr name="radius" format="dimension" />
         <attr name="barWidth" format="dimension" />
-        <attr name="barLength" format="dimension" />
+        <attr name="aBarLength" format="dimension" />
     </declare-styleable>
 </resources>
