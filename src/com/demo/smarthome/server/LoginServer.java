@@ -102,4 +102,41 @@ public class LoginServer {
                 return false;
         }
     }
+    //返回true表示成功,false表失败
+    public static String getType(String deviceId) {
+
+        Gson gson = new Gson();
+        ServerReturnResult tempData;
+        String jsonResult;
+        String[] paramsName = {"deviceID"};
+        String[] paramsValue = new String[1];
+
+        if (deviceId.isEmpty()) {
+            return null;
+        }
+        paramsValue[0] = deviceId;
+
+        setServerURL regiterUser = new setServerURL();
+
+        if ((jsonResult = regiterUser.sendParamToServer("getDeviceType", paramsName
+                , paramsValue)).isEmpty()) {
+            return null;
+        }
+        try {
+            tempData = gson.fromJson(jsonResult, ServerReturnResult.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        switch (Integer.parseInt(tempData.getCode())) {
+            case Cfg.CODE_SUCCESS:
+                if (tempData.getRows().size() != 1) {
+                    return null;
+                }
+                return tempData.getRows().get(0);
+            default:
+                return null;
+        }
+    }
 }

@@ -75,7 +75,7 @@ public class LoginActivity extends Activity {
 	static final int BASE_TYPE_LOGIN_SUCCEED	= 5;
 	static final int BASE_TYPE_LOGIN_FAILED		= 6;
 	static final int SERVER_ERROR = 7;
-
+	static final int JUMP_MAINACTIVITY = 8			;
 	static final int USER_EXISTED		 		= 10;
 	static final int USER_NOT_EXISTED		 	= 11;
 	static final int CODE_ERROR 				= 12;
@@ -94,6 +94,7 @@ public class LoginActivity extends Activity {
 			super.handleMessage(msg);
 			dialogView.closeMyDialog();
 			Intent intent = new Intent();
+			Bundle bundle = new Bundle();
 			switch (msg.what) {
 			case LOGIN_SUCCEED:
 				isLogin = true;
@@ -115,17 +116,11 @@ public class LoginActivity extends Activity {
 				if(!Cfg.currentDeviceID.isEmpty()){
 
 					new getDeviceType().start();
-				}
-				else {
-					Bundle bundle = new Bundle();
-					bundle.putString("activity", "login");
-
-					intent.putExtras(bundle);
-					intent.setClass(LoginActivity.this, MainActivity.class);
-					startActivity(intent);
+				}else
+				{
+					new getAllDeviceType().start();
 				}
 				break;
-
 			case PASSWORD_ERROR:
 
 				Toast.makeText(LoginActivity.this, "密码错误", Toast.LENGTH_SHORT)
@@ -153,7 +148,6 @@ public class LoginActivity extends Activity {
 					startActivity(intent);
 					finish();
 				}else {
-					Bundle bundle = new Bundle();
 					bundle.putString("activity", "login");
 
 					intent.putExtras(bundle);
@@ -162,14 +156,24 @@ public class LoginActivity extends Activity {
 					finish();
 				}
 				break;
+
 			case BASE_TYPE_LOGIN_FAILED:
-					Bundle bundle = new Bundle();
+					Cfg.currentDeviceID = null;
+
+
 					bundle.putString("activity", "login");
 
 					intent.putExtras(bundle);
 					intent.setClass(LoginActivity.this, MainActivity.class);
 					startActivity(intent);
 					break;
+			case JUMP_MAINACTIVITY:
+				bundle.putString("activity", "login");
+
+				intent.putExtras(bundle);
+				intent.setClass(LoginActivity.this, MainActivity.class);
+				startActivity(intent);
+				break;
 			case SERVER_ERROR:
 				Toast.makeText(LoginActivity.this, "服务器故障", Toast.LENGTH_SHORT)
 						.show();
@@ -292,7 +296,7 @@ public class LoginActivity extends Activity {
 					return false;
 				}
 
-				dialogView.showMyDialog("正在登录", "验证明用户名密码,请等待");
+				dialogView.showMyDialog("正在登录", "验证用户名密码,请等待");
 
 				Cfg.userName = name;
 				Cfg.userPassword =password;
@@ -481,7 +485,25 @@ public class LoginActivity extends Activity {
 			return;
 		}
 	}
+	private class getAllDeviceType extends Thread {
+		@Override
+		public void run () {
+			Message message = new Message();
 
+			for(int i = 0;i< Cfg.devInfo.length;i++) {
+				String type = LoginServer.getType(Cfg.devInfo[i]);
+				if (type == null ) {
+					message.what = BASE_TYPE_LOGIN_FAILED;
+					handler.sendMessage(message);
+					return;
+				}
+				dbService.SaveSysCfgByKey(Cfg.devInfo[i],type);
+			}
+			message.what = JUMP_MAINACTIVITY;
+			handler.sendMessage(message);
+			return;
+		}
+	}
 	/**
 	 * 
 	 * @author Administrator
