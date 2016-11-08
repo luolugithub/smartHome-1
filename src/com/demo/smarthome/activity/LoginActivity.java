@@ -10,7 +10,6 @@ import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.R;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -19,10 +18,7 @@ import android.os.Message;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,7 +26,6 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +64,12 @@ public class LoginActivity extends Activity {
 	boolean isSendCodeSuccessful = false;
 	View forgetPwdlayout;
 	private static final String TAG = "LoginActivity";
+
+	static CountDownTimer countDownTimer;
+	public static TextView SendCodeTextView;
+	public static boolean changePasswordCutdownTimerRunning = false;
+	public static long countDownNumber;
+
 	ConfigService dbService;
 	static final int LOGIN_SUCCEED = 0;
 	static final int PASSWORD_ERROR = 1;
@@ -80,6 +81,7 @@ public class LoginActivity extends Activity {
 	static final int USER_NOT_EXISTED		 	= 11;
 	static final int CODE_ERROR 				= 12;
 	static final int NOT_PHONENUMBER		 	= 13;
+	static final int EXCEPTION		 			= 99;
 
 	ServerReturnResult loginResult = new ServerReturnResult();
 	MyDialogView dialogView;
@@ -186,6 +188,17 @@ public class LoginActivity extends Activity {
 				case NOT_PHONENUMBER:
 					Toast.makeText(LoginActivity.this,userPhoneName, Toast.LENGTH_SHORT)
 							.show();
+					break;
+				case EXCEPTION:
+					AlertDialog.Builder failAlert = new AlertDialog.Builder(LoginActivity.this);
+					failAlert.setTitle("错误").setMessage("服务器出现异常")
+							.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									ActivityControl.getInstance().finishAllActivity();
+								}
+							});
+					failAlert.create().show();
 					break;
 			default:
 				break;
@@ -313,11 +326,61 @@ public class LoginActivity extends Activity {
 			LayoutInflater inflater = LayoutInflater.from(LoginActivity.this);
 			forgetPwdlayout = inflater.inflate(R.layout.forget_password, null);
 
+
+
 			AlertDialog.Builder myDialog = new AlertDialog.Builder(LoginActivity.this)
 					.setTitle("请输入注册手机号");
 			myDialog.setView(forgetPwdlayout);
 			sendCodeAgain = (TextView) forgetPwdlayout.findViewById(R.id.sendCodeAgainButton);
 			sendCodeAgain.setClickable(true);
+
+			SendCodeTextView = sendCodeAgain;
+
+			if(changePasswordCutdownTimerRunning == false)
+			{
+				changePasswordCutdownTimerRunning = true;
+				sendCodeAgain.setClickable(true);
+				sendCodeAgain.setTextColor(ContextCompat.getColor
+						(LoginActivity.this, R.color.blue_50));
+				sendCodeAgain.setText("发送验证码");
+				countDownTimer  = new CountDownTimer(Cfg.sendVerficationCodeInterval, 1000) {
+					public void onTick(long millisUntilFinished) {
+						countDownNumber = millisUntilFinished;
+
+						SendCodeTextView.setClickable(false);
+						SendCodeTextView.setTextColor(ContextCompat.getColor
+								(LoginActivity.this, R.color.sbc_header_text));
+						SendCodeTextView.setText("再次发送("+ millisUntilFinished/1000+")");
+
+					}
+					public void onFinish() {
+						countDownNumber = 0;
+
+						SendCodeTextView.setClickable(true);
+						SendCodeTextView.setTextColor(ContextCompat.getColor
+								(LoginActivity.this, R.color.blue_50));
+						SendCodeTextView.setText("发送验证码");
+					}
+				};
+			}
+			else
+			{
+				if(countDownNumber == 0)
+				{
+					sendCodeAgain.setClickable(true);
+					sendCodeAgain.setTextColor(ContextCompat.getColor
+							(LoginActivity.this, R.color.blue_50));
+					sendCodeAgain.setText("发送验证码");
+				}
+				else
+				{
+					sendCodeAgain.setClickable(false);
+					sendCodeAgain.setTextColor(ContextCompat.getColor
+							(LoginActivity.this, R.color.sbc_header_text));
+					sendCodeAgain.setText("再次发送("+ countDownNumber/1000+")");
+				}
+			}
+
 			sendCodeAgain.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -390,24 +453,10 @@ public class LoginActivity extends Activity {
         * */
 	private void sendVerifactionCode()
 	{
-
 		//send Code
-		SMSSDK.getVerificationCode(StringRes.ChinaCode, txtName.getText().toString());
+		SMSSDK.getVerificationCode(StringRes.ChinaCode, userPhoneName);
 
-		sendCodeAgain.setClickable(false);
-		sendCodeAgain.setTextColor(ContextCompat.getColor
-				(LoginActivity.this, R.color.sbc_header_text));
-		new CountDownTimer(Cfg.sendVerficationCodeInterval, 1000) {
-			public void onTick(long millisUntilFinished) {
-				sendCodeAgain.setText("再次发送("+ millisUntilFinished/1000+")");
-			}
-			public void onFinish() {
-				sendCodeAgain.setClickable(true);
-				sendCodeAgain.setTextColor(ContextCompat.getColor
-						(LoginActivity.this, R.color.blue_50));
-				sendCodeAgain.setText("发送验证码");
-			}
-		}.start();
+		countDownTimer.start();
 	}
 
 	EventHandler eh=new EventHandler(){
@@ -434,7 +483,6 @@ public class LoginActivity extends Activity {
 					message.obj = ((Throwable)data).getMessage();
 					handler.sendMessage(message);
 				}
-
 			}
 		}
 	};
@@ -514,7 +562,7 @@ public class LoginActivity extends Activity {
 		@Override
 		public void run() {
 			Message message = new Message();
-			message.what = Cfg.REG_SUCCESS;
+			message.what = LOGIN_SUCCEED;
 
 			if((loginResult = LoginServer.LoginServerMethod())==null) {
 				message.what = SERVER_ERROR;
@@ -531,12 +579,14 @@ public class LoginActivity extends Activity {
 					message.what = PASSWORD_ERROR;
 					break;
 				case Cfg.CODE_USER_EXISTED:
+					message.what = EXCEPTION;
 					break;
 
 				case Cfg.CODE_EXCEPTION:
+					message.what = EXCEPTION;
 					break;
 				default:
-					message.what = Cfg.REG_ERROR;
+					message.what = SERVER_ERROR;
 					break;
 			}
 
@@ -569,7 +619,7 @@ public class LoginActivity extends Activity {
 
 			if ((jsonResult = new setServerURL().sendParamToServer
 					("isUserExist", paramsName, paramsValue)).isEmpty()) {
-				message.what = Cfg.SERVER_CANT_CONNECT;
+				message.what = SERVER_ERROR;
 				handler.sendMessage(message);
 				return;
 			}
@@ -578,7 +628,7 @@ public class LoginActivity extends Activity {
 						, com.demo.smarthome.server.ServerReturnResult.class);
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
-				message.what = Cfg.SERVER_CANT_CONNECT;
+				message.what = SERVER_ERROR;
 				handler.sendMessage(message);
 				return;
 			}
@@ -602,27 +652,28 @@ public class LoginActivity extends Activity {
 			Message message = new Message();
 			message.what = SERVER_ERROR;
 			Gson gson = new Gson();
-
+			String json;
+			ServerReturnResult serverResult;
 			String[] paramsName = {"userName","userPassword"};
 			String[] paramsValue = {userPhoneName,newUserPassword};
 
-			if ((jsonResult = new setServerURL().sendParamToServer("updatePassword", paramsName, paramsValue)).isEmpty()) {
-				message.what = Cfg.SERVER_CANT_CONNECT;
+			if ((json = new setServerURL().sendParamToServer("updatePassword", paramsName, paramsValue)).isEmpty()) {
+				message.what = SERVER_ERROR;
 				handler.sendMessage(message);
 				return;
 			}
 			try {
-				getResult = gson.fromJson(jsonResult
+				serverResult = gson.fromJson(json
 						, com.demo.smarthome.server.ServerReturnResult.class);
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
-				message.what = Cfg.SERVER_CANT_CONNECT;
+				message.what = SERVER_ERROR;
 				handler.sendMessage(message);
 				return;
 			}
 
 
-			switch (Integer.parseInt(getResult.getCode())) {
+			switch (Integer.parseInt(serverResult.getCode())) {
 				case Cfg.CODE_SUCCESS:
 					Cfg.userName = userPhoneName;
 					Cfg.userPassword =newUserPassword;

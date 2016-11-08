@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor= "@color/sbc_layout_view"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:text="种类"/>
             </LinearLayout>
             <FrameLayout
@@ -92,7 +92,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:textColor= "@color/sbc_layout_view"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:text="提示"/>
             </LinearLayout>
             <LinearLayout
@@ -102,14 +102,14 @@
                 android:layout_marginTop="15dp">
 
                 <Button android:id="@+id/pm2_5Btn"
-                    android:layout_width="72dp"
-                    android:layout_height="90dp"
-                    android:layout_marginLeft="80dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginLeft="50dp"
                     android:background="@drawable/pm2_5"/>
                 <Button android:id="@+id/pm10Btn"
-                    android:layout_width="72dp"
-                    android:layout_height="90dp"
-                    android:layout_marginLeft="80dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginLeft="30dp"
                     android:background="@drawable/pm10"/>
 
             </LinearLayout>
@@ -119,7 +119,7 @@
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="@string/data_down_title"
-                android:textSize="18sp"
+                android:textSize="12sp"
                 android:textColor="@color/blue_50"/>
         </LinearLayout>
     </FrameLayout>

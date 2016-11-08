@@ -4,7 +4,6 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
     <!-- main view-->
     <FrameLayout
         android:id="@+id/content_frame"
@@ -55,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor= "@color/sbc_layout_view"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:text="种类"/>
             </LinearLayout>
             <FrameLayout
@@ -71,14 +70,14 @@
                     android:layout_marginLeft="10dp"
                     android:textColor= "@color/sbc_layout_view"
                     android:layout_marginBottom="10dp"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="温度"/>
                 <com.demo.smarthome.view.CircleAndNumberView
                     xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/CircleData"
                     android:layout_width="160dp"
                     android:layout_height="160dp"
-                    ProgressWheel:barColor="@color/greenyellow"
+                    ProgressWheel:barColor="@color/palegreen"
                     android:layout_gravity="center"
                     ProgressWheel:barWidth="4dp"
                     ProgressWheel:rimColor="@color/sbc_header_view"
@@ -94,7 +93,7 @@
                     android:layout_gravity="bottom|right"
                     android:layout_marginRight="18dp"
                     android:layout_marginBottom="10dp"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor= "@color/sbc_layout_view"
                     android:text="湿度"/>
             </FrameLayout>
@@ -103,13 +102,14 @@
                 android:layout_height="52dp"
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
+
                 <TextView android:id="@+id/presentation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
                     android:textColor= "@color/sbc_layout_view"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="提示"/>
             </LinearLayout>
             <LinearLayout
@@ -119,21 +119,21 @@
                 android:layout_marginTop="15dp">
 
                 <Button android:id="@+id/hchoBtn"
-                    android:layout_width="72dp"
-                    android:layout_height="90dp"
-                    android:layout_marginLeft="40dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="20dp"
                     android:background="@drawable/hcho"/>
 
                 <Button android:id="@+id/tvocBtn"
-                    android:layout_width="72dp"
-                    android:layout_height="90dp"
-                    android:layout_marginLeft="35dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="15dp"
                     android:background="@drawable/tvoc"/>
 
                 <Button android:id="@+id/pm2_5Btn"
-                    android:layout_width="72dp"
-                    android:layout_height="90dp"
-                    android:layout_marginLeft="35dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="15dp"
                     android:background="@drawable/pm2_5"/>
             </LinearLayout>
             <TextView
@@ -142,7 +142,7 @@
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="@string/data_down_title"
-                android:textSize="18sp"
+                android:textSize="12sp"
                 android:textColor="@color/blue_50"/>
         </LinearLayout>
     </FrameLayout>
@@ -155,6 +155,7 @@
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:divider="#FFFFFF"
-        android:dividerHeight="1dp" ></ListView>
+        android:dividerHeight="1dp" >
+    </ListView>
 
 </android.support.v4.widget.DrawerLayout>

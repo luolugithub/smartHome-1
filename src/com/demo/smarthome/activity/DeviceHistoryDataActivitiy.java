@@ -599,7 +599,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
 
                 diff = (int)((CreateTime.getTime() - Start.getTime())/1000);
 
-                if(diff >= 0 && diff < timeStepLength && j < allData.size()) {
+                if(diff >= 0 && diff < timeStepLength && j < allData.size() && !IsDeviceDataIsnegative(allData,j)) {
                     //The data from server need divide 100
                     if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_HCHO)) {
                         value = ((double) Integer.parseInt(allData.get(j).getHcho())) / 100;
@@ -608,7 +608,7 @@ public class DeviceHistoryDataActivitiy extends Activity {
                     }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM10)){
                         value = (double) Integer.parseInt(allData.get(j).getPm10());
                     }else{
-                        value = (double) Integer.parseInt(allData.get(j).getTvoc());
+                        value = ((double) Integer.parseInt(allData.get(j).getTvoc()))/100;
                     }
                     yData.add(value);
                     CreateTime = dfs.parse(allData.get(j).getCreateTime());
@@ -624,6 +624,33 @@ public class DeviceHistoryDataActivitiy extends Activity {
         }
         historyDataViewItem.setData(yData,YmaxValue,YaverageValue,currentType,Cfg.historyType);
     }
+    //当设备有数据但是数据为-1（因为传感器数据未稳定）返回true
+    private boolean IsDeviceDataIsnegative(List<DeviceDataSet> allData,int j)
+    {
+        if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_HCHO)) {
+            if(Integer.parseInt(allData.get(j).getHcho()) == -1)
+            {
+                return true;
+            }
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM2_5)){
+            if(Integer.parseInt(allData.get(j).getPm2_5()) == -1)
+            {
+                return true;
+            }
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_PM10)){
+            if(Integer.parseInt(allData.get(j).getPm10()) == -1)
+            {
+                return true;
+            }
+        }else if(Cfg.historyType.equals(DeviceInformation.HISTORY_TYPE_TVOC)) {
+            if (Integer.parseInt(allData.get(j).getTvoc()) == -1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void SetBlankView(){
 
         int stepCount = 24*60/5;

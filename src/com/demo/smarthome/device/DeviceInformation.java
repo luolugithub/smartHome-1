@@ -5,6 +5,7 @@ package com.demo.smarthome.device;
  */
 public class DeviceInformation {
     public final static String DEV_TYPE_BGPM_02L   	= "01";
+    public final static String DEV_TYPE_BGPM_08   	= "04";
     public final static String DEV_TYPE_BGPM_10   	= "06";
 
     public final static String HISTORY_TYPE_HCHO  	= "hcho";

@@ -1,0 +1,247 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:2:1-109:12
+	package
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:4:5-33
+	android:versionName
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:6:5-30
+		INJECTED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml
+		INJECTED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml
+	xmlns:tools
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:3:5-51
+	android:versionCode
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:5:5-28
+		INJECTED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml
+		INJECTED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:2:11-69
+uses-sdk
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:8:5-10:41
+MERGED from [:SMSSDK-2.1.1:] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/SMSSDK-2.1.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.tencent.bugly:crashreport:2.3.1] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.tencent.bugly/crashreport/2.3.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:5:5-44
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:5:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:5:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:design:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/design/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:5:5-44
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:5:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:5:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:20:5-43
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:10:9-38
+	android:minSdkVersion
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:9:9-35
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:13:5-76
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:13:22-73
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:14:5-79
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:14:22-76
+uses-permission#android.permission.CHANGE_WIFI_MULTICAST_STATE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:15:5-86
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:15:22-83
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:16:5-79
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:16:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:17:5-76
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:17:22-73
+uses-permission#android.permission.WAKE_LOCK
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:18:5-68
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:18:22-65
+uses-permission#android.permission.INTERNET
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:20:5-67
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:20:22-64
+uses-permission#android.permission.VIBRATE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:21:5-66
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:21:22-63
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:23:5-81
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:23:22-78
+uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:25:5-84
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:25:22-81
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:27:5-75
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:27:22-72
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:28:5-80
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:28:22-77
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:33:5-73
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:33:22-70
+uses-permission#android.permission.READ_LOGS
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:39:5-68
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:39:22-65
+application
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:42:5-107:19
+MERGED from [:SMSSDK-2.1.1:] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/SMSSDK-2.1.1/AndroidManifest.xml:11:5-12:19
+MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:design:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/design/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-vector-drawable:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.4.0/AndroidManifest.xml:7:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:23.4.0] /Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/support-v4/23.4.0/AndroidManifest.xml:22:5-20
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:46:9-41
+	android:allowBackup
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:44:9-35
+	android:icon
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:45:9-38
+	android:theme
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:47:9-53
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:43:9-36
+uses-library#android.test.runner
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:48:9-60
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:48:23-57
+service#com.demo.smarthome.service.SocketService
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:50:9-58
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:50:18-55
+service#com.amap.api.location.APSService
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:52:9-68
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:52:18-65
+meta-data#com.amap.api.v2.apikey
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:54:9-56:64
+	android:value
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:56:13-61
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:55:13-50
+activity#com.demo.smarthome.activity.WelcomeActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:58:9-68:20
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:62:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:60:13-45
+	android:launchMode
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:61:13-44
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:59:13-53
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:63:13-67:29
+action#android.intent.action.MAIN
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:64:17-69
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:64:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:66:17-77
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:66:27-74
+activity#com.demo.smarthome.activity.LoginActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:69:9-72:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:72:13-49
+	android:launchMode
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:71:13-44
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:70:13-51
+activity#com.demo.smarthome.activity.MainActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:73:9-77:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:77:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:75:13-56
+	android:launchMode
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:76:13-44
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:74:13-50
+activity#com.demo.smarthome.activity.RegisterActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:78:9-81:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:81:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:80:13-60
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:79:13-54
+activity#com.demo.smarthome.activity.WeatherActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:82:9-85:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:85:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:84:13-59
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:83:13-53
+activity#com.demo.smarthome.activity.BGPM10RealtimeDataActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:86:9-89:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:89:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:88:13-72
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:87:13-64
+activity#com.demo.smarthome.activity.BGPM08RealtimeDataActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:90:9-93:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:93:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:92:13-72
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:91:13-64
+activity#com.demo.smarthome.activity.BGPM02LRealtimeDataActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:94:9-97:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:97:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:96:13-73
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:95:13-65
+activity#com.demo.smarthome.activity.DeviceHistoryDataActivitiy
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:98:9-101:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:101:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:100:13-81
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:99:13-64
+activity#com.demo.smarthome.activity.HelpActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:102:9-105:52
+	android:screenOrientation
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:105:13-49
+	android:label
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:104:13-65
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:103:13-50
+activity#com.demo.smarthome.activity.PermissionsActivity
+ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:106:9-75
+	android:name
+		ADDED from /Users/leishi/Documents/code/smartHome/AndroidManifest.xml:106:19-63

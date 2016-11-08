@@ -1,0 +1,66 @@
+[
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_bgpm10_realtime_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_bgpm10_realtime_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_main.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_main.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_welcome.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_welcome.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_bgpm02l_realtime_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_bgpm02l_realtime_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/devitem.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/devitem.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_bgpm08_realtime_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_bgpm08_realtime_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_weather.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_weather.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_bgpm02l_realtime_data_no_navigation_bar.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_bgpm02l_realtime_data_no_navigation_bar.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/forget_password.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/forget_password.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_register.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_register.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_bgpm10_realtime_data_no_navigation_bar.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_bgpm10_realtime_data_no_navigation_bar.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_login.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_login.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/main.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/main.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/fragment_content.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/fragment_content.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/activity_device_history_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/activity_device_history_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-hdpi-v4/add_device_wifi_password.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-hdpi/add_device_wifi_password.xml"
+    }
+]

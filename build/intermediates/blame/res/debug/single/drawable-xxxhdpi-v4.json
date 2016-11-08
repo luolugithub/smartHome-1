@@ -1,0 +1,314 @@
+[
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/vertical.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/vertical.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/tvoc.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/tvoc.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_menu_moreoverflow_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/username_backgroud.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/username_backgroud.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/pm10.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/pm10.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/regist_03.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/regist_03.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/control2_03.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/control2_03.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/register_long.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/register_long.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_spinner_mtrl_am_alpha.9.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_spinner_mtrl_am_alpha.9.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/set_03.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/set_03.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_switch_track_mtrl_alpha.9.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_switch_track_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/logined_03.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/logined_03.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/login_backgroud.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/login_backgroud.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/delete_device.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/delete_device.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/pm2_5.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/pm2_5.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/history_background.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/history_background.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_menu_copy_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_scrubber_control_to_pressed_mtrl_000.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_clear_mtrl_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_clear_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/warning_01.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/warning_01.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_btn_check_to_on_mtrl_000.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_btn_check_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/white_back_button.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/white_back_button.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/delete_alert.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/delete_alert.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/regist_08.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/regist_08.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/regist_13.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/regist_13.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/line.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/line.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_search_api_mtrl_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_search_api_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/login_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/login_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_btn_switch_to_on_mtrl_00001.9.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_menu_selectall_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_btn_radio_to_on_mtrl_000.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_btn_radio_to_on_mtrl_000.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_btn_switch_to_on_mtrl_00012.9.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/device_list.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/device_list.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/register.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/register.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/loging_0311.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/loging_0311.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/control2_01_10.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/control2_01_10.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_ab_back_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/password_backgroud.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/password_backgroud.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/red.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/red.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/register_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/register_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/pm10_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/pm10_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/blue.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/blue.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_btn_check_to_on_mtrl_015.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_btn_check_to_on_mtrl_015.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_star_black_16dp.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_star_black_16dp.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/pm2_5_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/pm2_5_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/vertical_line.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/vertical_line.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/resign.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/resign.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_share_mtrl_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_menu_share_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/logined_06.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/logined_06.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/bule_line.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/bule_line.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/pass.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/pass.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/regist_06.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/regist_06.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/share.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/share.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/hcho_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/hcho_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/welcome.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/welcome.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/register_long_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/register_long_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/cloud_fail.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/cloud_fail.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/history.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/history.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_star_half_black_36dp.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_36dp.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/weixin_timeline.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/weixin_timeline.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_btn_radio_to_on_mtrl_015.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_btn_radio_to_on_mtrl_015.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/tvoc_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/tvoc_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/weather.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/weather.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_tab_indicator_mtrl_alpha.9.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_tab_indicator_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/grep_line.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/grep_line.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_menu_paste_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_star_half_black_16dp.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_16dp.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/resign_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/resign_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/hcho.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/hcho.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/realtime_data_backgroud.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/realtime_data_backgroud.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/history_light.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/history_light.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_star_black_36dp.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_star_black_36dp.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/backgroud.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/backgroud.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/error_01.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/error_01.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/weixin_friends.png",
+        "source": "/Users/leishi/Documents/code/smartHome/res/drawable-xxxhdpi/weixin_friends.png"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/drawable-xxxhdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png",
+        "source": "/Users/leishi/Documents/code/smartHome/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.4.0/res/drawable-xxxhdpi-v4/abc_ic_voice_search_api_mtrl_alpha.png"
+    }
+]

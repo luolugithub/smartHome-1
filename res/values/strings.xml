@@ -4,10 +4,11 @@
     <string name="app_name">Begood</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">欢迎使用!</string>
-    <string name="data_down_title">-贝谷科技股份有限公司-</string>
-    <string name="begood_techology">贝谷科技股份有限公司</string>
+    <string name="data_down_title">贝谷科技股份有限公司</string>
+    <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_setup_dev">SetupDevActivity</string>
+    <string name="title_activity_weath">RegisterActivity</string>
     <string name="title_activity_dev_view">DevViewActivity</string>
     <string name="title_activity_hcho_view">HCHOActivity</string>
     <string name="app_version">v0.0.1</string>
@@ -39,9 +40,33 @@
     <string name="updated_at">上次更新于%1$s前</string>
     <string name="updated_just_now">刚刚更新</string>
     <string name="time_error">时间有问题</string>
+    <string name="permission">权限(permission)</string>
+    <string name="no_permissions">应用需要必要的运行权限</string>
+    <string name="settings">设置</string>
+    <string name="help">帮助</string>
+    <string name="string_help_text">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。\n\n最后点击两次后退按钮，即可返回。</string>
+    <string name="quit">退出</string>
     <string name="title_activity_weather">WeatherActivity</string>
     <string name="title_activity_device_realtime_data">DeviceRealtimeDataActivity</string>
+    <string name="title_activity_bgpm08_realtime_data">BGPM08RealtimeDataActivity</string>
     <string name="title_activity_bgpm02l_realtime_data">BGPM02LRealtimeDataActivity</string>
     <string name="title_activity_device_history_data_activitiy">DeviceHistoryDataActivitiy</string>
-
+    <string name="title_activity_help_activity">HelpActivity</string>
+    <string name="help_content_01">01.怎样配置环保设备连接网络?\n
+        确保手机已经接入WI-FI网络，打开手机APP，进入设备列表，点击添加设备，输入Wi-Fi密码，点击确定
+        ，出现提示（请确定已经将设备设置成搜索网络模式）,按照说明书将设备调成搜索Wi-Fi模式，点击APP提示框的确定
+        ，APP发送Wi-Fi密码到设备，需要几十秒后，APP收到设备返回的设备号，提示到手机上，点击添加，配置设备成功。</string>
+    <string name="help_content_02">02.刚打开APP就出现\"请连接网络\"怎么办？\n
+                                    请确定手机已接入网络，是否能够打开网页。</string>
+    <string name="help_content_03">03.升级APP过程出现\"升级错误\"怎么办？\n
+                                    请确定手机容量是否足够，手机是否感染软件病毒。</string>
+    <string name="help_content_04">04.注册过程出现\"验证码验证失败\"怎么办？\n
+                                    请确定手机已接入网络，重新发送一次验证码。</string>
+    <string name="help_content_05">05.设备列表中，设备显示\"未知\"怎么办？\n
+                                    说明手机获取设备类型失败，请点击垃圾桶删除设备重新绑定设备。</string>
+    <string name="help_content_06">06.实时数据显示0，并显示离线是怎么回事？\n
+                                    可能是本地Wi-Fi网络掉线，需要确保本地网络能够接入互联网，\n
+                                    如果是设备更换Wi-Fi网络（如更换路由器、更换了路由器密码），需要进入设备列表删除设备重新绑定设备。</string>
+    <string name="help_content_07">07.出现\"设备错误\"怎么办?\n
+                                    进入设备列表删除设备重新绑定设备。</string>
 </resources>

@@ -2,12 +2,9 @@ package com.demo.smarthome.activity;
 
 import com.demo.smarthome.control.ActivityControl;
 import com.demo.smarthome.dao.ConfigDao;
-import com.demo.smarthome.device.DeviceInformation;
-import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
-import com.demo.smarthome.service.ConfigDevice;
 import com.demo.smarthome.staticString.StringRes;
 import com.demo.smarthome.tools.CheckEmailPhoneTools;
 import com.demo.smarthome.R;
@@ -15,7 +12,6 @@ import com.demo.smarthome.view.MyDialogView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,9 +49,13 @@ public class RegisterActivity extends Activity {
 	String userRegName = "";
 	String userRegPassword = "";
 
+	static CountDownTimer countDownTimer;
+	public static TextView registerActivitySendCodeTextView;
+	public static boolean isRegisterCutdownTimerRunning = false;
+	public static long countDownNumber;
+
     //if sending verification code is successful
     boolean isSendCodeSuccessful = false;
-
 	ConfigService dbService;
 
 	final static int REGISTER_SUCCESS 		= 0x10;
@@ -71,7 +71,6 @@ public class RegisterActivity extends Activity {
 			super.handleMessage(msg);
 
 			switch (msg.what) {
-
 			case REGISTER_SUCCESS:
 				dbService.SaveSysCfgByKey(Cfg.KEY_USER_NAME, userRegName);
 				dbService.SaveSysCfgByKey(Cfg.KEY_PASS_WORD, userRegPassword);
@@ -127,13 +126,13 @@ public class RegisterActivity extends Activity {
 		txtPassword = (EditText) findViewById(R.id.registerTxtPassword);
 		txtrePassword = (EditText) findViewById(R.id.againPassword);
         sendCodeAgain = (TextView) findViewById(R.id.sendCodeAgainButton);
-        sendCodeAgain.setClickable(true);
         sendCodeAgain.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendVerifactionCode();
             }
         });
+		registerActivitySendCodeTextView = sendCodeAgain;
 
 		Button btnSetup = (Button) findViewById(R.id.registerBtnReg);
 		btnSetup.setOnClickListener(new BtnRegOnClickListener());
@@ -144,6 +143,50 @@ public class RegisterActivity extends Activity {
         //短信验证码
 		SMSSDK.initSDK(RegisterActivity.this,StringRes.SMSKEY,StringRes.SMSSECRET);
 		SMSSDK.registerEventHandler(eh); //注册短信回调
+
+		if(isRegisterCutdownTimerRunning == false)
+		{
+			isRegisterCutdownTimerRunning = true;
+			sendCodeAgain.setClickable(true);
+			sendCodeAgain.setTextColor(ContextCompat.getColor
+					(RegisterActivity.this, R.color.blue_50));
+			sendCodeAgain.setText("发送验证码");
+			countDownTimer  = new CountDownTimer(Cfg.sendVerficationCodeInterval, 1000) {
+				public void onTick(long millisUntilFinished) {
+					countDownNumber = millisUntilFinished;
+
+					registerActivitySendCodeTextView.setClickable(false);
+					registerActivitySendCodeTextView.setTextColor(ContextCompat.getColor
+							(RegisterActivity.this, R.color.sbc_header_text));
+					registerActivitySendCodeTextView.setText("再次发送("+ millisUntilFinished/1000+")");
+				}
+				public void onFinish() {
+					countDownNumber = 0;
+
+					registerActivitySendCodeTextView.setClickable(true);
+					registerActivitySendCodeTextView.setTextColor(ContextCompat.getColor
+							(RegisterActivity.this, R.color.blue_50));
+					registerActivitySendCodeTextView.setText("发送验证码");
+				}
+			};
+		}
+		else
+		{
+			if(countDownNumber == 0)
+			{
+				sendCodeAgain.setClickable(true);
+				sendCodeAgain.setTextColor(ContextCompat.getColor
+						(RegisterActivity.this, R.color.blue_50));
+				sendCodeAgain.setText("发送验证码");
+			}
+			else
+			{
+				sendCodeAgain.setClickable(false);
+				sendCodeAgain.setTextColor(ContextCompat.getColor
+						(RegisterActivity.this, R.color.sbc_header_text));
+				sendCodeAgain.setText("再次发送("+ countDownNumber/1000+")");
+			}
+		}
 	}
 
     /*
@@ -161,20 +204,7 @@ public class RegisterActivity extends Activity {
         //send Code
         SMSSDK.getVerificationCode(StringRes.ChinaCode, txtName.getText().toString());
 
-        sendCodeAgain.setClickable(false);
-        sendCodeAgain.setTextColor(ContextCompat.getColor
-                (RegisterActivity.this, R.color.sbc_header_text));
-        new CountDownTimer(Cfg.sendVerficationCodeInterval, 1000) {
-            public void onTick(long millisUntilFinished) {
-                sendCodeAgain.setText("再次发送("+ millisUntilFinished/1000+")");
-            }
-            public void onFinish() {
-                sendCodeAgain.setClickable(true);
-                sendCodeAgain.setTextColor(ContextCompat.getColor
-                        (RegisterActivity.this, R.color.blue_50));
-                sendCodeAgain.setText("发送验证码");
-            }
-        }.start();
+        countDownTimer.start();
     }
 
     EventHandler eh=new EventHandler(){

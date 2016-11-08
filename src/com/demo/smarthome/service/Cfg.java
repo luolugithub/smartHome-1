@@ -10,6 +10,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 /**
@@ -59,9 +60,9 @@ public class Cfg extends Application  {
 	public final static int REG_SUCCESS 			= 0;
 	public final static int REG_ERROR   			= 1;
 	public final static int SERVER_CANT_CONNECT    	= 6;
-	public final static int REG_PWD_ERROR   		= 7;
-	public final static int REG_USER_EXISTED    	= 8;
-	public final static int REG_EXCEPTION   		= 9;
+//	public final static int REG_PWD_ERROR   		= 7;
+//	public final static int REG_USER_EXISTED    	= 8;
+//	public final static int REG_EXCEPTION   		= 9;
 	public final static int USERNAME_EXCEPTION   	= 10;
 
 	public final static int CODE_SUCCESS 		= 000;
@@ -79,7 +80,7 @@ public class Cfg extends Application  {
 	public static String versionNumber = "";
 	//The time(millisecond) of auto freshing of real-time data of device
 	public static int autoFreshTime = 5000;
-	public static int outlineTime = 15000;
+	public static int outlineTime = 20000;
 
 	//send verification code interval
 	public static long sendVerficationCodeInterval = 60*1000;
@@ -107,6 +108,7 @@ public class Cfg extends Application  {
 	public static boolean isLogin=false;
 	public static boolean isSubmitDev=false;
 	public static boolean isDeleteDev=false;
+
 
 	public static boolean register=false;
 	public  static String regUserName ="";

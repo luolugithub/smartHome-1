@@ -17,111 +17,111 @@
             android:layout_marginTop="0dp"
             android:orientation="vertical"
             android:background="@color/lightseagreen" >
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal" >
-
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
 
-                <Button android:id="@+id/devicelist"
-                    android:layout_width="30dp"
-                    android:layout_height="27dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/device_list"/>
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" >
 
-                <Button android:id="@+id/shareBtn"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/share"/>
-            </FrameLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal" >
-            <TextView
-                android:id="@+id/dataType"
-                android:layout_width="wrap_content"
+                    <Button android:id="@+id/devicelist"
+                        android:layout_width="30dp"
+                        android:layout_height="27dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/device_list"/>
+
+                    <Button android:id="@+id/shareBtn"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/share"/>
+                </FrameLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor= "@color/sbc_layout_view"
-                android:textSize="25sp"
-                android:text="种类"/>
-        </LinearLayout>
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:orientation="horizontal" >
-
-            <com.demo.smarthome.view.CircleAndNumberView
-                xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/CircleData"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                ProgressWheel:barColor="@color/greenyellow"
-                android:layout_gravity="center"
-                ProgressWheel:barWidth="4dp"
-                ProgressWheel:rimColor="@color/sbc_header_view"
-                ProgressWheel:rimWidth="6dp"
-                ProgressWheel:spinSpeed="3dp"
-                ProgressWheel:text="0"
-                ProgressWheel:textColor="@color/sbc_header_view"
-                ProgressWheel:textSize="14sp" />
-
-        </FrameLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="30dp"
-            android:orientation="vertical">
-
-            <TextView android:id="@+id/presentation"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+                <TextView
+                    android:id="@+id/dataType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor= "@color/sbc_layout_view"
+                    android:textSize="20sp"
+                    android:text="种类"/>
+            </LinearLayout>
+            <FrameLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15dp"
-                android:textColor= "@color/sbc_layout_view"
-                android:textSize="18sp"
-                android:text="提示"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="30dp">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal" >
 
-            <Button android:id="@+id/pm2_5Btn"
-                android:layout_width="72dp"
-                android:layout_height="90dp"
-                android:layout_marginLeft="70dp"
-                android:background="@drawable/pm2_5"/>
-            <Button android:id="@+id/pm10Btn"
-                android:layout_width="72dp"
-                android:layout_height="90dp"
-                android:layout_marginLeft="70dp"
-                android:background="@drawable/pm10"/>
+                <com.demo.smarthome.view.CircleAndNumberView
+                    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/CircleData"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    ProgressWheel:barColor="@color/greenyellow"
+                    android:layout_gravity="center"
+                    ProgressWheel:barWidth="4dp"
+                    ProgressWheel:rimColor="@color/sbc_header_view"
+                    ProgressWheel:rimWidth="6dp"
+                    ProgressWheel:spinSpeed="3dp"
+                    ProgressWheel:text="0"
+                    ProgressWheel:textColor="@color/sbc_header_view"
+                    ProgressWheel:textSize="14sp" />
 
-        </LinearLayout>
+            </FrameLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView android:id="@+id/presentation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:textColor= "@color/sbc_layout_view"
+                    android:textSize="15sp"
+                    android:text="提示"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+
+                <Button android:id="@+id/pm2_5Btn"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginLeft="50dp"
+                    android:background="@drawable/pm2_5"/>
+                <Button android:id="@+id/pm10Btn"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/pm10"/>
+
+            </LinearLayout>
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="@string/data_down_title"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textColor="@color/blue_50"/>
-    </LinearLayout>
+        </LinearLayout>
     </FrameLayout>
     <!--navigation view -->
     <ListView

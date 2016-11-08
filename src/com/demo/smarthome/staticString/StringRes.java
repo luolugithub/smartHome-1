@@ -4,7 +4,8 @@ package com.demo.smarthome.staticString;
  * Created by leishi on 15/11/19.
  */
 public class StringRes {
-    public final static String serverIP = "59.55.142.172";
+    public final static String serverIP = "139.224.57.128";
+//    public final static String serverIP = "59.55.142.172";
     public final static String updateXmlUrl= serverIP + ":8080/essh/versionUpdata/update.xml";
     public final static String serverPort = "8080";
     public final static String nameSpace ="http://webservice.smarthome.begood.com";

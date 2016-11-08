@@ -203,6 +203,9 @@ public class MainActivity extends Activity {
 				{
 					tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
 
+				}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_08))
+				{
+					tempIntent = new Intent(MainActivity.this, BGPM08RealtimeDataActivity.class);
 				}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 				{
 					tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
@@ -224,6 +227,9 @@ public class MainActivity extends Activity {
 					{
 						tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
 
+					}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_08))
+					{
+						tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
 					}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 					{
 						tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);
@@ -316,9 +322,13 @@ public class MainActivity extends Activity {
 			{
 				item.put("name", "PM2.5监测仪");
 			}
+			else if(dbService.getCfgByKey(devID).equals(DeviceInformation.DEV_TYPE_BGPM_08))
+			{
+				item.put("name", "多功能甲醛监测仪");
+			}
 			else if(dbService.getCfgByKey(devID).equals(DeviceInformation.DEV_TYPE_BGPM_10))
 			{
-				item.put("name", "多功能PM2.5监测仪");
+				item.put("name", "多功能空气监测仪");
 			}
 			else{
 				item.put("name", "未知");
@@ -476,7 +486,7 @@ public class MainActivity extends Activity {
 			setServerURL addDevSet = new setServerURL();
 
 			if ((jsonResult = addDevSet.sendParamToServer("addDeviceForUser", paramsName, paramsValue)).isEmpty()) {
-				message.what = Cfg.SERVER_CANT_CONNECT;
+				message.what = SERVER_CONNECT_ERROR;
 				handler.sendMessage(message);
 				return;
 			}
@@ -577,6 +587,9 @@ public class MainActivity extends Activity {
 			{
 				tempIntent = new Intent(MainActivity.this, BGPM02LRealtimeDataActivity.class);
 
+			}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_08))
+			{
+				tempIntent = new Intent(MainActivity.this, BGPM08RealtimeDataActivity.class);
 			}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
 			{
 				tempIntent = new Intent(MainActivity.this, BGPM10RealtimeDataActivity.class);

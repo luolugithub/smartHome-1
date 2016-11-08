@@ -1,0 +1,66 @@
+[
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/scan.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/scan.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/menu_add_device.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/menu_add_device.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/menu_hcho.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/menu_hcho.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/aa.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/aa.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/login.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/login.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/menu_device_realtime_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/menu_device_realtime_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/menu_data_spinner_item.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/menu_data_spinner_item.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/menu_history_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/menu_history_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/share_list.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/share_list.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/main.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/main.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/dev_view.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/dev_view.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/setup_dev.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/setup_dev.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/menu_hcho_monitor.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/menu_hcho_monitor.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/menu_device_history_data_activitiy.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/menu_device_history_data_activitiy.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/register.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/register.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/menu/welcome.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/menu/welcome.xml"
+    }
+]

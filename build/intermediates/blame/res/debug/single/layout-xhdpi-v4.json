@@ -1,0 +1,74 @@
+[
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/main.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/main.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_register.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_register.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_login.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_login.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_bgpm02l_realtime_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_bgpm02l_realtime_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_weather.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_weather.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_bgpm10_realtime_data_no_navigation_bar.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_bgpm10_realtime_data_no_navigation_bar.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_permissions.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_permissions.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_bgpm10_realtime_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_bgpm10_realtime_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/forget_password.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/forget_password.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/change_password.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/change_password.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/add_device_wifi_password.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/add_device_wifi_password.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_welcome.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_welcome.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_bgpm02l_realtime_data_no_navigation_bar.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_bgpm02l_realtime_data_no_navigation_bar.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_main.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_main.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/devitem.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/devitem.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_device_history_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_device_history_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/activity_bgpm08_realtime_data.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/activity_bgpm08_realtime_data.xml"
+    },
+    {
+        "merged": "/Users/leishi/Documents/code/smartHome/build/intermediates/res/merged/debug/layout-xhdpi-v4/fragment_content.xml",
+        "source": "/Users/leishi/Documents/code/smartHome/res/layout-xhdpi/fragment_content.xml"
+    }
+]

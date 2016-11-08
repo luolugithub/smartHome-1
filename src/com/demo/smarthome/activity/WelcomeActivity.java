@@ -7,30 +7,24 @@ import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.server.LoginServer;
 import com.demo.smarthome.server.ServerReturnResult;
-import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.service.ConfigService;
-import com.demo.smarthome.service.HttpConnectService;
 import com.demo.smarthome.staticString.StringRes;
 import com.demo.smarthome.tools.NetworkStatusTools;
-import com.demo.smarthome.tools.StrTools;
-import com.demo.smarthome.tools.MD5Tools;
 import com.demo.smarthome.updata.UpdataInfo;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.*;
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Xml;
 import android.view.Window;
 import android.util.Log;
@@ -45,6 +39,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.demo.smarthome.tools.PermissionsCheckerTools;
 
 /**
  * 
@@ -79,6 +74,16 @@ public class WelcomeActivity extends Activity {
 	ServerReturnResult loginResult = new ServerReturnResult();
 	long startTimestamp;
 
+	private static final int REQUEST_CODE = 0; // 权限请求码
+	// 所必需的全部权限
+	static final String[] PERMISSIONS = new String[]{
+			//读写SD卡
+			Manifest.permission.READ_EXTERNAL_STORAGE,
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			//获取日历信息
+//			Manifest.permission.WRITE_CALENDAR
+	};
+	private PermissionsCheckerTools mPermissionsChecker; // 权限检测器
 
 	Handler handler = new Handler(){
 		public void handleMessage(Message msg){
@@ -91,6 +96,11 @@ public class WelcomeActivity extends Activity {
 						if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_02L))
 						{
 							intent.setClass(WelcomeActivity.this, BGPM02LRealtimeDataActivity.class);
+							startActivity(intent);
+							finish();
+						}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_08))
+						{
+							intent.setClass(WelcomeActivity.this, BGPM08RealtimeDataActivity.class);
 							startActivity(intent);
 							finish();
 						}else if(Cfg.currentDeviceType.equals(DeviceInformation.DEV_TYPE_BGPM_10))
@@ -190,7 +200,42 @@ public class WelcomeActivity extends Activity {
 		applicationInit();
         //崩溃日志收集
         CrashReport.initCrashReport(getApplicationContext(), StringRes.buglyKey, false);
-        new CheckVersionThread().start();
+		//权限检查
+		mPermissionsChecker = new PermissionsCheckerTools(this);
+		// 缺少权限时, 进入权限配置页面
+		if (mPermissionsChecker.lacksPermissions(PERMISSIONS))
+		{
+			startPermissionsActivity();
+		}
+		else
+		{
+			new CheckVersionThread().start();
+		}
+	}
+
+	@Override protected void onResume() {
+		super.onResume();
+	}
+	private void startPermissionsActivity() {
+		PermissionsActivity.startActivityForResult(this, REQUEST_CODE, PERMISSIONS);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		// 拒绝时, 关闭页面, 缺少主要权限, 无法运行
+		if (requestCode == REQUEST_CODE && resultCode == PermissionsActivity.PERMISSIONS_DENIED) {
+			finish();
+		}
+		//如果开启了所有权限程序继续进行。否则就关闭程序。
+		if (!mPermissionsChecker.lacksPermissions(PERMISSIONS))
+		{
+			new CheckVersionThread().start();
+		}
+		else
+		{
+			finish();
+		}
 	}
 
 	@Override

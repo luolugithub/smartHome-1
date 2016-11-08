@@ -11,8 +11,8 @@ allprojects {
         jcenter()
     }
 }
-repositories{
-    flatDir{
+repositories {
+    flatDir {
         dirs 'libs'
     }
 }
@@ -24,10 +24,11 @@ dependencies {
     compile files('gsno-2.3.1.jar')
     compile files('libs/AMap_Location_v2.3.0_20160112.jar')
     //用于收集崩溃信息
-    compile 'com.tencent.bugly:crashreport:latest.release'
     //发送短信验证码模块
-    compile name:'SMSSDK-2.1.1',ext:'aar'
-    compile 'com.android.support:appcompat-v7:23+'
+    compile name: 'SMSSDK-2.1.1', ext: 'aar'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
 }
 
 allprojects {
@@ -41,8 +42,9 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
-    compileOptions{
-        encoding "UTF-8"}
+    compileOptions {
+        encoding "UTF-8"
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

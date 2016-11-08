@@ -84,7 +84,7 @@ public class DeviceHistoryDataView extends View {
 
 	//顶部底部留白
 	private int marginTop = 80;
-	private int marginBottom = 150;
+	private int marginBottom = 180;
 
 	private static int noData = -1;
 

@@ -12,6 +12,8 @@ import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +34,7 @@ import com.demo.smarthome.dao.ConfigDao;
 import com.demo.smarthome.device.DeviceInformation;
 import com.demo.smarthome.server.DeviceDataResult;
 import com.demo.smarthome.server.DeviceDataSet;
+import com.demo.smarthome.server.ServerReturnResult;
 import com.demo.smarthome.server.setServerURL;
 import com.demo.smarthome.service.Cfg;
 import com.demo.smarthome.service.ConfigService;
@@ -46,7 +50,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.widget.PopupMenu;
 import android.view.MenuItem;
-import com.tencent.bugly.crashreport.CrashReport;
 
 
 /**********************************************************
@@ -71,6 +74,9 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
     Gson gson = new Gson();
     boolean is_device_online = true;
     boolean is_get_data_success = false;
+    MyDialogView dialogView;
+    String originalPassword;
+    String changeNewPassword;
     TextView dataTitle;
     TextView temperatureTextView;
     TextView dampnessTextView;
@@ -87,7 +93,9 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
     static final int SERVER_CANT_CONNECT   = 8;
     static final int SERVE_EXCEPTION       = 9;
     static final int UPDATE_DATA           = 10;
-
+    static final int CHANGE_PASSWORD_ERROR           = 11;
+    static final int INPUT_PASSWORD_ERROR            = 12;
+    static final int CHANGE_PASSWORD_SUCCEED         = 15;
     //
     static int shareSucceed     = 0;
 
@@ -118,13 +126,13 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                             tvocBtn.setBackgroundResource(R.drawable.tvoc);
                             pm2_5Btn.setBackgroundResource(R.drawable.pm2_5);
                             crrentValue = Integer.parseInt(currentData.getHcho());
-                            if(crrentValue<= 5)
+                            if(crrentValue<= 10)
                             {
-                                presentation.setText("甲醛含量:低");
-                            }else if(crrentValue<= 10){
-                                presentation.setText("甲醛含量:较低");
+                                presentation.setText("优良");
+                            }else if(crrentValue<= 30){
+                                presentation.setText("轻微超标");
                             }else{
-                                presentation.setText("甲醛含量:超标");
+                                presentation.setText("严重超标");
                             }
                             dataTitle.setText("甲醛");
                         }else if(currentType == currentdataTitle.tvoc) {
@@ -134,10 +142,11 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                             crrentValue = Integer.parseInt(currentData.getTvoc());
                             if(crrentValue < 60)
                             {
-                                presentation.setText("总挥发性有机物含量:低");
-                            }else
-                            {
-                                presentation.setText("总挥发性有机物含量:超标");
+                                presentation.setText("优良");
+                            }else if(crrentValue<= 180){
+                                presentation.setText("轻微超标");
+                            }else{
+                                presentation.setText("严重超标");
                             }
                             dataTitle.setText("TVOC");
                         }else if(currentType == currentdataTitle.pm2_5) {
@@ -147,17 +156,17 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                             crrentValue = Integer.parseInt(currentData.getPm2_5());
                             if(crrentValue<= 35)
                             {
-                                presentation.setText("空气质量:优");
+                                presentation.setText("优");
                             }else if(crrentValue<= 75){
-                                presentation.setText("空气质量:良");
+                                presentation.setText("良");
                             }else if(crrentValue<= 115){
-                                presentation.setText("空气质量:轻度污染");
+                                presentation.setText("轻度污染");
                             }else if(crrentValue<= 150){
-                                presentation.setText("空气质量:中度污染");
+                                presentation.setText("中度污染");
                             }else if(crrentValue<= 250){
-                                presentation.setText("空气质量:重度污染");
+                                presentation.setText("重度污染");
                             }else if(crrentValue > 250){
-                                presentation.setText("空气质量:严重污染");
+                                presentation.setText("严重污染");
                             }
                             dataTitle.setText("PM 2.5");
                         }else
@@ -239,7 +248,38 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                     dampnessTextView.setText("湿度:" +dampness
                             + getResources().getString(R.string.device_hygrometer_unit));
                     break;
+                case CHANGE_PASSWORD_ERROR:
+                    dialogView.closeMyDialog();
+                    Toast.makeText(BGPM10RealtimeDataActivity.this, "密码更新失败", Toast.LENGTH_SHORT)
+                            .show();
+                    break;
+                case INPUT_PASSWORD_ERROR:
+                    dialogView.closeMyDialog();
+                    Toast.makeText(BGPM10RealtimeDataActivity.this, "原密码输入错误", Toast.LENGTH_SHORT)
+                            .show();
+                    break;
+                case CHANGE_PASSWORD_SUCCEED:
+                    dialogView.closeMyDialog();
+                    Toast.makeText(BGPM10RealtimeDataActivity.this, "密码更新成功", Toast.LENGTH_SHORT)
+                            .show();
+                    Cfg.userPassword = changeNewPassword;
+                    dbService = new ConfigDao(BGPM10RealtimeDataActivity.this.getBaseContext());
+                    dbService.SaveSysCfgByKey(Cfg.KEY_PASS_WORD, changeNewPassword);
+                    break;
+                case SERVER_CANT_CONNECT:
+                    AlertDialog.Builder failAlert = new AlertDialog.Builder(BGPM10RealtimeDataActivity.this);
+                    failAlert.setTitle("错误").setMessage("服务器出现异常")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ActivityControl.getInstance().finishAllActivity();
+                                }
+                            });
+                    failAlert.create().show();
+                    break;
                 default:
+                    Toast.makeText(BGPM10RealtimeDataActivity.this, "错误", Toast.LENGTH_SHORT)
+                            .show();
                     break;
 
             }
@@ -308,6 +348,8 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
         menuLists.add("用户名:"+ Cfg.userName);
         menuLists.add("历史数据");
         menuLists.add("设备列表");
+        menuLists.add("修改密码");
+        menuLists.add("帮助");
         menuLists.add("注销登陆");
         //为列表设置适配器
         drawerAdapter = new ArrayAdapter<String>(this, R.layout.simple_list_item, menuLists);
@@ -346,6 +388,12 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                 Message message = new Message();
                 message.what = UPDATE_DATA;
                 int range = 1000;
+                //当数据为-1说明设备传感器初始化未完成
+                if(crrentValue == -1)
+                {
+                    crrentValue = 0;
+                }
+
                 if(currentType == currentdataTitle.tvoc)
                 {
                     realDataView.setText((float) crrentValue / 100 + "");
@@ -503,13 +551,13 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
             } else if (iAction == MotionEvent.ACTION_UP) {
                 if (is_get_data_success && is_device_online) {
                     crrentValue = Integer.parseInt(currentData.getHcho());
-                    if(crrentValue<= 5)
+                    if(crrentValue<= 10)
                     {
-                        presentation.setText("甲醛含量:低");
-                    }else if(crrentValue<= 10){
-                        presentation.setText("甲醛含量:较低");
+                        presentation.setText("优良");
+                    }else if(crrentValue<= 30){
+                        presentation.setText("轻微超标");
                     }else{
-                        presentation.setText("甲醛含量:超标");
+                        presentation.setText("严重超标");
                     }
                     dataTitle.setText("甲醛");
                     currentType = currentdataTitle.hcho;
@@ -540,10 +588,11 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                     crrentValue = Integer.parseInt(currentData.getTvoc());
                     if(crrentValue < 60)
                     {
-                        presentation.setText("总挥发性有机物含量:低");
-                    }else
-                    {
-                        presentation.setText("总挥发性有机物含量:超标");
+                        presentation.setText("优良");
+                    }else if(crrentValue<= 180){
+                        presentation.setText("轻微超标");
+                    }else{
+                        presentation.setText("严重超标");
                     }
                     dataTitle.setText("TVOC");
                     currentType = currentdataTitle.tvoc;
@@ -576,17 +625,17 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                     crrentValue = Integer.parseInt(currentData.getPm2_5());
                     if(crrentValue<= 35)
                     {
-                        presentation.setText("空气质量:优");
+                        presentation.setText("优");
                     }else if(crrentValue<= 75){
-                        presentation.setText("空气质量:良");
+                        presentation.setText("良");
                     }else if(crrentValue<= 115){
-                        presentation.setText("空气质量:轻度污染");
+                        presentation.setText("轻度污染");
                     }else if(crrentValue<= 150){
-                        presentation.setText("空气质量:中度污染");
+                        presentation.setText("中度污染");
                     }else if(crrentValue<= 250){
-                        presentation.setText("空气质量:重度污染");
+                        presentation.setText("重度污染");
                     }else if(crrentValue > 250){
-                        presentation.setText("空气质量:严重污染");
+                        presentation.setText("严重污染");
                     }
                     dataTitle.setText("PM 2.5");
                     currentType = currentdataTitle.pm2_5;
@@ -660,6 +709,7 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                 try {
                     Date deviceTime = dfs.parse(currentData.getCreateTime());
                     Date currentTime = new Date();
+
                     if(currentTime.getTime() - deviceTime.getTime() > Cfg.outlineTime){
                         is_device_online = false;
                     }
@@ -698,6 +748,13 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
                 startActivity(intent);
                 break;
             case 3:
+                showChangePasswordDialog();
+                break;
+            case 4:
+                intent.setClass(BGPM10RealtimeDataActivity.this,HelpActivity.class);
+                startActivity(intent);
+                break;
+            case 5:
                 resign();
                 break;
             default:
@@ -707,6 +764,105 @@ public class BGPM10RealtimeDataActivity extends AppCompatActivity implements Ada
 
         //主视图显示碎片后把导航栏关了
         drawerMenu.closeDrawer(drawerButtonList);
+    }
+
+    private void showChangePasswordDialog(){
+        LayoutInflater inflater = LayoutInflater.from(BGPM10RealtimeDataActivity.this);
+        final View changePwdlayout = inflater.inflate(R.layout.change_password, null);
+
+        AlertDialog.Builder myDialog = new AlertDialog.Builder(BGPM10RealtimeDataActivity.this)
+                .setTitle("修改密码");
+        myDialog.setView(changePwdlayout);
+
+        myDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText originalPasswordEt = (EditText) changePwdlayout.findViewById(R.id.originalPassword);
+                originalPassword = originalPasswordEt.getText().toString();
+                if (originalPassword.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "请输入原始密码", Toast.LENGTH_SHORT).show();
+                    originalPasswordEt.setFocusable(true);
+                    return;
+                }
+                EditText newPasswordEt = (EditText) changePwdlayout.findViewById(R.id.newPassword);
+                changeNewPassword = newPasswordEt.getText().toString();
+                if (changeNewPassword.isEmpty() || (changeNewPassword.length() < 6)) {
+                    Toast.makeText(getApplicationContext(), "密码至少为六位", Toast.LENGTH_SHORT).show();
+                    newPasswordEt.setFocusable(true);
+                    return;
+                }
+                if(changeNewPassword.equals(originalPassword)){
+                    Toast.makeText(getApplicationContext(), "更改的密码需要不一样", Toast.LENGTH_SHORT).show();
+                    newPasswordEt.setFocusable(true);
+                    return;
+                }
+                EditText confirmPasswordEt = (EditText) changePwdlayout.findViewById(R.id.confirmPassword);
+                String confirmPassword = confirmPasswordEt.getText().toString();
+                if(!changeNewPassword.equals(confirmPassword)){
+                    Toast.makeText(getApplicationContext(), "两次填写的密码不一致", Toast.LENGTH_SHORT).show();
+                    confirmPasswordEt.setFocusable(true);
+                    return;
+                }
+                new changePasswordThread().start();
+                dialog.dismiss();
+                dialogView = new MyDialogView(BGPM10RealtimeDataActivity.this);
+                dialogView.showMyDialog("更改密码中", "...请等待");
+            }
+        });
+        myDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog,
+                                int which) {
+                dialog.dismiss();
+            }
+        });
+        myDialog.create().show();
+    }
+    class changePasswordThread extends Thread {
+
+        @Override
+        public void run() {
+            Message message = new Message();
+            int result;
+            Gson gsonChange = new Gson();
+            String jsonResultChange;
+            ServerReturnResult returnDate;
+            String[] paramsName = {"userName","userPassword","newPassword"};
+            String[] paramsValue = {Cfg.userName,originalPassword,changeNewPassword};
+            String methodName = "changePassword";
+
+            setServerURL regiterUser= new setServerURL();
+
+            if((jsonResultChange = regiterUser.sendParamToServer(methodName, paramsName, paramsValue)).isEmpty()){
+                message.what = SERVER_CANT_CONNECT;
+                handler.sendMessage(message);
+                return;
+            }
+            try {
+                returnDate = gsonChange.fromJson(jsonResultChange, ServerReturnResult.class);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                message.what = CHANGE_PASSWORD_ERROR;
+                handler.sendMessage(message);
+                return;
+            }
+
+            switch (Integer.parseInt(returnDate.getCode())) {
+                case Cfg.CODE_SUCCESS:
+                    result = CHANGE_PASSWORD_SUCCEED;
+                    break;
+                case Cfg.CODE_PWD_ERROR:
+                    result = INPUT_PASSWORD_ERROR;
+                    break;
+                default:
+                    result =   CHANGE_PASSWORD_ERROR;
+                    break;
+
+            }
+            message.what = result;
+            handler.sendMessage(message);
+        }
     }
     @Override
     protected void onDestroy() {
