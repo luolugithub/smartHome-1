@@ -19,8 +19,8 @@
             android:background="@color/lightseagreen" >
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="50dp"
+
                 android:orientation="horizontal" >
 
                 <FrameLayout
@@ -61,19 +61,19 @@
             <FrameLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal" >
 
-                <com.demo.smarthome.view.CircleAndNumberView
+                <com.begood.smarthome.view.CircleAndNumberView
                     xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/CircleData"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
                     ProgressWheel:barColor="@color/greenyellow"
                     android:layout_gravity="center"
                     ProgressWheel:barWidth="4dp"
                     ProgressWheel:rimColor="@color/sbc_header_view"
-                    ProgressWheel:rimWidth="6dp"
+                    ProgressWheel:rimWidth="8dp"
                     ProgressWheel:spinSpeed="3dp"
                     ProgressWheel:text="0"
                     ProgressWheel:textColor="@color/sbc_header_view"
@@ -82,37 +82,37 @@
             </FrameLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <TextView android:id="@+id/presentation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="5dp"
                     android:textColor= "@color/sbc_layout_view"
                     android:textSize="15sp"
                     android:text="提示"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="15dp">
 
                 <Button android:id="@+id/pm2_5Btn"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="40dp"
                     android:background="@drawable/pm2_5"/>
                 <Button android:id="@+id/pm10Btn"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginLeft="30dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="40dp"
                     android:background="@drawable/pm10"/>
-
-            </LinearLayout>
+            </RelativeLayout>
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"

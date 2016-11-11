@@ -63,12 +63,12 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center_vertical">
-        <com.demo.smarthome.view.DeviceHistoryDataView
+        <com.begood.smarthome.view.DeviceHistoryDataView
             android:id="@+id/historyDataView"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_marginTop="0dp">
-        </com.demo.smarthome.view.DeviceHistoryDataView>
+        </com.begood.smarthome.view.DeviceHistoryDataView>
     </LinearLayout>
 </LinearLayout>
 

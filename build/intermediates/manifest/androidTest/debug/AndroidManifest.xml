@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.demo.smarthome.test">
+    package="com.begood.smarthome.test">
 
     <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="23" />
 
@@ -9,8 +9,8 @@
     </application>
 
     <instrumentation android:name="android.test.InstrumentationTestRunner"
-                     android:targetPackage="com.demo.smarthome"
+                     android:targetPackage="com.begood.smarthome"
                      android:handleProfiling="false"
                      android:functionalTest="false"
-                     android:label="Tests for com.demo.smarthome"/>
+                     android:label="Tests for com.begood.smarthome"/>
 </manifest>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.demo.smarthome"
+    package="com.begood.smarthome"
     android:versionCode="2"
     android:versionName="0.2" >
 
@@ -39,14 +39,14 @@
 
     <!-- 在sdcard中创建/删除文件的权限 -->
     <application
-        android:name="com.demo.smarthome.service.Cfg"
+        android:name="com.begood.smarthome.service.Cfg"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
         <uses-library android:name="android.test.runner" />
 
-        <service android:name="com.demo.smarthome.service.SocketService" />
+        <service android:name="com.begood.smarthome.service.SocketService" />
         //定位服务
         <service android:name="com.amap.api.location.APSService" />
         //申请的高德地图的key
@@ -55,7 +55,7 @@
             android:value="744c883d37941bcc708790b3f9480f03" />
 
         <activity
-            android:name="com.demo.smarthome.activity.WelcomeActivity"
+            android:name="com.begood.smarthome.activity.WelcomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
@@ -66,43 +66,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.demo.smarthome.activity.LoginActivity"
+            android:name="com.begood.smarthome.activity.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.MainActivity"
+            android:name="com.begood.smarthome.activity.MainActivity"
             android:label="@string/title_activity_main"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.RegisterActivity"
+            android:name="com.begood.smarthome.activity.RegisterActivity"
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.WeatherActivity"
+            android:name="com.begood.smarthome.activity.WeatherActivity"
             android:label="@string/title_activity_weather"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.BGPM10RealtimeDataActivity"
+            android:name="com.begood.smarthome.activity.BGPM10RealtimeDataActivity"
             android:label="@string/title_activity_device_realtime_data"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.BGPM08RealtimeDataActivity"
+            android:name="com.begood.smarthome.activity.BGPM08RealtimeDataActivity"
             android:label="@string/title_activity_bgpm08_realtime_data"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.BGPM02LRealtimeDataActivity"
+            android:name="com.begood.smarthome.activity.BGPM02LRealtimeDataActivity"
             android:label="@string/title_activity_bgpm02l_realtime_data"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.DeviceHistoryDataActivitiy"
+            android:name="com.begood.smarthome.activity.DeviceHistoryDataActivitiy"
             android:label="@string/title_activity_device_history_data_activitiy"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.demo.smarthome.activity.HelpActivity"
+            android:name="com.begood.smarthome.activity.HelpActivity"
             android:label="@string/title_activity_help_activity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.demo.smarthome.activity.PermissionsActivity" />
+        <activity android:name="com.begood.smarthome.activity.PermissionsActivity" />
     </application>
 
 </manifest>

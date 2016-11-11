@@ -159,15 +159,15 @@
 
         <Button
             android:id="@+id/loginBtnOk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="32dp"
             android:background="@drawable/login" />
 
         <Button
             android:id="@+id/loginBtnReg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_width="100dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/register" />
     </LinearLayout>
 

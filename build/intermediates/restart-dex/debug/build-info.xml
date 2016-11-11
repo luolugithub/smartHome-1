@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <instant-run
     abi="armeabi-v7a,armeabi"
-    api-level="23"
-    density="xxxhdpi"
+    api-level="19"
+    density="xxhdpi"
     format="7"
-    timestamp="9257107245532" >
+    timestamp="24652632706552" >
 
     <task
         name="javac"
-        duration="1210" />
+        duration="3344" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="691" />
+        duration="3013" />
     <task
         name="verifier"
-        duration="157" />
+        duration="757" />
 
     <artifact
         location="/Users/leishi/Documents/code/smartHome/build/outputs/apk/smartHome-debug.apk"
         type="MAIN" />
 
-    <build timestamp="9257107245532" >
+    <build timestamp="24652632706552" >
         <artifact
             location="/Users/leishi/Documents/code/smartHome/build/outputs/apk/smartHome-debug.apk"
             type="MAIN" />

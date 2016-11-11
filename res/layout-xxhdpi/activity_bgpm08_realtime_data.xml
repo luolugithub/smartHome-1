@@ -72,7 +72,7 @@
                     android:layout_marginBottom="10dp"
                     android:textSize="18sp"
                     android:text="温度"/>
-                <com.demo.smarthome.view.CircleAndNumberView
+                <com.begood.smarthome.view.CircleAndNumberView
                     xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/CircleData"
                     android:layout_width="160dp"
@@ -111,24 +111,24 @@
                     android:textSize="18sp"
                     android:text="提示"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="25dp">
+                android:layout_marginTop="20dp">
 
                 <Button android:id="@+id/hchoBtn"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
                     android:background="@drawable/hcho"/>
-
                 <Button android:id="@+id/tvocBtn"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="40dp"
                     android:background="@drawable/tvoc"/>
-            </LinearLayout>
+            </RelativeLayout>
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"

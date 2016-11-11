@@ -64,7 +64,7 @@
                 android:layout_marginTop="25dp"
                 android:orientation="horizontal" >
 
-                <com.demo.smarthome.view.CircleAndNumberView
+                <com.begood.smarthome.view.CircleAndNumberView
                     xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/CircleData"
                     android:layout_width="190dp"
@@ -81,8 +81,8 @@
             </FrameLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="55dp"
-                android:layout_marginTop="25dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical">
 
                  <TextView android:id="@+id/presentation"
@@ -94,24 +94,24 @@
                     android:textSize="22sp"
                     android:text="提示"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
 
                 <Button android:id="@+id/pm2_5Btn"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="40dp"
                     android:background="@drawable/pm2_5"/>
                 <Button android:id="@+id/pm10Btn"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="40dp"
                     android:background="@drawable/pm10"/>
-
-            </LinearLayout>
+            </RelativeLayout>
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
